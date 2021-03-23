@@ -38,6 +38,8 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use('/api/login', require('./login'));
+
 app.listen(process.env.PORT, () =>
   console.log(`Listening to PORT ${process.env.PORT}...`)
 );
