@@ -24,7 +24,7 @@ router.post('/', validateSchema, async (req, res) => {
 
     return res.status(200).json({
       success: 1,
-      token,
+      role: user.role,
     });
   } catch (error) {
     return res.status(400).json({

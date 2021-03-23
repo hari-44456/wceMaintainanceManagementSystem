@@ -1,53 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import UserDashboard from './Dashboards/UserDashboard';
-import HodDashboard from './Dashboards/HodDashboard';
-import AdminDashboard from './Dashboards/AdminDashboard';
-import "../node_modules/bootstrap/dist/css/bootstrap.css";
-import {BrowserRouter as Router,Route,Switch,withRouter} from "react-router-dom";
-import axiosInstance from './helpers/axiosInstance';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import { Container } from '@material-ui/core';
+
+import Login from './auth';
+import Dashboards from './dashboards';
+
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 const App = () => {
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await axiosInstance.get('/');
-        console.log(response);
-        if (response.data.success) setMessage(response.data.message);
-        else {
-          try {
-            setError(response.data.error);
-          } catch (error) {
-            setError('Error occured');
-          }
-        }
-      } catch (error) {
-        try {
-          setError(error.response.data.error);
-        } catch (error) {
-          setError('Error Occured...');
-        }
-      }
-    };
-    getData();
-  });
-
   return (
     <Router>
-      <div className="App">
-        
-
+      <Container className="App">
         <Switch>
-          
-          <Route exact path="/UserDashboard" component={UserDashboard} />
-          <Route exact path="/HodDashboard" component={HodDashboard} />
-          <Route exact path="/AdminDashboard" component={AdminDashboard} />
+          <Redirect exact from="/" to={'/ui'} />
+          <Route path="/ui/login" component={Login} />
+          <Route path="/ui/dashboard" component={Dashboards} />
         </Switch>
-      </div>
+      </Container>
     </Router>
-    
   );
 };
 
