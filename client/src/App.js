@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
+import UserDashboard from './Dashboards/UserDashboard';
+import HodDashboard from './Dashboards/HodDashboard';
+import AdminDashboard from './Dashboards/AdminDashboard';
+import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import {BrowserRouter as Router,Route,Switch,withRouter} from "react-router-dom";
 import axiosInstance from './helpers/axiosInstance';
 
 const App = () => {
@@ -31,11 +35,19 @@ const App = () => {
   });
 
   return (
-    <div>
-      {error}
+    <Router>
+      <div className="App">
+        
 
-      <h1> {message} </h1>
-    </div>
+        <Switch>
+          
+          <Route exact path="/UserDashboard" component={UserDashboard} />
+          <Route exact path="/HodDashboard" component={HodDashboard} />
+          <Route exact path="/AdminDashboard" component={AdminDashboard} />
+        </Switch>
+      </div>
+    </Router>
+    
   );
 };
 
