@@ -6,7 +6,7 @@ const MaintainSchema=new mongoose.Schema({
     }, 
     Departmental:{
          type:String,
-          required:true,
+         required:true,
           
      },
      Details:{

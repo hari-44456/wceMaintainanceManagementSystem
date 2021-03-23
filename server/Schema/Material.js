@@ -1,4 +1,12 @@
 const mongoose=require('mongoose');
+const Material =new mongoose.Schema({
+       materialName:{
+           type:String,
+       },
+       materialCost:{
+            type:Number,
+       }
+});
 const MaterialSchema=new mongoose.Schema({
     cid:{
         type:ObjectId,
@@ -10,7 +18,7 @@ const MaterialSchema=new mongoose.Schema({
           
      },
      MaterialIssued:{
-         type:String,
+         type:[Material],
          required:true,
          
      },
