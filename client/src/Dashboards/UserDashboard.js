@@ -64,8 +64,9 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'Form ID', numeric: false, disablePadding: true, label: 'Form ID' },
+  { id: 'Form ID', numeric: true, disablePadding: true, label: 'Form ID' },
   { id: 'Name', numeric: true, disablePadding: false, label: 'Name' },
+  { id: 'Date', numeric: true, disablePadding: false, label: 'Date' },
   { id: 'Status', numeric: true, disablePadding: false, label: 'Status' },
   { id: 'Action', numeric: true, disablePadding: false, label: 'Action' },
   
@@ -93,7 +94,7 @@ function EnhancedTableHead(props) {
           <TableCell  
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
+            padding={headCell.disablePadding ? 'none' : '50%'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -169,7 +170,7 @@ const EnhancedTableToolbar = (props) => {
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
-            <DeleteIcon />
+            <DeleteIcon/>
           </IconButton>
         </Tooltip>
         
@@ -316,11 +317,12 @@ export default function EnhancedTable() {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell align="right" component="th" id={labelId} scope="row" padding="none">
                         {row.id}
                       </TableCell>
                       
                       <TableCell align="right">{row.name}</TableCell>
+                  <TableCell align="right">{row.Date}</TableCell>
                       <TableCell align="right">Pending...</TableCell>
                       <TableCell align="right">
                       <Link class="btn btn-primary mr-2" to={`/`}> View
