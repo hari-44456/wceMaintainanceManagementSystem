@@ -10,7 +10,7 @@ const Dashboards = ({ match }) => {
     <Switch>
       <Route
         path={`${match.url}/student`}
-        render={(props) => <UserDashboard {...props} />}
+        render={(props) => <UserDashboard{...props} />}
       />
 
       <Route

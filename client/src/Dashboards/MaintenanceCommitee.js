@@ -2,7 +2,7 @@ import React from 'react';
 
 import Table from './Table';
 
-const UserDashboard = () => {
+const MaintenanceCommiteeDashboard = () => {
   return (
     <>
       <Table />
@@ -10,4 +10,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default MaintenanceCommiteeDashboard;
