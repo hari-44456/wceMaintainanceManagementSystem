@@ -1,28 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-const UserDashboard = () => {
-  const [users, setUser] = useState([]);// array required
+const AdminDashboard = () => {
+  const [users, setUsers] = useState([
+    {
+      username: 'Narahari',
+      role: 'Student',
+      status: 'Waiting for Approval from HoD...',
+    },
+  ]);
 
   useEffect(() => {
-    loadUsers();//load the complains of given id
-  }, []);
-
-  const loadUsers = async () => {
-    const result = await axios.get("http://localhost:3003/users");
-    setUser(result.data.reverse());//Recent Complains so array is Reversed
-  };
-
-  const deleteUser = async id => {
-    await axios.delete(`http://localhost:3003/users/${id}`);// user want to delete the complaints
-    loadUsers();
-  };
+    console.log(document.cookie);
+  });
 
   return (
     <div className="container">
       <div className="py-4">
-        <h1>User Complaints</h1>
+        <h1>Complaints</h1>
         <table class="table border shadow">
           <thead class="thead-dark">
             <tr>
@@ -36,19 +31,16 @@ const UserDashboard = () => {
           <tbody>
             {users.map((user, index) => (
               <tr>
-                <th scope="row">{index+1}</th>
+                <th scope="row">{index + 1}</th>
                 <td>{user.username}</td>
                 <td>{user.role}</td>
                 <td>{user.status}</td>
                 <td>
-                  <Link class="btn btn-primary mr-2" to={`/users/${user.id}`}>
-                    View
-                  </Link>
                   <Link
-                    class="btn btn-danger"
-                    onClick={() => deleteUser(user.id)}
+                    className="btn btn-primary mr-2"
+                    to={`/users/${user.id}`}
                   >
-                    Delete
+                    View
                   </Link>
                 </td>
               </tr>
@@ -60,4 +52,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default AdminDashboard;
