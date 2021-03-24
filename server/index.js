@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
+const verify = require('./verifyAuthToken');
+
 require('dotenv').config();
 const app = express();
 
@@ -30,12 +32,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.cookie('auth-token', 'Cookie Token', { httpOnly: true, secure: true });
-  res.status(200).json({
-    success: 1,
-    message: 'Hello from MERN',
-  });
+app.get('/api/isAuthenticated', verify, (req, res) => {
+  try {
+    return res.status(200).json({
+      success: 1,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      success: 0,
+    });
+  }
 });
 
 app.use('/api/login', require('./login'));
