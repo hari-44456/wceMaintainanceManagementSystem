@@ -26,7 +26,7 @@ const UserDashboard = () => {
         <table class="table border shadow">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">From ID</th>
               <th scope="col">User Name</th>
               <th scope="col">Role</th>
               <th scope="col">Status</th>

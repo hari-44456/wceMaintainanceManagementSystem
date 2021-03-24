@@ -26,7 +26,7 @@ const HodDashboard = () => {
         <table class="table border shadow">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">From ID</th>
               <th scope="col">User Name</th>
               <th scope="col">Role</th>
               <th scope="col">Status</th>
@@ -44,12 +44,7 @@ const HodDashboard = () => {
                   <Link class="btn btn-primary mr-2" to={`/users/${user.id}`}>
                     View
                   </Link>
-                  <Link
-                    class="btn btn-danger"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    Delete
-                  </Link>
+                  
                 </td>
               </tr>
             ))}

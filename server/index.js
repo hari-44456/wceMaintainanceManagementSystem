@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 const app = express();
@@ -12,16 +12,6 @@ app.use(
     origin: true,
     credentials: true,
   })
-);
-
-mongoose.connect(
-  process.env.DB_CONNECT,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  },
-  () => console.log('connected to db...')
 );
 
 app.use(morgan('dev'));
@@ -37,8 +27,6 @@ app.get('/', (req, res) => {
     message: 'Hello from MERN',
   });
 });
-
-app.use('/api/login', require('./login'));
 
 app.listen(process.env.PORT, () =>
   console.log(`Listening to PORT ${process.env.PORT}...`)

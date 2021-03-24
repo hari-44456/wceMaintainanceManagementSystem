@@ -41,9 +41,9 @@ const App = () => {
 
         <Switch>
           
-          <Route exact path="/UserDashboard" component={UserDashboard} />
-          <Route exact path="/HodDashboard" component={HodDashboard} />
-          <Route exact path="/AdminDashboard" component={AdminDashboard} />
+          <Route exact path="/ui/UserDashboard" component={UserDashboard} />
+          <Route exact path="/ui/HodDashboard" component={HodDashboard} />
+          <Route exact path="/ui/AdminDashboard" component={AdminDashboard} />
         </Switch>
       </div>
     </Router>
