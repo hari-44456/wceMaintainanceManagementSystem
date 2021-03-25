@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -24,6 +24,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 function createData(index, complaintTitle, date, status) {
   return { index, complaintTitle, date, status };
 }
+let sel;
 
 const rows = [
   createData(1, 'First', '12-12-2020', 'Waiting For Approval From HoD'),
@@ -188,10 +189,12 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
+        <Tooltip title="Delete" >
+          
+          <IconButton aria-label="delete" >
+            <DeleteIcon/>
           </IconButton>
+         
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
@@ -249,7 +252,9 @@ export default function EnhancedTable() {
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n.name);
+      
       setSelected(newSelecteds);
+      sel=selected
       return;
     }
     setSelected([]);
@@ -337,7 +342,7 @@ export default function EnhancedTable() {
                         // id={labelId}
                         // scope="row"
                         // padding="none"
-                        align="left"
+                        align="centre"
                       >
                         {row.index}
                       </TableCell>

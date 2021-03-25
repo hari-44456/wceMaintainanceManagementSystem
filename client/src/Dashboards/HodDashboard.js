@@ -5,7 +5,7 @@ import Table from './Table';
 const HoDDashboard = () => {
   return (
     <>
-      <Table />
+      <Table/>
     </>
   );
 };
