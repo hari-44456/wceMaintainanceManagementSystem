@@ -45,6 +45,7 @@ app.get('/api/isAuthenticated', verify, (req, res) => {
 });
 
 app.use('/api/login', require('./login'));
+app.use('/api/complaint', require('./complaint'));
 
 app.listen(process.env.PORT, () =>
   console.log(`Listening to PORT ${process.env.PORT}...`)
