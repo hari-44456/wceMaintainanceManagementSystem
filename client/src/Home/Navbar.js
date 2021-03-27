@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
-import '/Users/apple/Desktop/WCE Maintains/node_modules/bootstrap/dist/css/bootstrap.css';
+// import '/Users/apple/Desktop/WCE Maintains/node_modules/bootstrap/dist/css/bootstrap.css';
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button1, setButton] = useState(true);
@@ -25,33 +25,38 @@ function Navbar() {
 
   return (
     <>
-      <nav className='navbar'>
-        <div className='navbar-container'>
-          <Link to='/' className='navbar-logo' onClick={closeMobileMenu}><img className='imglog' src="/logo.png"/>
-            <i class='fab fa-typo3' />
+      <nav className="navbar">
+        <div className="navbar-container">
+          <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+            <img className="imglog" src="/logo.png" />
+            <i class="fab fa-typo3" />
           </Link>
-          <div className='menu-icon' onClick={handleClick}>
+          <div className="menu-icon" onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-          <li className='nav-item'>
-              <Link to='/ui/home' className='nav-links' onClick={closeMobileMenu}>
+            <li className="nav-item">
+              <Link
+                to="/ui/home"
+                className="nav-links"
+                onClick={closeMobileMenu}
+              >
                 Home
               </Link>
             </li>
-            <li className='nav-item'>
+            <li className="nav-item">
               <Link
-                to='/services'
-                className='nav-links'
+                to="/services"
+                className="nav-links"
                 onClick={closeMobileMenu}
               >
                 Services
               </Link>
             </li>
-            <li className='nav-item'>
+            <li className="nav-item">
               <Link
-                to='/products'
-                className='nav-links'
+                to="/products"
+                className="nav-links"
                 onClick={closeMobileMenu}
               >
                 Products
@@ -59,11 +64,11 @@ function Navbar() {
             </li>
 
             <li>
-               <Link to='/login' className='nav-links'onClick={closeMobileMenu}>Login</Link> 
-              
+              <Link to="/login" className="nav-links" onClick={closeMobileMenu}>
+                Login
+              </Link>
             </li>
           </ul>
-          
         </div>
       </nav>
     </>
