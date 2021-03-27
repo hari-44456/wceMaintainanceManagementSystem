@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -16,23 +16,14 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { Link } from 'react-router-dom';
 
 function createData(index, complaintTitle, date, status) {
   return { index, complaintTitle, date, status };
 }
 let sel;
-
-const rows = [
-  createData(1, 'First', '12-12-2020', 'Waiting For Approval From HoD'),
-  createData(2, 'Second', '13-12-2020', 'Rejected From Hod'),
-  createData(3, 'Third', '01-01-2021', 'Approved By Administrativ Officer'),
-  createData(4, 'Fourth', '14-02-2021', 'Waiting For Approval From HoD'),
-  createData(5, 'Fifth', '21-12-2022', 'Waiting For Approval From HoD'),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -189,12 +180,10 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete" >
-          
-          <IconButton aria-label="delete" >
-            <DeleteIcon/>
+        <Tooltip title="Delete">
+          <IconButton aria-label="delete">
+            <DeleteIcon />
           </IconButton>
-         
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
@@ -235,13 +224,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable() {
+export default function EnhancedTable({ complaints }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    setRows(
+      complaints.map((complaint, index) =>
+        createData(index + 1, complaint.title, complaint.date, complaint.status)
+      )
+    );
+  }, [complaints]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -252,9 +251,9 @@ export default function EnhancedTable() {
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n.name);
-      
+
       setSelected(newSelecteds);
-      sel=selected
+      sel = selected;
       return;
     }
     setSelected([]);
@@ -328,7 +327,7 @@ export default function EnhancedTable() {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -337,15 +336,24 @@ export default function EnhancedTable() {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell
-                        // component="th"
-                        // id={labelId}
-                        // scope="row"
-                        // padding="none"
-                        align="centre"
+                      <Link
+                        to={{
+                          pathname: '/ui/complaint',
+                          state: {
+                            complaintId: complaints[row.index - 1]._id,
+                          },
+                        }}
                       >
-                        {row.index}
-                      </TableCell>
+                        <TableCell
+                          // component="th"
+                          // id={labelId}
+                          // scope="row"
+                          // padding="none"
+                          align="centre"
+                        >
+                          {row.index}
+                        </TableCell>
+                      </Link>
                       <TableCell align="center">{row.complaintTitle}</TableCell>
                       <TableCell align="center">{row.date}</TableCell>
                       <TableCell align="center">{row.status}</TableCell>
