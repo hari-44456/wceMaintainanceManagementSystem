@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
-import UserComplaintValidator from '../utils/UserComplaintValidator';
+import UserComplaintFormValidator from '../utils/UserComplaintFormValidator';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -56,7 +56,7 @@ export default function UserComplaintForm() {
         event.preventDefault();
 
         try{
-            UserComplaintValidator()
+            UserComplaintFormValidator()
             .validate({
                 department,
                 location,
