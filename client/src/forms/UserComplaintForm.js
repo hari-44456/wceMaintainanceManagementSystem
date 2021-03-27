@@ -8,7 +8,7 @@ import {
     FormLabel,
     FormGroup,
     FormControlLabel,
-    Checkbox,
+    Radio,
 } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
@@ -37,11 +37,8 @@ export default function UserComplaintForm() {
 
     const [department, setDepartment] = useState('');
     const [location, setLocation] = useState('');
-    const [elecetricalCheck, setElecetricalCheck] = useState(false);
-    const [plumbingCheck, setPlumbingCheck] = useState(false);
-    const [furnitureCheck, setFurnitureCheck] = useState(false);
-    const [repairCheck, setRepairCheck] = useState(false)
-    const [otherCheck, setOtherCheck] = useState(false)
+    const [workType, setWorkType] = useState('')
+    const [workDetails, setWorkDetails] = useState('')
     const [errors, setErrors] = useState({});
 
     const resetForm = () => {
@@ -51,90 +48,75 @@ export default function UserComplaintForm() {
     };
 
     const handleChange = (event) => {
-        switch(event.target.name){
-            case 'Electrical':
-                setElecetricalCheck(!elecetricalCheck)
-                break;
-            case 'Plumbing':
-                setPlumbingCheck(!plumbingCheck);
-                break;
-            case 'Furniture':
-                setFurnitureCheck(!furnitureCheck);
-                break;
-            case 'Repair':
-                setRepairCheck(!repairCheck);
-                break;
-            default:
-                setOtherCheck(!otherCheck);
-                break;
-        }
+        setWorkType(event.target.value);
     }
 
-  const submitHandler = async (event) => {
-    // event.preventDefault();
-    // try {
-    //   LoginValidator()
-    //     .validate({
-    //       username: department,
-    //       password,
-    //     })
-    //     .then(
-    //       () => resetForm(),
-    //       (error) => setErrors(error.errors)
-    //     );
+    const submitHandler = async (event) => {
+        console.log(workDetails)
+        // event.preventDefault();
+        // try {
+        //   LoginValidator()
+        //     .validate({
+        //       username: department,
+        //       password,
+        //     })
+        //     .then(
+        //       () => resetForm(),
+        //       (error) => setErrors(error.errors)
+        //     );
 
-    //   const data = {
-    //     username: department,
-    //     password,
-    //   };
+        //   const data = {
+        //     username: department,
+        //     password,
+        //   };
 
-    //   history.push(`/ui/dashboard/${type}`);
-    // } catch (err) {
-    //   try {
-    //     setLoginError(err.response.data.error);
-    //   } catch (error) {
-    //     setLoginError('Invalid Credentials');
-    //   }
-    // }
-  };
+        //   history.push(`/ui/dashboard/${type}`);
+        // } catch (err) {
+        //   try {
+        //     setLoginError(err.response.data.error);
+        //   } catch (error) {
+        //     setLoginError('Invalid Credentials');
+        //   }
+        // }
+    };
 
     return (
-        <Grid>
-            <form className="login-form">
-                <Grid md={4} xs={12}>
+        <form className="login-form">
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={4}>
                     <Grid>
                         <FormControl className={classes.formControl}>
                             <TextField
-                            className={classes.style}
-                            fullWidth
-                            required
-                            autoFocus
-                            inputProps={{ 'data-testid': 'username' }}
-                            label="Department"
-                            variant="outlined"
-                            size="small"
-                            value={department}
-                            onChange={(event) => setDepartment(event.target.value)}
-                            error={!!errors.department}
-                            helperText={errors.department ? errors.department[0] : null}
+                                className={classes.style}
+                                fullWidth
+                                required
+                                autoFocus
+                                inputProps={{ 'data-testid': 'username' }}
+                                label="Department"
+                                variant="outlined"
+                                size="small"
+                                value={department}
+                                onChange={(event) => setDepartment(event.target.value)}
+                                error={!!errors.department}
+                                helperText={errors.department ? errors.department[0] : null}
                             />
                         </FormControl>
                     </Grid>
                     <Grid>
                         <FormControl className={classes.formControl}>
                             <TextField
-                            className={classes.style}
-                            fullWidth
-                            required
-                            autoFocus
-                            inputProps={{ 'data-testid': 'location' }}
-                            label="Room/Location"
-                            variant="outlined"
-                            size="small"
-                            value={location}
-                            onChange={(event) => setLocation(event.target.value)}
-                            error={!!errors.location}
-                            helperText={errors.location ? errors.location[0] : null}
+                                className={classes.style}
+                                fullWidth
+                                required
+                                autoFocus
+                                inputProps={{ 'data-testid': 'location' }}
+                                label="Room/Location"
+                                variant="outlined"
+                                size="small"
+                                value={location}
+                                onChange={(event) => setLocation(event.target.value)}
+                                error={!!errors.location}
+                                helperText={errors.location ? errors.location[0] : null}
                             />
                         </FormControl>
                     </Grid>
@@ -148,32 +130,67 @@ export default function UserComplaintForm() {
                             </FormLabel>
                             <FormGroup>
                                 <Grid container>
-                                    <Grid item xs={6}>
-                                        <FormControlLabel
-                                            control={<Checkbox checked={elecetricalCheck} onChange={handleChange} name="Electrical" />}
+                                    <Grid item xs={6} md={6}>
+                                    <FormControlLabel
+                                            control={
+                                                <Radio
+                                                    value='Electrical'
+                                                    checked={workType === 'Electrical'} 
+                                                    onChange={handleChange} 
+                                                    name="Repair" 
+                                                />
+                                            }
                                             label="Electrical"
                                         />
                                         <FormControlLabel
-                                            control={<Checkbox checked={plumbingCheck} onChange={handleChange} name="Plumbing" />}
+                                            control={
+                                                <Radio
+                                                    value='Plumbing'
+                                                    checked={workType === 'Plumbing'} 
+                                                    onChange={handleChange} 
+                                                    name="Plumbing" 
+                                                />
+                                            }
                                             label="Plumbing"
                                         />
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} md={6}>
                                         <FormControlLabel
-                                            control={<Checkbox checked={repairCheck} onChange={handleChange} name="Repair" />}
+                                            control={
+                                                <Radio
+                                                    value='Repair'
+                                                    checked={workType === 'Repair'} 
+                                                    onChange={handleChange} 
+                                                    name="Repair" 
+                                                />
+                                            }
                                             label="Repair"
                                         />
                                         <FormControlLabel
-                                            control={<Checkbox checked={furnitureCheck} onChange={handleChange} name="Furniture" />}
+                                            control={
+                                                <Radio
+                                                    value='Furniture'
+                                                    checked={workType === 'Furniture'} 
+                                                    onChange={handleChange} 
+                                                    name="Furniture" 
+                                                />
+                                            }
                                             label="Furniture"
                                         />
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <FormControlLabel
-                                        control={<Checkbox checked={otherCheck} onChange={handleChange} name="Other" />}
-                                        label="Other"
-                                    />
+                                <Grid item xs={12} md={12}>
+                                        <FormControlLabel
+                                            control={
+                                                <Radio
+                                                    value='Other'
+                                                    checked={workType === 'Other'} 
+                                                    onChange={handleChange} 
+                                                    name="Other" 
+                                                />
+                                            }
+                                            label="Other"
+                                        />
                                 </Grid>
                             </FormGroup>
                         </FormControl>
@@ -185,20 +202,37 @@ export default function UserComplaintForm() {
                     >
                         {errors['non_field_errors'] ? errors['non_field_errors'][0] : null}
                     </Typography>
-                    <Grid container justify="center" alignItems="center">
-                        <Button
-                            className={[classes.button, classes.style].join(' ')}
-                            type="submit"
-                            size="large"
-                            color="secondary"
-                            variant="contained"
-                            onClick={submitHandler}
-                        >
-                            Submit
-                        </Button>
-                    </Grid>
                 </Grid>
-            </form>
-        </Grid>
+                <Grid item xs={12} md={8}>
+                    <FormControl className={classes.formControl}>
+                        <TextField
+                            className={classes.style}
+                            fullWidth
+                            multiline
+                            rows={4}
+                            rowsMax={4}
+                            variant="outlined"
+                            label="Details of Work"
+                            size="small"
+                            value={workDetails}
+                            onChange={(event) => setWorkDetails(event.target.value)}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid container justify="center" alignItems="center">
+                    <Button
+                        className={[classes.button, classes.style].join(' ')}
+                        type="submit"
+                        fullWidth
+                        size="large"
+                        color="secondary"
+                        variant="contained"
+                        onClick={submitHandler}
+                    >
+                        Submit
+                    </Button>
+                </Grid>
+            </Grid>
+        </form>
     );
 }

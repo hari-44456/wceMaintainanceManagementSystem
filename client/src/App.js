@@ -10,7 +10,7 @@ import { Container } from '@material-ui/core';
 import Login from './auth';
 import Dashboards from './dashboards';
 import Home from './Home/pages';
-import '../node_modules/bootstrap/dist/css/bootstrap.css';
+import UserComplaintForm from './forms/UserComplaintForm';
 
 const App = () => {
   return (
@@ -21,6 +21,7 @@ const App = () => {
           <Route exact path="/ui" component={Home} />
           <Route path="/ui/login" component={Login} />
           <Route path="/ui/dashboard" component={Dashboards} />
+          <Route path="/ui/form" component={UserComplaintForm} />
         </Switch>
       </Container>
     </Router>
