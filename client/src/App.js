@@ -18,7 +18,7 @@ const App = () => {
       <Container className="App">
         <Switch>
           <Redirect exact from="/" to={'/ui'} />
-          <Route path="/ui" component={Home} />
+          <Route exact path="/ui" component={Home} />
           <Route path="/ui/login" component={Login} />
           <Route path="/ui/dashboard" component={Dashboards} />
         </Switch>
