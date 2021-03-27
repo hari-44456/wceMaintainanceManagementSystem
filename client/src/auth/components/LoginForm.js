@@ -88,9 +88,11 @@ export default function LoginForm({ type }) {
         case 3:
           typeCheck = 'commitee';
           break;
+        default:
+          break;
       }
 
-      if (!result.data.success || typeCheck != type) throw new Error();
+      if (!result.data.success || typeCheck !== type) throw new Error();
 
       history.push(`/ui/dashboard/${type}`);
     } catch (err) {

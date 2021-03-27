@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
+import UserComplaintValidator from '../utils/UserComplaintValidator';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -52,32 +53,23 @@ export default function UserComplaintForm() {
     }
 
     const submitHandler = async (event) => {
-        console.log(workDetails)
-        // event.preventDefault();
-        // try {
-        //   LoginValidator()
-        //     .validate({
-        //       username: department,
-        //       password,
-        //     })
-        //     .then(
-        //       () => resetForm(),
-        //       (error) => setErrors(error.errors)
-        //     );
+        event.preventDefault();
 
-        //   const data = {
-        //     username: department,
-        //     password,
-        //   };
-
-        //   history.push(`/ui/dashboard/${type}`);
-        // } catch (err) {
-        //   try {
-        //     setLoginError(err.response.data.error);
-        //   } catch (error) {
-        //     setLoginError('Invalid Credentials');
-        //   }
-        // }
+        try{
+            UserComplaintValidator()
+            .validate({
+                department,
+                location,
+                workType,
+                workDetails
+            })
+            .then(
+                () => resetForm(),
+                (error) => setErrors(error.errors)
+            );
+        }catch(error){
+            setErrors(error.errors);
+        }
     };
 
     return (
@@ -194,14 +186,14 @@ export default function UserComplaintForm() {
                                 </Grid>
                             </FormGroup>
                         </FormControl>
+                        <Typography
+                            variant="subtitle2"
+                            color="error"
+                            data-testid="non-field-errors"
+                        >
+                            {errors['workType'] ? errors['workType'][0] : null}
+                        </Typography>
                     </Grid>
-                    <Typography
-                        variant="subtitle2"
-                        color="error"
-                        data-testid="non-field-errors"
-                    >
-                        {errors['non_field_errors'] ? errors['non_field_errors'][0] : null}
-                    </Typography>
                 </Grid>
                 <Grid item xs={12} md={8}>
                     <FormControl className={classes.formControl}>
@@ -216,6 +208,8 @@ export default function UserComplaintForm() {
                             size="small"
                             value={workDetails}
                             onChange={(event) => setWorkDetails(event.target.value)}
+                            error={!!errors.workDetails}
+                            helperText={errors.workDetails ? errors.workDetails[0] : null}
                         />
                     </FormControl>
                 </Grid>

@@ -10,7 +10,7 @@ import { Container } from '@material-ui/core';
 import Login from './auth';
 import Dashboards from './dashboards';
 import Home from './Home/pages';
-import UserComplaintForm from './forms/UserComplaintForm';
+import UserComplaintForm from './forms/components/UserComplaintForm';
 
 const App = () => {
   return (
