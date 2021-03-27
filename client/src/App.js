@@ -5,28 +5,23 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { Container, Paper } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 
 import Login from './auth';
-import Dashboards from './Dashboards';
-import Form from './forms/UserComplaintForm';
-
+import Dashboards from './dashboards';
+import Home from './Home/pages';
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 const App = () => {
   return (
     <Router>
       <Container className="App">
-        <Paper>
-          <Container>
-            <Switch>
-              <Redirect exact from="/" to={'/ui'} />
-              <Route path="/ui/login" component={Login} />
-              <Route path="/ui/dashboard" component={Dashboards} />
-              <Route path="/ui/form" component={Form} />
-            </Switch>
-          </Container>
-        </Paper>
+        <Switch>
+          <Redirect exact from="/" to={'/ui'} />
+          <Route exact path="/ui" component={Home} />
+          <Route path="/ui/login" component={Login} />
+          <Route path="/ui/dashboard" component={Dashboards} />
+        </Switch>
       </Container>
     </Router>
   );
