@@ -43,8 +43,8 @@ export default function UserComplaintForm() {
     const [errors, setErrors] = useState({});
 
     const resetForm = () => {
-        setDepartment('');
-        setLocation('');
+        // setDepartment('');
+        // setLocation('');
         setErrors({});
     };
 
@@ -52,7 +52,7 @@ export default function UserComplaintForm() {
         setWorkType(event.target.value);
     }
 
-    const submitHandler = async (event) => {
+    const submitHandler = (event) => {
         event.preventDefault();
 
         try{
@@ -73,7 +73,7 @@ export default function UserComplaintForm() {
     };
 
     return (
-        <form className="login-form">
+        <form className="user-complaint-form">
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                     <Grid>
