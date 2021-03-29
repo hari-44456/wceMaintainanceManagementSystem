@@ -10,7 +10,6 @@ import {
     FormControlLabel,
     Radio,
 } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import UserComplaintFormValidator from '../utils/UserComplaintFormValidator';
 
@@ -20,18 +19,12 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(2, 0),
     },
     style: {
-        margin: theme.spacing(1, 0),
+        margin: theme.spacing(2, 0),
     },
     formControl: {
         width: '100%',
     }
 }));
-
-const DisplayAlert = ({ error }) => (
-  <Alert severity="error">
-    <AlertTitle>{error}</AlertTitle>
-  </Alert>
-);
 
 export default function UserComplaintForm() {
     const classes = useStyles();
@@ -114,22 +107,24 @@ export default function UserComplaintForm() {
                     </Grid>
                     <Grid className={classes.style}>
                         <FormControl component="fieldset" className={classes.formControl}>
-                            <FormLabel component='label'>
-                                Nature of Work  
-                                <Typography variant="caption">
-                                    (Mark Appropriate)
-                                </Typography>
-                            </FormLabel>
+                            <Grid>
+                                <FormLabel component='label' error={!!errors.workType}>
+                                    Nature of Work  
+                                    <Typography variant="caption">
+                                        (Mark Appropriate)
+                                    </Typography>
+                                </FormLabel>
+                            </Grid>
                             <FormGroup>
                                 <Grid container>
                                     <Grid item xs={6} md={6}>
-                                    <FormControlLabel
+                                        <FormControlLabel
                                             control={
                                                 <Radio
                                                     value='Electrical'
                                                     checked={workType === 'Electrical'} 
                                                     onChange={handleChange} 
-                                                    name="Repair" 
+                                                    name="Electrical" 
                                                 />
                                             }
                                             label="Electrical"

@@ -11,6 +11,7 @@ import Login from './auth';
 import Dashboards from './dashboards';
 import Home from './Home/pages';
 import UserComplaintForm from './forms/components/UserComplaintForm';
+import HodForm from './forms/components/HodForm';
 
 const App = () => {
   return (
@@ -21,7 +22,8 @@ const App = () => {
           <Route exact path="/ui" component={Home} />
           <Route path="/ui/login" component={Login} />
           <Route path="/ui/dashboard" component={Dashboards} />
-          <Route path="/ui/form" component={UserComplaintForm} />
+          <Route exact path="/ui/forms/complaint" component={UserComplaintForm} />
+          <Route exact path="/ui/forms/hod" component={HodForm} />
         </Switch>
       </Container>
     </Router>
