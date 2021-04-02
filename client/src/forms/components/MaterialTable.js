@@ -9,7 +9,7 @@ import {
     TableBody,
     IconButton
 } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+import { DeleteOutline, Edit } from '@material-ui/icons';
 
 export default function MaterialTable({ data, setData }) {
     const deleteHandler = (index) => {
@@ -36,12 +36,12 @@ export default function MaterialTable({ data, setData }) {
                             <TableCell component="th" scope="row" align="right">{item.approxCost}</TableCell>
                             <TableCell align="right">
                                 <IconButton size='small'>
-                                    <Edit fontSize='small' />
+                                    <Edit style={{ color: 'black' }} fontSize='small' />
                                 </IconButton>
                             </TableCell>
                             <TableCell align="center">
                                 <IconButton size='small' onClick={() => deleteHandler(index)}>
-                                    <Delete fontSize='small' />
+                                    <DeleteOutline style={{ color: 'red' }} fontSize='small' />
                                 </IconButton>
                             </TableCell>
                         </TableRow>
