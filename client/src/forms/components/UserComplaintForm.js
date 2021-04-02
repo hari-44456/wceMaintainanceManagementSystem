@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(2, 0),
     },
     style: {
-        margin: theme.spacing(2, 0),
+        margin: theme.spacing(1, 0),
     },
     formControl: {
         width: '100%',
@@ -83,7 +83,7 @@ export default function UserComplaintForm() {
                                 value={department}
                                 onChange={(event) => setDepartment(event.target.value)}
                                 error={!!errors.department}
-                                helperText={errors.department ? errors.department[0] : null}
+                                helperText={errors.department ? errors.department[0] : ' '}
                             />
                         </FormControl>
                     </Grid>
@@ -101,7 +101,7 @@ export default function UserComplaintForm() {
                                 value={location}
                                 onChange={(event) => setLocation(event.target.value)}
                                 error={!!errors.location}
-                                helperText={errors.location ? errors.location[0] : null}
+                                helperText={errors.location ? errors.location[0] : ' '}
                             />
                         </FormControl>
                     </Grid>
@@ -186,7 +186,7 @@ export default function UserComplaintForm() {
                             color="error"
                             data-testid="non-field-errors"
                         >
-                            {errors['workType'] ? errors['workType'][0] : null}
+                            {errors['workType'] ? errors['workType'][0] : ' '}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -204,7 +204,7 @@ export default function UserComplaintForm() {
                             value={workDetails}
                             onChange={(event) => setWorkDetails(event.target.value)}
                             error={!!errors.workDetails}
-                            helperText={errors.workDetails ? errors.workDetails[0] : null}
+                            helperText={errors.workDetails ? errors.workDetails[0] : ' '}
                         />
                     </FormControl>
                 </Grid>

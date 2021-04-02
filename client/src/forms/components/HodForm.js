@@ -130,7 +130,7 @@ export default function HodForm(){
                             color="error"
                             data-testid="non-field-errors"
                         >
-                            {errors['fundSource'] ? errors['fundSource'][0] : null}
+                            {errors['fundSource'] ? errors['fundSource'][0] : ' '}
                         </Typography>
                     </FormGroup>
                 </Grid>

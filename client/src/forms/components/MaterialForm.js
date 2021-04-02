@@ -2,10 +2,11 @@ import React,{useState} from 'react';
 import { FormControl, 
     Grid, 
     TextField, 
-    Typography, 
     Button, 
 } from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
+
+import MaterialFormValidator from '../utils/MaterialFormValidator';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -25,12 +26,33 @@ const useStyles = makeStyles((theme) => ({
 export default function MaterialForm({ type, submitHandler}){
     const classes = useStyles();
 
-    const [storeMaterial, setstoreMaterial] = useState('');
+    const [material, setMaterial] = useState('');
     const [approxCost, setApproxCost] = useState(0);
+    const [errors, setErrors] = useState({});
+
+    const resetForm = () => {
+        setMaterial('');
+        setApproxCost(0);
+    }
 
     const addHandler = (event) => {
-        submitHandler(storeMaterial,approxCost);
         event.preventDefault();
+        try{
+            MaterialFormValidator()
+            .validate({
+                material,
+                approxCost
+            })
+            .then(() => {
+                submitHandler(material,approxCost);
+                resetForm();
+                setErrors({});
+            }, error => {
+                setErrors(error.errors);
+            })
+        }catch(error){
+            setErrors(error.errors);
+        }
     }
 
     return(
@@ -45,10 +67,10 @@ export default function MaterialForm({ type, submitHandler}){
                             inputProps={{ 'data-testid': 'material' }}
                             label="Material Issued"
                             size="small"
-                            value={storeMaterial}
-                            onChange={(event) => setstoreMaterial(event.target.value)}
-                            // error={!!errors.department}
-                            // helperText={errors.department ? errors.department[0] : null}
+                            value={material}
+                            onChange={(event) => setMaterial(event.target.value)}
+                            error={!!errors.material}
+                            helperText={errors.material ? errors.material[0] : ' '}
                         />
                     </FormControl>
                 </Grid>
@@ -65,8 +87,8 @@ export default function MaterialForm({ type, submitHandler}){
                             size="small"
                             value={approxCost}
                             onChange={(event) => setApproxCost(event.target.value)}
-                            // error={!!errors.department}
-                            // helperText={errors.department ? errors.department[0] : null}
+                            error={!!errors.approxCost}
+                            helperText={errors.approxCost ? errors.approxCost[0] : ' '}
                         />
                     </FormControl>
                 </Grid>

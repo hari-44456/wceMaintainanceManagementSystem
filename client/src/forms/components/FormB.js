@@ -2,6 +2,7 @@ import React,{useEffect, useState} from 'react';
 import { Grid, Typography } from '@material-ui/core';
 
 import MaterialForm from './MaterialForm';
+import MaterialTable from './MaterialTable';
 
 export default function FormB(){
     const [storeMaterial, setStoreMaterial] = useState([]);
@@ -30,6 +31,9 @@ export default function FormB(){
                 <Grid>
                     <MaterialForm type = {'available'} submitHandler = {availableHandler} />
                 </Grid>
+                <Grid>
+                    <MaterialTable data={storeMaterial} />
+                </Grid>
             </Grid>
 
             <br/>
@@ -42,6 +46,9 @@ export default function FormB(){
                 </Grid>
                 <Grid>
                     <MaterialForm type = {'ordered'} submitHandler = {orderedHandler } />
+                </Grid>
+                <Grid>
+                    <MaterialTable data = {orderedMaterial} />
                 </Grid>
             </Grid>
         </Grid>
