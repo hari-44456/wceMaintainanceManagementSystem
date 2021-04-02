@@ -13,9 +13,8 @@ import {
 import { DeleteOutline, Edit } from '@material-ui/icons';
 import CheckIcon from '@material-ui/icons/Check';
 
-export default function MaterialTable({ type, data, setData }) {
+export default function MaterialTable({ data, setData }) {
   const [currentlyEditing, setCurrentlyEditing] = useState({
-    type,
     index: -1,
     material: null,
     approxCost: 0,
@@ -29,38 +28,25 @@ export default function MaterialTable({ type, data, setData }) {
     );
   };
 
-  const editHandler = (type, index) => {
+  const editHandler = (index) => {
     setCurrentlyEditing({
-      type,
       index,
-      material:
-        type === 'available'
-          ? data[index].singleStoreMaterial
-          : data[index].singleOrderedMaterial,
-      approxCost:
-        type === 'available'
-          ? data[index].singleStoreApproxCost
-          : data[index].singleOrderedApproxCost,
+      material: data[index].material,
+
+      approxCost: data[index].approxCost,
     });
   };
 
   const handleStopEditing = () => {
     const updatedData = [...data];
 
-    if (type === 'available')
-      updatedData[currentlyEditing.index] = {
-        singleStoreMaterial: currentlyEditing.material,
-        singleStoreApproxCost: currentlyEditing.approxCost,
-      };
-    else
-      updatedData[currentlyEditing.index] = {
-        singleOrderedMaterial: currentlyEditing.material,
-        singleOrderedApproxCost: currentlyEditing.approxCost,
-      };
+    updatedData[currentlyEditing.index] = {
+      material: currentlyEditing.material,
+      approxCost: currentlyEditing.approxCost,
+    };
 
     setData(updatedData);
     setCurrentlyEditing({
-      ...currentlyEditing,
       index: -1,
       material: null,
       approxCost: 0,
@@ -82,8 +68,7 @@ export default function MaterialTable({ type, data, setData }) {
           {data.map((item, index) => (
             <TableRow key={index}>
               <TableCell scope="row">
-                {currentlyEditing.type === type &&
-                currentlyEditing.index === index ? (
+                {currentlyEditing.index === index ? (
                   <TextField
                     name="material"
                     defaultValue={currentlyEditing.material}
@@ -95,15 +80,12 @@ export default function MaterialTable({ type, data, setData }) {
                       })
                     }
                   />
-                ) : type === 'available' ? (
-                  item.singleStoreMaterial
                 ) : (
-                  item.singleOrderedMaterial
+                  item.material
                 )}
               </TableCell>
               <TableCell component="th" scope="row" align="right">
-                {currentlyEditing.type === type &&
-                currentlyEditing.index === index ? (
+                {currentlyEditing.index === index ? (
                   <TextField
                     type="number"
                     name="approxCost"
@@ -115,15 +97,13 @@ export default function MaterialTable({ type, data, setData }) {
                       })
                     }
                   />
-                ) : type === 'available' ? (
-                  item.singleStoreApproxCost
                 ) : (
-                  item.singleOrderedApproxCost
+                  item.approxCost
                 )}
               </TableCell>
               <TableCell align="right">
                 <IconButton size="small">
-                  {currentlyEditing.index !== -1 ? (
+                  {currentlyEditing.index === index ? (
                     <CheckIcon
                       style={{ color: 'red' }}
                       fontSize="small"
@@ -133,7 +113,7 @@ export default function MaterialTable({ type, data, setData }) {
                     <Edit
                       style={{ color: 'red' }}
                       fontSize="small"
-                      onClick={() => editHandler(type, index)}
+                      onClick={() => editHandler(index)}
                     />
                   )}
                 </IconButton>

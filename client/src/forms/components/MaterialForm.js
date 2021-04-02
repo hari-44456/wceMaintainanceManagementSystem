@@ -19,16 +19,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MaterialForm({
-  type,
-  submitHandler,
-  material,
-  setMaterial,
-  approxCost,
-  setApproxCost,
-}) {
+export default function MaterialForm({ type, submitHandler }) {
   const classes = useStyles();
 
+  const [material, setMaterial] = useState('');
+  const [approxCost, setApproxCost] = useState(0);
   const [errors, setErrors] = useState({});
 
   const resetForm = () => {
