@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     TableContainer, 
     Paper, 
@@ -11,15 +11,40 @@ import {
 } from '@material-ui/core';
 import { DeleteOutline, Edit } from '@material-ui/icons';
 
+import Confirmation from '../../helpers/components/Confirmation';
+import PopOver from '../../helpers/components/PopOver';
+
 export default function MaterialTable({ data, setData }) {
-    const deleteHandler = (index) => {
+    const [popoverEvent, setPopoverEvent] = useState(null);
+    const [popoverVisible, setPopoverVisible] = useState(false);
+    const [delIndex, setDelIndex] = useState(-1);
+
+    const resetPopoverStates = () => {
+        setPopoverEvent(null);
+        setPopoverVisible(false);
+        setDelIndex(-1);
+    };
+
+    const showPopover = (event,index) => {
+        setDelIndex(index);
+        setPopoverEvent(event.target);
+        setPopoverVisible(true);
+    };
+
+    const deleteHandler = () => {
         setData(data.filter((item,i) => {
-            return i !== index;
-        }))
+            return i !== delIndex;
+        }));
+        resetPopoverStates();
     }
+
+    const popoverContent = (
+        <Confirmation confirmText={'Are you sure?'} onResolve={deleteHandler} onReject={resetPopoverStates} />
+    );
     
     return(
         <TableContainer component={Paper}>
+            {popoverVisible ? <PopOver event={popoverEvent} content={popoverContent} /> : null}
             <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
@@ -40,7 +65,7 @@ export default function MaterialTable({ data, setData }) {
                                 </IconButton>
                             </TableCell>
                             <TableCell align="center">
-                                <IconButton size='small' onClick={() => deleteHandler(index)}>
+                                <IconButton size='small' onClick={(event) => showPopover(event,index)}>
                                     <DeleteOutline style={{ color: 'red' }} fontSize='small' />
                                 </IconButton>
                             </TableCell>
