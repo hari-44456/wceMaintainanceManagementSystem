@@ -74,8 +74,6 @@ export default function FormB() {
               type={'available'}
               data={storeMaterial}
               setData={setStoreMaterial}
-              setMaterial={setSingleStoreMaterial}
-              setApproxCost={setSingleStoreApproxCost}
             />
           </Grid>
         </Grid>
@@ -103,8 +101,6 @@ export default function FormB() {
               type={'ordered'}
               data={orderedMaterial}
               setData={setOrderedMaterial}
-              setMaterial={setSingleOrderedMaterial}
-              setApproxCost={setSingleOrderedApproxCost}
             />
           </Grid>
         </Grid>
