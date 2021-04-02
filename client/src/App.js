@@ -12,6 +12,7 @@ import Dashboards from './dashboards';
 import Home from './Home/pages';
 import UserComplaintForm from './forms/components/UserComplaintForm';
 import HodForm from './forms/components/HodForm';
+import FormB from './forms/components/FormB';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/ui/dashboard" component={Dashboards} />
           <Route exact path="/ui/forms/complaint" component={UserComplaintForm} />
           <Route exact path="/ui/forms/hod" component={HodForm} />
+          <Route exact path='/ui/forms/formb' component={FormB} />
         </Switch>
       </Container>
     </Router>
