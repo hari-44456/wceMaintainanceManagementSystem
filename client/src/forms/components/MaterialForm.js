@@ -8,7 +8,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import MaterialFormValidator from '../utils/MaterialFormValidator';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     button: {
         borderRadius: 0,
     },
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MaterialForm({ type, submitHandler}){
+export default function MaterialForm({ submitHandler}){
     const classes = useStyles();
 
     const [material, setMaterial] = useState('');
@@ -44,9 +44,12 @@ export default function MaterialForm({ type, submitHandler}){
                 approxCost
             })
             .then(() => {
-                submitHandler(material,approxCost);
-                resetForm();
-                setErrors({});
+                submitHandler(material,approxCost).then(() => {
+                    resetForm();
+                    setErrors({});
+                }, error => {
+                    setErrors(error.errors);
+                })
             }, error => {
                 setErrors(error.errors);
             })
