@@ -24,13 +24,10 @@ const useStyles = makeStyles(() => ({
           "-webkit-appearance": "none",
           margin: 0
         }
-    },
-    inputLabel: {
-        textAlign: 'right',
     }
 }))
 
-export default function MaterialTable({ data, setData }) {
+export default function MaterialTable({ data, otherData, setData }) {
     const classes = useStyles();
 
     const [material, setMaterial] = useState('');
@@ -56,10 +53,13 @@ export default function MaterialTable({ data, setData }) {
         setPopoverVisible(true);
     };
 
-    const isMaterialExists = (array, value) => array.findIndex((item) => item.material === value) >= 1;
+    const isMaterialExists = (array, value) => (
+        array.filter((item) => item.material === value).length > 1
+    )
 
     const checkDuplicate = (material) => {
-        if (!isMaterialExists(data, material)){
+        console.log(otherData);
+        if (!isMaterialExists(data, material.trim()) && !isMaterialExists(otherData, material.trim())){
             setErrors({});
             return Promise.resolve({
                 status: true,
@@ -67,7 +67,7 @@ export default function MaterialTable({ data, setData }) {
             });
         } else{
             const error = {
-                material: ['Material already Exists']
+                material: ['Material Exists']
             }
             setErrors(error);
             return Promise.reject({
@@ -106,7 +106,10 @@ export default function MaterialTable({ data, setData }) {
                 });
 
                 const editedData = [...data];
-                editedData[index] = {material,approxCost};
+                editedData[index] = {
+                    material: material.trim(),
+                    approxCost
+                };
                 setData(editedData);
             }, error => {
                 console.log(error)
@@ -122,7 +125,7 @@ export default function MaterialTable({ data, setData }) {
         <Confirmation confirmText={'Are you sure?'} onResolve={deleteHandler} onReject={resetPopoverStates} />
     );
 
-    const editModeForm = (index,item) => {
+    const editModeForm = (index) => {
         return (
             <TableRow key={index}>
                 <TableCell component="th" scope="row" width='50%'>
@@ -146,14 +149,10 @@ export default function MaterialTable({ data, setData }) {
                         <TextField
                             className={classes.costInput}
                             inputProps={{
-                                shrink: true,
                                 'data-testid': 'cost', 
                                 style: { textAlign: 'right' }
                             }}
-                            InputLabelProps={{
-                                shrink: true,
-                                classes: classes.inputLabel
-                            }}
+                            InputLabelProps={{ shrink: true}}
                             type='number'
                             fullWidth
                             required
@@ -210,7 +209,7 @@ export default function MaterialTable({ data, setData }) {
                     {data.map((item,index) => (
                         <React.Fragment key={index}>
                             {inEditMode.state && inEditMode.row === index
-                                ? (editModeForm(index,item)) : (displayInfo(index,item))
+                                ? (editModeForm(index)) : (displayInfo(index,item))
                             }
                         </React.Fragment>
                     ))}

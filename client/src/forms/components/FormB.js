@@ -5,17 +5,22 @@ import MaterialForm from './MaterialForm';
 import MaterialTable from './MaterialTable';
 
 export default function FormB(){
-    const [storeMaterial, setStoreMaterial] = useState([]);
+    const [availableMaterial, setAvailableMaterial] = useState([]);
     const [orderedMaterial, setOrderedMaterial] = useState([]);
     const [errors, setErrors] = useState({});
 
     // useEffect(() => {}, [storeMaterial,orderedMaterial])
 
-    const isMaterialExists = (array, value) => array.findIndex((item) => item.material === value) >= 0;
+    const isMaterialExists = (array, value) => (
+        array.filter((item) => item.material === value).length > 0
+    )
 
     const addAvailableHandler = (material, approxCost) => {
-        if (!isMaterialExists(storeMaterial, material)){
-            setStoreMaterial([...storeMaterial, { material, approxCost }]);
+        if (!isMaterialExists(availableMaterial, material.trim()) && !isMaterialExists(orderedMaterial, material.trim())){
+            setAvailableMaterial([...availableMaterial, { 
+                material: material.trim(), 
+                approxCost 
+            }]);
             setErrors({});
             return Promise.resolve({
                 status: true,
@@ -24,7 +29,7 @@ export default function FormB(){
         }
         else{
             setErrors({
-                material: ['Material already Added']
+                material: ['Material already Exists']
             });
             return Promise.reject({
                 status: false,
@@ -34,8 +39,11 @@ export default function FormB(){
     };
 
     const addOrderedHandler = (material, approxCost) => {
-        if (!isMaterialExists(orderedMaterial, material)){
-            setOrderedMaterial([...orderedMaterial, { material, approxCost }]);
+        if (!isMaterialExists(orderedMaterial, material.trim()) && !isMaterialExists(availableMaterial, material.trim())){
+            setOrderedMaterial([...orderedMaterial, { 
+                material: material.trim(), 
+                approxCost 
+            }]);
             setErrors({});
             return Promise.resolve({
                 status: true,
@@ -63,10 +71,10 @@ export default function FormB(){
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <MaterialForm type = {'available'} submitHandler = {addAvailableHandler} />
+                        <MaterialForm submitHandler = {addAvailableHandler} />
                     </Grid>
                     <Grid item xs={12}>
-                        <MaterialTable data={storeMaterial} setData = {setStoreMaterial} />
+                        <MaterialTable data={availableMaterial} otherData={orderedMaterial} setData = {setAvailableMaterial} />
                     </Grid>
                 </Grid>
             </Grid>    
@@ -79,10 +87,10 @@ export default function FormB(){
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <MaterialForm type = {'ordered'} submitHandler = {addOrderedHandler } />
+                        <MaterialForm submitHandler = {addOrderedHandler } />
                     </Grid>
                     <Grid item xs={12}>
-                        <MaterialTable data = {orderedMaterial} setData = {setOrderedMaterial} />
+                        <MaterialTable data = {orderedMaterial} otherData = {availableMaterial} setData = {setOrderedMaterial} />
                     </Grid>
                 </Grid>
             </Grid>

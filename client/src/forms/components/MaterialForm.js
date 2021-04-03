@@ -85,6 +85,7 @@ export default function MaterialForm({ submitHandler}){
                             fullWidth
                             required
                             autoFocus
+                            InputLabelProps={{ shrink: true}}
                             inputProps={{ 'data-testid': 'cost' }}
                             label="Approx Cost"
                             size="small"
