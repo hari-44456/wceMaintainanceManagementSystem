@@ -53,13 +53,15 @@ export default function MaterialTable({ data, otherData, setData }) {
         setPopoverVisible(true);
     };
 
-    const isMaterialExists = (array, value) => (
-        array.filter((item) => item.material === value).length > 1
-    )
+    function isMaterialExists(array, value) {
+        const items = array.reduce((acc, item, index) => item.material === value ? [...acc, index] : acc, []);
+        return items;
+    }
 
-    const checkDuplicate = (material) => {
-        console.log(otherData);
-        if (!isMaterialExists(data, material.trim()) && !isMaterialExists(otherData, material.trim())){
+    const checkDuplicate = (material, index) => {
+        const allData = [...data, ...otherData];
+        const duplicates = isMaterialExists(allData,material.trim());
+        if (duplicates.length === 0 || (duplicates.length===1 && duplicates.includes(index))){
             setErrors({});
             return Promise.resolve({
                 status: true,
@@ -99,7 +101,7 @@ export default function MaterialTable({ data, otherData, setData }) {
             material,
             approxCost,
         }).then(() => {
-            checkDuplicate(material).then(() => {
+            checkDuplicate(material,index).then(() => {
                 setInEditMode({
                     state: false,
                     row: null
@@ -112,11 +114,9 @@ export default function MaterialTable({ data, otherData, setData }) {
                 };
                 setData(editedData);
             }, error => {
-                console.log(error)
                 setErrors(error.errors);
             })
         }, (error => {
-            console.log(error)
             setErrors(error.errors);
         }))
     };

@@ -11,9 +11,10 @@ export default function FormB(){
 
     // useEffect(() => {}, [storeMaterial,orderedMaterial])
 
-    const isMaterialExists = (array, value) => (
-        array.filter((item) => item.material === value).length > 0
-    )
+    function isMaterialExists(array, value) {
+        const count = array.reduce((acc, item) => item.material === value ? ++acc : acc, 0);
+        return count > 0;
+    }
 
     const addAvailableHandler = (material, approxCost) => {
         if (!isMaterialExists(availableMaterial, material.trim()) && !isMaterialExists(orderedMaterial, material.trim())){
