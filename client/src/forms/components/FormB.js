@@ -1,68 +1,100 @@
-import React, { useState } from 'react';
+import React,{ useState} from 'react';
 import { Grid, Typography } from '@material-ui/core';
 
 import MaterialForm from './MaterialForm';
 import MaterialTable from './MaterialTable';
-import Alert from './Alert';
 
-export default function FormB() {
-  const [storeMaterial, setStoreMaterial] = useState([]);
-  const [orderedMaterial, setOrderedMaterial] = useState([]);
+export default function FormB(){
+    const [availableMaterial, setAvailableMaterial] = useState([]);
+    const [orderedMaterial, setOrderedMaterial] = useState([]);
+    const [errors, setErrors] = useState({});
 
-  const [error, setError] = useState(null);
+    // useEffect(() => {}, [storeMaterial,orderedMaterial])
 
-  // useEffect(() => {}, [storeMaterial,orderedMaterial])
+    function isMaterialExists(array, value) {
+        const count = array.reduce((acc, item) => item.material === value ? ++acc : acc, 0);
+        return count > 0;
+    }
 
-  const isMaterialExists = (array, value) =>
-    array.findIndex((item) => item.material == value) >= 0;
+    const addAvailableHandler = (material, approxCost) => {
+        if (!isMaterialExists(availableMaterial, material.trim()) && !isMaterialExists(orderedMaterial, material.trim())){
+            setAvailableMaterial([...availableMaterial, { 
+                material: material.trim(), 
+                approxCost 
+            }]);
+            setErrors({});
+            return Promise.resolve({
+                status: true,
+                errors: errors
+            });
+        }
+        else{
+            setErrors({
+                material: ['Material already Exists']
+            });
+            return Promise.reject({
+                status: false,
+                errors: errors
+            })
+        }
+    };
 
-  const availableHandler = (material, approxCost) => {
-    if (!isMaterialExists(storeMaterial, material))
-      setStoreMaterial([...storeMaterial, { material, approxCost }]);
-    else setError('Material name already exists');
-  };
+    const addOrderedHandler = (material, approxCost) => {
+        if (!isMaterialExists(orderedMaterial, material.trim()) && !isMaterialExists(availableMaterial, material.trim())){
+            setOrderedMaterial([...orderedMaterial, { 
+                material: material.trim(), 
+                approxCost 
+            }]);
+            setErrors({});
+            return Promise.resolve({
+                status: true,
+                errors: errors
+            });
+        }
+        else{
+            setErrors({
+                material: ['Material already Added']
+            });
+            return Promise.reject({
+                status: false,
+                errors: errors
+            })
+        }
+    };
 
-  const orderedHandler = (material, approxCost) => {
-    if (!isMaterialExists(orderedMaterial, material))
-      setOrderedMaterial([...orderedMaterial, { material, approxCost }]);
-    else setError('Material name already exists');
-  };
-
-  return (
-    <Grid container spacing={4}>
-      {error && <Alert error={error} setError={setError} />}
-      <Grid item lg={6} md={12}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant="h4">Available in Store</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <MaterialForm type={'available'} submitHandler={availableHandler} />
-          </Grid>
-          <Grid item xs={12}>
-            <MaterialTable data={storeMaterial} setData={setStoreMaterial} />
-          </Grid>
+    return(
+        <Grid container spacing={4}>
+            <Grid item lg={6} md={12}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Typography variant='h4'>
+                            Available in Store
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <MaterialForm submitHandler = {addAvailableHandler} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <MaterialTable data={availableMaterial} otherData={orderedMaterial} setData = {setAvailableMaterial} />
+                    </Grid>
+                </Grid>
+            </Grid>    
+                    
+            <Grid item lg={6} md={12}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Typography variant='h4'>
+                            Ordered By Administrative Officer
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <MaterialForm submitHandler = {addOrderedHandler } />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <MaterialTable data = {orderedMaterial} otherData = {availableMaterial} setData = {setOrderedMaterial} />
+                    </Grid>
+                </Grid>
+            </Grid>
         </Grid>
-      </Grid>
-
-      <Grid item lg={6} md={12}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant="h4">
-              Ordered By Administrative Officer
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <MaterialForm type={'ordered'} submitHandler={orderedHandler} />
-          </Grid>
-          <Grid item xs={12}>
-            <MaterialTable
-              data={orderedMaterial}
-              setData={setOrderedMaterial}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
-  );
+    )
 }
