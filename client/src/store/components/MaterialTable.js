@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Grid,
   TableContainer,
@@ -15,11 +15,12 @@ import {
 } from '@material-ui/core';
 import { DeleteOutline, DoneOutline, Edit } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import { useToasts } from 'react-toast-notifications';
 
+import axiosInstance from '../../helpers/axiosInstance';
 import Confirmation from '../../helpers/components/Confirmation';
 import PopOver from '../../helpers/components/PopOver';
 import MaterialFormValidator from '../utils/MaterialFormValidator';
-import { useToasts } from 'react-toast-notifications';
 
 const useStyles = makeStyles(() => ({
   numberInput: {
@@ -45,6 +46,17 @@ export default function MaterialTable({ data, setData }) {
     state: false,
     row: null,
   });
+
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (error)
+      addToast(error, {
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    setError(null);
+  }, [error]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -90,17 +102,27 @@ export default function MaterialTable({ data, setData }) {
     }
   };
 
-  const deleteHandler = () => {
-    setData(
-      data.filter((item, i) => {
-        return i !== delIndex;
-      })
-    );
-    addToast('Deleted Successfully', {
-      appearance: 'success',
-      autoDismiss: true,
-    });
-    resetPopoverStates();
+  const deleteHandler = async () => {
+    try {
+      await axiosInstance.delete(`/api/store/${data[delIndex]._id}`);
+
+      setData(
+        data.filter((item, i) => {
+          return i !== delIndex;
+        })
+      );
+      addToast('Deleted Successfully', {
+        appearance: 'success',
+        autoDismiss: true,
+      });
+      resetPopoverStates();
+    } catch (error) {
+      try {
+        setError(error.response.data.error);
+      } catch (error) {
+        setError('Unable to delete material');
+      }
+    }
   };
 
   const editHandler = (index, item) => {
@@ -123,19 +145,36 @@ export default function MaterialTable({ data, setData }) {
       .then(
         () => {
           checkDuplicate(material, index).then(
-            () => {
-              setInEditMode({
-                state: false,
-                row: null,
-              });
+            async () => {
+              try {
+                const result = await axiosInstance.put(
+                  `/api/store/${data[index]._id}`,
+                  { material: material.trim(), cost, quantity: units }
+                );
+                if (!result.data.success) throw new Error();
 
-              const editedData = [...data];
-              editedData[index] = {
-                material: material.trim(),
-                cost,
-                units,
-              };
-              setData(editedData);
+                setInEditMode({
+                  state: false,
+                  row: null,
+                });
+
+                const updatedMaterial = result.data.data;
+
+                const editedData = [...data];
+                editedData[index] = {
+                  material: updatedMaterial.material,
+                  cost: updatedMaterial.cost,
+                  units: updatedMaterial.quantity,
+                  _id: updatedMaterial._id,
+                };
+                setData(editedData);
+              } catch (error) {
+                try {
+                  setError(error.response.data.error);
+                } catch (error) {
+                  setError('Unable to update material');
+                }
+              }
             },
             (error) => {
               setErrors(error.errors);

@@ -1,13 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography } from '@material-ui/core';
+import { useToasts } from 'react-toast-notifications';
 
 import MaterialForm from '../components/MaterialForm';
 import MaterialTable from '../components/MaterialTable';
+import axiosInstance from '../../helpers/axiosInstance';
 
 export default function Store() {
+  const { addToast } = useToasts();
+
   const [availableMaterial, setAvailableMaterial] = useState([]);
 
+  const [error, setError] = useState(null);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (error)
+      addToast(error, {
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    setError(null);
+  }, [error]);
+
+  useEffect(() => {
+    const getMaterial = async () => {
+      try {
+        const result = await axiosInstance.get('/api/store');
+        if (result.data.success) setAvailableMaterial(result.data.data);
+        else throw new Error();
+      } catch (error) {
+        try {
+          setError(error.response.data.error);
+        } catch (error) {
+          setError('Unable to fetch data');
+        }
+      }
+    };
+    getMaterial();
+  }, []);
 
   function isMaterialExists(array, value) {
     const count = array.reduce(
@@ -17,23 +48,33 @@ export default function Store() {
     return count > 0;
   }
 
-  const addAvailableHandler = (material, cost, units) => {
-    if (!isMaterialExists(availableMaterial, material.trim())) {
-      setAvailableMaterial([
-        ...availableMaterial,
-        {
-          material: material.trim(),
+  const submitHandler = async (material, cost, units) => {
+    try {
+      if (!isMaterialExists(availableMaterial, material.trim())) {
+        const result = await axiosInstance.post('/api/store', {
+          material,
           cost,
-          units,
-        },
-      ]);
+          quantity: units,
+        });
+        if (result.data.success)
+          setAvailableMaterial([
+            ...availableMaterial,
+            {
+              material: material.trim(),
+              cost,
+              units,
+              _id: result.data._id,
+            },
+          ]);
+        else throw new Error('Unable tp add material to store');
 
-      setErrors({});
-      return Promise.resolve({
-        status: true,
-        errors: errors,
-      });
-    } else {
+        setErrors({});
+        return Promise.resolve({
+          status: true,
+          errors: errors,
+        });
+      }
+    } catch (error) {
       setErrors({
         material: ['Material already Exists'],
       });
@@ -52,7 +93,7 @@ export default function Store() {
             <Typography variant="h4">Manage Store</Typography>
           </Grid>
           <Grid item xs={12}>
-            <MaterialForm submitHandler={addAvailableHandler} />
+            <MaterialForm submitHandler={submitHandler} />
           </Grid>
           <Grid item xs={12}>
             <MaterialTable
