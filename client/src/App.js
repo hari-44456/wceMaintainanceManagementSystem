@@ -15,6 +15,8 @@ import UserComplaintForm from './forms/components/UserComplaintForm';
 import HodForm from './forms/components/HodForm';
 import FormB from './forms/components/FormB';
 
+import Store from './store';
+
 const App = () => {
   return (
     <Router>
@@ -25,9 +27,14 @@ const App = () => {
             <Route exact path="/ui" component={Home} />
             <Route path="/ui/login" component={Login} />
             <Route path="/ui/dashboard" component={Dashboards} />
-            <Route exact path="/ui/forms/complaint" component={UserComplaintForm} />
+            <Route path="/ui/store" component={Store} />
+            <Route
+              exact
+              path="/ui/forms/complaint"
+              component={UserComplaintForm}
+            />
             <Route exact path="/ui/forms/hod" component={HodForm} />
-            <Route exact path='/ui/forms/formb' component={FormB} />
+            <Route exact path="/ui/forms/formb" component={FormB} />
           </Switch>
         </ToastProvider>
       </Container>
