@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
-const verify = require('./verifyAuthToken');
+const { verify } = require('./verifyAuthToken');
 
 require('dotenv').config();
 const app = express();
@@ -46,7 +46,7 @@ app.get('/api/isAuthenticated', verify, (req, res) => {
 
 app.use('/api/login', require('./login'));
 app.use('/api/complaint', require('./complaint'));
-
+app.use('/api/store', require('./store'));
 app.listen(process.env.PORT, () =>
   console.log(`Listening to PORT ${process.env.PORT}...`)
 );

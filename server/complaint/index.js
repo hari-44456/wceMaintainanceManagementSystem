@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const verify = require('../verifyAuthToken');
+const { verify } = require('../verifyAuthToken');
 const verifySchema = require('./validate');
 const Complaint = require('./model');
 const User = require('../login/model');
