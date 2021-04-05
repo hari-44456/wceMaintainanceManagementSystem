@@ -6,6 +6,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { Container } from '@material-ui/core';
+import { ToastProvider } from 'react-toast-notifications';
 
 import Login from './auth';
 import Dashboards from './dashboards';
@@ -18,15 +19,17 @@ const App = () => {
   return (
     <Router>
       <Container className="App">
-        <Switch>
-          <Redirect exact from="/" to={'/ui'} />
-          <Route exact path="/ui" component={Home} />
-          <Route path="/ui/login" component={Login} />
-          <Route path="/ui/dashboard" component={Dashboards} />
-          <Route exact path="/ui/forms/complaint" component={UserComplaintForm} />
-          <Route exact path="/ui/forms/hod" component={HodForm} />
-          <Route exact path='/ui/forms/formb' component={FormB} />
-        </Switch>
+        <ToastProvider>
+          <Switch>
+            <Redirect exact from="/" to={'/ui'} />
+            <Route exact path="/ui" component={Home} />
+            <Route path="/ui/login" component={Login} />
+            <Route path="/ui/dashboard" component={Dashboards} />
+            <Route exact path="/ui/forms/complaint" component={UserComplaintForm} />
+            <Route exact path="/ui/forms/hod" component={HodForm} />
+            <Route exact path='/ui/forms/formb' component={FormB} />
+          </Switch>
+        </ToastProvider>
       </Container>
     </Router>
   );

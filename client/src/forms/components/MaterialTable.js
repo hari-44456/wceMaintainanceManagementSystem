@@ -17,21 +17,24 @@ import { makeStyles } from '@material-ui/core/styles'
 import Confirmation from '../../helpers/components/Confirmation';
 import PopOver from '../../helpers/components/PopOver';
 import MaterialFormValidator from '../utils/MaterialFormValidator';
+import { useToasts } from 'react-toast-notifications';
 
 const useStyles = makeStyles(() => ({
-    costInput: {
-        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
-          "-webkit-appearance": "none",
-          margin: 0
+    numberInput: {
+            "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+            "-webkit-appearance": "none",
+            margin: 0
         }
     }
 }))
 
 export default function MaterialTable({ data, otherData, setData }) {
     const classes = useStyles();
+    const { addToast } = useToasts();
 
     const [material, setMaterial] = useState('');
     const [approxCost, setApproxCost] = useState(0);
+    const [units, setUnits] = useState(0);
     const [popoverEvent, setPopoverEvent] = useState(null);
     const [popoverVisible, setPopoverVisible] = useState(false);
     const [delIndex, setDelIndex] = useState(-1);
@@ -83,12 +86,14 @@ export default function MaterialTable({ data, otherData, setData }) {
         setData(data.filter((item,i) => {
             return i !== delIndex;
         }));
+        addToast('Deleted Successfully', { appearance: 'success', autoDismiss: true });
         resetPopoverStates();
     };
 
     const editHandler = (index,item) => {
         setMaterial(item.material);
         setApproxCost(item.approxCost);
+        setUnits(item.units);
         setInEditMode({
             state: true,
             row: index
@@ -100,6 +105,7 @@ export default function MaterialTable({ data, otherData, setData }) {
         .validate({
             material,
             approxCost,
+            units
         }).then(() => {
             checkDuplicate(material,index).then(() => {
                 setInEditMode({
@@ -110,7 +116,8 @@ export default function MaterialTable({ data, otherData, setData }) {
                 const editedData = [...data];
                 editedData[index] = {
                     material: material.trim(),
-                    approxCost
+                    approxCost,
+                    units
                 };
                 setData(editedData);
             }, error => {
@@ -128,7 +135,7 @@ export default function MaterialTable({ data, otherData, setData }) {
     const editModeForm = (index) => {
         return (
             <TableRow key={index}>
-                <TableCell component="th" scope="row" width='50%'>
+                <TableCell component="th" scope="row" width='40%'>
                     <FormControl>
                         <TextField
                             fullWidth
@@ -144,10 +151,10 @@ export default function MaterialTable({ data, otherData, setData }) {
                         />
                     </FormControl>
                 </TableCell>
-                <TableCell component="th" scope="row" align="right" width='30%'>
+                <TableCell component="th" scope="row" align="right" width='20%'>
                     <FormControl>
                         <TextField
-                            className={classes.costInput}
+                            className={classes.numberInput}
                             inputProps={{
                                 'data-testid': 'cost', 
                                 style: { textAlign: 'right' }
@@ -166,6 +173,28 @@ export default function MaterialTable({ data, otherData, setData }) {
                         />
                     </FormControl>    
                 </TableCell>
+                <TableCell component="th" scope="row" align="right" width='20%'>
+                    <FormControl>
+                        <TextField
+                            className={classes.numberInput}
+                            inputProps={{
+                                'data-testid': 'units', 
+                                style: { textAlign: 'right' }
+                            }}
+                            InputLabelProps={{ shrink: true}}
+                            type='number'
+                            fullWidth
+                            required
+                            autoFocus
+                            label="Units"
+                            size="small"
+                            value={units}
+                            onChange={(event) => setUnits(event.target.value)}
+                            error={!!errors.units}
+                            helperText={errors.units ? errors.units[0] : ' '}
+                        />
+                    </FormControl>    
+                </TableCell>
                 <TableCell component="th" scope="row" align="center" width='20%'>
                     <IconButton onClick={() => saveHandler(index)}>
                         <DoneOutline style={{ color: 'black' }} fontSize='small' />
@@ -178,13 +207,14 @@ export default function MaterialTable({ data, otherData, setData }) {
     function displayInfo(index,item){
         return (
             <TableRow key={index}>
-                <TableCell component="th" scope="row" width='50%'>{item.material}</TableCell>
-                <TableCell component="th" scope="row" align="right" widht='30%'>{item.approxCost}</TableCell>
+                <TableCell component="th" scope="row" width='40%'>{item.material}</TableCell>
+                <TableCell component="th" scope="row" align="right" width='20%'>{item.approxCost}</TableCell>
+                <TableCell component="th" scope="row" align="right" width='20%'>{item.units}</TableCell>
                 <TableCell component="th" scope="row" width='20%' align="center">
-                    <IconButton style={{padding: '10px'}} size='small' disabled={inEditMode.state} onClick={(event) => editHandler(index,item)}>
+                    <IconButton style={{padding: '5px'}} size='small' disabled={inEditMode.state} onClick={(event) => editHandler(index,item)}>
                         <Edit style={{ color: 'black' }} fontSize='small' />
                     </IconButton>
-                    <IconButton style={{padding: '10px'}} size='small' onClick={(event) => showPopover(event,index)}>
+                    <IconButton style={{padding: '5px'}} size='small' onClick={(event) => showPopover(event,index)}>
                         <DeleteOutline style={{ color: 'red' }} fontSize='small' />
                     </IconButton>
                 </TableCell>
@@ -198,9 +228,12 @@ export default function MaterialTable({ data, otherData, setData }) {
             <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell width='50%'>Material</TableCell>
-                        <TableCell width='30%' align={inEditMode.state ? 'left' : 'right'}>
+                        <TableCell width='40%'>Material</TableCell>
+                        <TableCell width='20%' align={inEditMode.state ? 'left' : 'right'}>
                             Approx Cost
+                        </TableCell>
+                        <TableCell component="th" scope="row" align={inEditMode.state ? 'left' : 'right'} width='20%'>
+                            Units
                         </TableCell>
                         <TableCell width='20%' align="center">Actions</TableCell>
                     </TableRow>

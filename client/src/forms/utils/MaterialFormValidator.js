@@ -7,7 +7,8 @@ export default function MaterialFormValidator() {
     const validator = new FormValidator();
     validator
       .addRule('material', emptyCheck, 'Please Enter Material')
-      .addRule('approxCost', checkValue, 'Please Enter Valid Cost');
+      .addRule('approxCost', checkValue, 'Please Enter Valid Cost')
+      .addRule('units', checkValue, 'Please Enter valid quantity');
 
     return validator;
 }

@@ -16,11 +16,12 @@ export default function FormB(){
         return count > 0;
     }
 
-    const addAvailableHandler = (material, approxCost) => {
+    const addAvailableHandler = (material, approxCost, units) => {
         if (!isMaterialExists(availableMaterial, material.trim()) && !isMaterialExists(orderedMaterial, material.trim())){
             setAvailableMaterial([...availableMaterial, { 
                 material: material.trim(), 
-                approxCost 
+                approxCost ,
+                units
             }]);
             setErrors({});
             return Promise.resolve({
@@ -39,11 +40,12 @@ export default function FormB(){
         }
     };
 
-    const addOrderedHandler = (material, approxCost) => {
+    const addOrderedHandler = (material, approxCost,units) => {
         if (!isMaterialExists(orderedMaterial, material.trim()) && !isMaterialExists(availableMaterial, material.trim())){
             setOrderedMaterial([...orderedMaterial, { 
                 material: material.trim(), 
-                approxCost 
+                approxCost,
+                units
             }]);
             setErrors({});
             return Promise.resolve({
