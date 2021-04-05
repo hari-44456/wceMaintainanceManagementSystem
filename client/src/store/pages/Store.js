@@ -27,8 +27,15 @@ export default function Store() {
     const getMaterial = async () => {
       try {
         const result = await axiosInstance.get('/api/store');
-        if (result.data.success) setAvailableMaterial(result.data.data);
-        else throw new Error();
+        if (result.data.success) {
+          const data = result.data.data.map((d) => ({
+            material: d.material,
+            cost: d.cost,
+            units: d.quantity,
+          }));
+
+          setAvailableMaterial(data);
+        } else throw new Error();
       } catch (error) {
         try {
           setError(error.response.data.error);
