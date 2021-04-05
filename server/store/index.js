@@ -38,10 +38,11 @@ router.post('/', validate, verifyAdmin, async (req, res) => {
       error: 'Material Already Exists',
     });
 
-  await entry.save();
+  const data = await entry.save();
 
   return res.status(200).json({
     success: 1,
+    _id: data._id,
   });
 });
 
