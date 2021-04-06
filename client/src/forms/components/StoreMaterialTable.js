@@ -16,7 +16,6 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Confirmation from '../../helpers/components/Confirmation';
 import PopOver from '../../helpers/components/PopOver';
-import MaterialFormValidator from '../utils/MaterialFormValidator';
 import { useToasts } from 'react-toast-notifications';
 
 const useStyles = makeStyles(() => ({
@@ -26,15 +25,19 @@ const useStyles = makeStyles(() => ({
             margin: 0
         }
     }
-}))
+}));
 
-export default function MaterialTable({ data, otherData, setData, type }) {
+export default function StoreMaterialTable({ storeMaterials, data, setData }) {
     const classes = useStyles();
     const { addToast } = useToasts();
 
-    const [material, setMaterial] = useState('');
-    const [approxCost, setApproxCost] = useState(0);
-    const [units, setUnits] = useState(0);
+    const [selectedMaterial, setSelectedMaterial] = useState({
+        _id: null,
+        material: '',
+        cost: 0,
+        units: 0,
+    });
+    const [units, setUnits] = useState(0); 
     const [popoverEvent, setPopoverEvent] = useState(null);
     const [popoverVisible, setPopoverVisible] = useState(false);
     const [delIndex, setDelIndex] = useState(-1);
@@ -56,14 +59,49 @@ export default function MaterialTable({ data, otherData, setData, type }) {
         setPopoverVisible(true);
     };
 
-    function isMaterialExists(array, value) {
-        const items = array.reduce((acc, item, index) => item.material === value ? [...acc, index] : acc, []);
-        return items;
+    const resetForm = () => {
+        setSelectedMaterial({
+            _id: null,
+            material: '',
+            cost: 0,
+            units: 0,
+        });
+        setUnits(0);
+        setErrors({});
     }
 
+    const changeHandler = (event) => {
+        setSelectedMaterial({
+            ...selectedMaterial,
+            material: event.target.value,
+        });
+        const selected = storeMaterials.filter((item) => item.material===event.target.value);
+        if(selected.length > 0){
+            setSelectedMaterial({
+                ...selectedMaterial,
+                _id: selected[0]._id,
+                material: selected[0].material,
+                cost: selected[0].cost,
+                units: selected[0].units,
+            });
+        }else{
+            setSelectedMaterial({
+                ...selectedMaterial,
+                _id: null,
+                material: event.target.value,
+                cost: 0,
+                units: 0,
+            });
+        }   
+    };
+
+    const isMaterialExists = (array, value) => {
+        const items = array.reduce((acc, item, index) => item.material === value ? [...acc, index] : acc, []);
+        return items;
+    };
+
     const checkDuplicate = (material, index) => {
-        const allData = [...data, ...otherData];
-        const duplicates = isMaterialExists(allData,material.trim());
+        const duplicates = isMaterialExists(data,material.trim());
         if (duplicates.length === 0 || (duplicates.length===1 && duplicates.includes(index))){
             setErrors({});
             return Promise.resolve({
@@ -91,41 +129,69 @@ export default function MaterialTable({ data, otherData, setData, type }) {
     };
 
     const editHandler = (index,item) => {
-        setMaterial(item.material);
-        setApproxCost(item.approxCost);
-        setUnits(item.units);
         setInEditMode({
             state: true,
             row: index
-        })
+        });
+        const selected = storeMaterials.filter((material) => material.material===item.material);
+        if(selected.length > 0){
+            setSelectedMaterial({
+                ...selectedMaterial,
+                _id: selected[0]._id,
+                material: selected[0].material,
+                cost: selected[0].cost,
+                units: selected[0].quantity,
+            });
+            setUnits(item.units);
+        }else{
+            setSelectedMaterial({
+                ...selectedMaterial,
+                _id: null,
+                material: item.material,
+                cost: 0,
+                units,
+            });
+        }
     };
 
     const saveHandler = (index) => {
-        MaterialFormValidator()
-        .validate({
-            material,
-            approxCost,
-            units
-        }).then(() => {
-            checkDuplicate(material,index).then(() => {
-                setInEditMode({
-                    state: false,
-                    row: null
-                });
-
-                const editedData = [...data];
-                editedData[index] = {
-                    material: material.trim(),
-                    approxCost,
-                    units
-                };
-                setData(editedData);
-            }, error => {
-                setErrors(error.errors);
+        if(selectedMaterial.cost===0){
+            setErrors({
+                material: ['Please Select a Material']
             })
-        }, (error => {
+            return;
+        }
+        checkDuplicate(selectedMaterial.material,index).then(() => {
+            if(selectedMaterial.units<units){
+                setErrors({
+                    units: ['Available Units: ' + selectedMaterial.units],
+                })
+                return;
+            }
+            if(units<=0){
+                setErrors({
+                    units: ['Enter valid units'],
+                })
+                return;
+            }
+
+            setInEditMode({
+                state: false,
+                row: null
+            });
+
+            const editedData = [...data];
+            editedData[index] = {
+                material: selectedMaterial.material.trim(),
+                cost: selectedMaterial.cost,
+                units,
+            };
+            setData(editedData);
+            resetForm();
+            setErrors({});
+        }, error => {
             setErrors(error.errors);
-        }))
+        })
     };
 
     const popoverContent = (
@@ -136,18 +202,28 @@ export default function MaterialTable({ data, otherData, setData, type }) {
         return (
             <TableRow key={index}>
                 <TableCell component="th" scope="row" width='40%'>
-                    <FormControl>
+                    <FormControl className={classes.formControl}>
                         <TextField
-                            fullWidth
-                            required
-                            autoFocus
-                            inputProps={{ 'data-testid': 'material' }}
+                            name="Store Materials"
                             label="Material"
-                            size="small"
-                            value={material}
-                            onChange={(event) => setMaterial(event.target.value)}
+                            autoComplete='off'
+                            value={selectedMaterial.material}
+                            onChange={(event) => changeHandler(event)}
                             error={!!errors.material}
                             helperText={errors.material ? errors.material[0] : ' '}
+                            InputProps={{
+                                endAdornment: (
+                                    <datalist id='storeList'>
+                                        {
+                                            storeMaterials.map((item,index) => (
+                                            <option key={index} value={item.material}>{item.material}</option>
+                                        ))}
+                                    </datalist>
+                                ),
+                                inputProps: {
+                                    list: "storeList"
+                                }
+                            }}
                         />
                     </FormControl>
                 </TableCell>
@@ -162,13 +238,12 @@ export default function MaterialTable({ data, otherData, setData, type }) {
                             InputLabelProps={{ shrink: true}}
                             type='number'
                             fullWidth
+                            disabled
                             required
                             autoFocus
-                            min={1}
                             label="Cost"
                             size="small"
-                            value={approxCost}
-                            onChange={(event) => setApproxCost(event.target.value)}
+                            value={selectedMaterial.cost}
                             error={!!errors.approxCost}
                             helperText={errors.approxCost ? errors.approxCost[0] : ' '}
                         />
@@ -209,7 +284,7 @@ export default function MaterialTable({ data, otherData, setData, type }) {
         return (
             <TableRow key={index}>
                 <TableCell component="th" scope="row" width='40%'>{item.material}</TableCell>
-                <TableCell component="th" scope="row" align="right" width='20%'>{type==='availabe' ? item.cost : item.approxCost}</TableCell>
+                <TableCell component="th" scope="row" align="right" width='20%'>{item.cost}</TableCell>
                 <TableCell component="th" scope="row" align="right" width='20%'>{item.units}</TableCell>
                 <TableCell component="th" scope="row" width='20%' align="center">
                     <IconButton style={{padding: '5px'}} size='small' disabled={inEditMode.state} onClick={() => editHandler(index,item)}>
@@ -231,7 +306,7 @@ export default function MaterialTable({ data, otherData, setData, type }) {
                     <TableRow>
                         <TableCell width='40%'>Material</TableCell>
                         <TableCell width='20%' align={inEditMode.state ? 'left' : 'right'}>
-                            {type === 'available' ? 'Cost' : 'Approx Cost'}
+                            Cost
                         </TableCell>
                         <TableCell component="th" scope="row" align={inEditMode.state ? 'left' : 'right'} width='20%'>
                             Units
@@ -251,4 +326,4 @@ export default function MaterialTable({ data, otherData, setData, type }) {
             </Table>
         </TableContainer>
     )
-}
+};

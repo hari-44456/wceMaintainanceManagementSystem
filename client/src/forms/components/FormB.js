@@ -82,28 +82,33 @@ export default function FormB(){
         return count > 0;
     }
 
-    const addAvailableHandler = (material, approxCost, units) => {
-        if (!isMaterialExists(selectedMaterials, material.trim()) && !isMaterialExists(orderedMaterials, material.trim())){
+    const addAvailableHandler = () => {
+
+        if (!isMaterialExists(orderedMaterials, selectedMaterial.material.trim())){
+            if(selectedMaterial.units<units){
+                setErrors({
+                    units: ['Available Units: ' + selectedMaterial.units],
+                })
+                return;
+            }
+            // if()
             setSelectedMaterials([...selectedMaterials, { 
-                material: material.trim(), 
-                approxCost ,
+                material: selectedMaterial.material.trim(), 
+                cost: selectedMaterial.cost,
                 units
             }]);
-            setErrors({});
-            return Promise.resolve({
-                status: true,
-                errors: errors
-            });
-        }
-        else{
-            setErrors({
-                material: ['Material already Exists']
-            });
-            return Promise.reject({
-                status: false,
-                errors: errors
+            setSelectedMaterial({
+                _id: null,
+                material: '',
+                cost: 0,
+                units: 0,
             })
+            setErrors({});
+            return;
         }
+        setErrors({
+            material: ['Material already Added']
+        });
     };
 
     const addOrderedHandler = (material, approxCost,units) => {
@@ -129,11 +134,6 @@ export default function FormB(){
             })
         }
     };
-
-    const addHandler = (event) => {
-        event.preventDefault();
-        console.log(selectedMaterial)
-    }
 
     return(
         <Grid container spacing={4}>
@@ -170,7 +170,7 @@ export default function FormB(){
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item md={3} xs={12}>
+                    <Grid item md={2} xs={12}>
                         <FormControl className = {classes.formControl}>
                             <TextField
                                 className={classes.numberInput}
@@ -184,12 +184,10 @@ export default function FormB(){
                                 label="Cost"
                                 size="small"
                                 value={selectedMaterial.cost}
-                                error={!!errors.units}
-                                helperText={errors.units ? errors.units[0] : ' '}
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item md={2} xs={12}>
+                    <Grid item md={3} xs={12}>
                         <FormControl className = {classes.formControl}>
                             <TextField
                                 className={classes.numberInput}
@@ -216,7 +214,7 @@ export default function FormB(){
                             size="large"
                             color="secondary"
                             variant="contained"
-                            onClick={addHandler}
+                            onClick={addAvailableHandler}
                         >
                             Add
                         </Button>

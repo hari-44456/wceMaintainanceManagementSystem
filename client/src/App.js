@@ -13,7 +13,7 @@ import Dashboards from './dashboards';
 import Home from './Home/pages';
 import UserComplaintForm from './forms/components/UserComplaintForm';
 import HodForm from './forms/components/HodForm';
-import FormB from './forms/components/FormB';
+import FormB from './forms/components/FormB2';
 
 import Store from './store';
 
