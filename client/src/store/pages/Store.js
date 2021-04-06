@@ -28,10 +28,11 @@ export default function Store() {
       try {
         const result = await axiosInstance.get('/api/store');
         if (result.data.success) {
-          const data = result.data.data.map((d) => ({
-            material: d.material,
-            cost: d.cost,
-            units: d.quantity,
+          const data = result.data.data.map((item) => ({
+            _id: item._id,
+            material: item.material,
+            cost: item.cost,
+            units: item.quantity,
           }));
 
           setAvailableMaterial(data);

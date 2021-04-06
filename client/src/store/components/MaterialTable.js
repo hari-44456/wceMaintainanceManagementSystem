@@ -47,16 +47,16 @@ export default function MaterialTable({ data, setData }) {
     row: null,
   });
 
-  const [error, setError] = useState(null);
+  const [serverError, setServerError] = useState(null);
 
   useEffect(() => {
-    if (error)
-      addToast(error, {
+    if (serverError)
+      addToast(serverError, {
         appearance: 'error',
         autoDismiss: true,
       });
-    setError(null);
-  }, [error]);
+    setServerError(null);
+  }, [serverError]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -104,6 +104,7 @@ export default function MaterialTable({ data, setData }) {
 
   const deleteHandler = async () => {
     try {
+      console.log(data)
       await axiosInstance.delete(`/api/store/${data[delIndex]._id}`);
 
       setData(
@@ -118,9 +119,9 @@ export default function MaterialTable({ data, setData }) {
       resetPopoverStates();
     } catch (error) {
       try {
-        setError(error.response.data.error);
+        setServerError(error.response.data.error);
       } catch (error) {
-        setError('Unable to delete material');
+        setServerError('Unable to delete material');
       }
     }
   };
@@ -170,9 +171,9 @@ export default function MaterialTable({ data, setData }) {
                 setData(editedData);
               } catch (error) {
                 try {
-                  setError(error.response.data.error);
+                  setServerError(error.response.data.error);
                 } catch (error) {
-                  setError('Unable to update material');
+                  setServerError('Unable to update material');
                 }
               }
             },
