@@ -56,7 +56,7 @@ export default function MaterialTable({ data, setData }) {
         autoDismiss: true,
       });
     setServerError(null);
-  }, [serverError]);
+  }, [serverError, addToast]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);

@@ -1,24 +1,90 @@
-import React,{ useState} from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import React,{ useEffect, useState} from 'react';
+import { FormControl, Grid, makeStyles, TextField, Typography, Button } from '@material-ui/core';
 
 import MaterialForm from './MaterialForm';
 import MaterialTable from './MaterialTable';
+import axiosInstance from '../../helpers/axiosInstance';
+
+const useStyles = makeStyles(() => ({
+    numberInput: {
+        '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+        },
+    },
+    button: {
+        borderRadius: 0,
+    },
+    formControl: {
+        width: '100%',
+    }
+}));
 
 export default function FormB(){
-    const [availableMaterial, setAvailableMaterial] = useState([]);
-    const [orderedMaterial, setOrderedMaterial] = useState([]);
+    const classes = useStyles();
+
+    const [storeMaterials, setStoreMaterials] = useState([]);
+    const [selectedMaterials, setSelectedMaterials] = useState([]);
+    const [orderedMaterials, setOrderedMaterials] = useState([]);
+    const [selectedMaterial, setSelectedMaterial] = useState({
+        _id: null,
+        material: '',
+        cost: 0,
+        units: 0,
+    });
+    const [units, setUnits] = useState(0);
     const [errors, setErrors] = useState({});
 
-    // useEffect(() => {}, [storeMaterial,orderedMaterial])
+    useEffect(() => {
+        axiosInstance.get('/api/store')
+        .then((data) => {
+            setStoreMaterials(data.data.data);
+        });
 
-    function isMaterialExists(array, value) {
+        setSelectedMaterial({
+            _id: null,
+            material: '',
+            cost: 0,
+            units: 0,
+        });
+        setSelectedMaterials([]);
+        setOrderedMaterials([]);
+        setErrors([]);
+    }, []);
+
+    const changeHandler = (event) => {
+        setSelectedMaterial({
+            ...selectedMaterial,
+            material: event.target.value,
+        });
+        const selected = storeMaterials.filter((item) => item.material===event.target.value);
+        if(selected.length > 0){
+            setSelectedMaterial({
+                ...selectedMaterial,
+                _id: selected[0]._id,
+                material: selected[0].material,
+                cost: selected[0].cost,
+                units: selected[0].quantity,
+            });
+        }else{
+            setSelectedMaterial({
+                ...selectedMaterial,
+                _id: null,
+                material: event.target.value,
+                cost: 0,
+                units: 0,
+            });
+        }
+    }
+
+    const isMaterialExists = (array, value) => {
         const count = array.reduce((acc, item) => item.material === value ? ++acc : acc, 0);
         return count > 0;
     }
 
     const addAvailableHandler = (material, approxCost, units) => {
-        if (!isMaterialExists(availableMaterial, material.trim()) && !isMaterialExists(orderedMaterial, material.trim())){
-            setAvailableMaterial([...availableMaterial, { 
+        if (!isMaterialExists(selectedMaterials, material.trim()) && !isMaterialExists(orderedMaterials, material.trim())){
+            setSelectedMaterials([...selectedMaterials, { 
                 material: material.trim(), 
                 approxCost ,
                 units
@@ -41,8 +107,8 @@ export default function FormB(){
     };
 
     const addOrderedHandler = (material, approxCost,units) => {
-        if (!isMaterialExists(orderedMaterial, material.trim()) && !isMaterialExists(availableMaterial, material.trim())){
-            setOrderedMaterial([...orderedMaterial, { 
+        if (!isMaterialExists(orderedMaterials, material.trim()) && !isMaterialExists(selectedMaterials, material.trim())){
+            setOrderedMaterials([...orderedMaterials, { 
                 material: material.trim(), 
                 approxCost,
                 units
@@ -64,6 +130,11 @@ export default function FormB(){
         }
     };
 
+    const addHandler = (event) => {
+        event.preventDefault();
+        console.log(selectedMaterial)
+    }
+
     return(
         <Grid container spacing={4}>
             <Grid item lg={6} md={12}>
@@ -73,15 +144,88 @@ export default function FormB(){
                             Available in Store
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                        <MaterialForm submitHandler = {addAvailableHandler} />
+                    <Grid item md={5} xs={12}>
+                        <FormControl className={classes.formControl}>
+                            <TextField
+                                name="Store Materials"
+                                label="Material"
+                                autoComplete='off'
+                                value={selectedMaterial.material}
+                                onChange={(event) => changeHandler(event)}
+                                error={!!errors.material}
+                                helperText={errors.material ? errors.material[0] : ' '}
+                                InputProps={{
+                                    endAdornment: (
+                                        <datalist id='storeList'>
+                                            { 
+                                                storeMaterials.map((item,index) => (
+                                                <option key={index} value={item.material}>{item.material}</option>
+                                            ))}
+                                        </datalist>
+                                    ),
+                                    inputProps: {
+                                        list: "storeList"
+                                    }
+                                }}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item md={3} xs={12}>
+                        <FormControl className = {classes.formControl}>
+                            <TextField
+                                className={classes.numberInput}
+                                type='number'
+                                fullWidth
+                                disabled
+                                required
+                                autoFocus
+                                InputLabelProps={{ shrink: true}}
+                                inputProps={{ 'data-testid': 'cost' }}
+                                label="Cost"
+                                size="small"
+                                value={selectedMaterial.cost}
+                                error={!!errors.units}
+                                helperText={errors.units ? errors.units[0] : ' '}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item md={2} xs={12}>
+                        <FormControl className = {classes.formControl}>
+                            <TextField
+                                className={classes.numberInput}
+                                type='number'
+                                fullWidth
+                                required
+                                autoFocus
+                                InputLabelProps={{ shrink: true}}
+                                inputProps={{ 'data-testid': 'units' }}
+                                label="Units"
+                                size="small"
+                                value={units}
+                                onChange={(event) => setUnits(event.target.value)}
+                                error={!!errors.units}
+                                helperText={errors.units ? errors.units[0] : ' '}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button
+                            className={classes.button}
+                            type="submit"
+                            fullWidth
+                            size="large"
+                            color="secondary"
+                            variant="contained"
+                            onClick={addHandler}
+                        >
+                            Add
+                        </Button>
                     </Grid>
                     <Grid item xs={12}>
-                        <MaterialTable data={availableMaterial} otherData={orderedMaterial} setData = {setAvailableMaterial} />
+                        <MaterialTable data={selectedMaterials} otherData={orderedMaterials} setData = {setSelectedMaterials} type='available' />
                     </Grid>
                 </Grid>
-            </Grid>    
-                    
+            </Grid>
             <Grid item lg={6} md={12}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -93,7 +237,7 @@ export default function FormB(){
                         <MaterialForm submitHandler = {addOrderedHandler } />
                     </Grid>
                     <Grid item xs={12}>
-                        <MaterialTable data = {orderedMaterial} otherData = {availableMaterial} setData = {setOrderedMaterial} />
+                        <MaterialTable data = {orderedMaterials} otherData = {selectedMaterials} setData = {setOrderedMaterials} type='ordered' />
                     </Grid>
                 </Grid>
             </Grid>

@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-export default function MaterialTable({ data, otherData, setData }) {
+export default function MaterialTable({ data, otherData, setData, type }) {
     const classes = useStyles();
     const { addToast } = useToasts();
 
@@ -164,6 +164,7 @@ export default function MaterialTable({ data, otherData, setData }) {
                             fullWidth
                             required
                             autoFocus
+                            min={1}
                             label="Cost"
                             size="small"
                             value={approxCost}
@@ -230,7 +231,7 @@ export default function MaterialTable({ data, otherData, setData }) {
                     <TableRow>
                         <TableCell width='40%'>Material</TableCell>
                         <TableCell width='20%' align={inEditMode.state ? 'left' : 'right'}>
-                            Approx Cost
+                            {type === 'available' ? 'Cost' : 'Approx Cost'}
                         </TableCell>
                         <TableCell component="th" scope="row" align={inEditMode.state ? 'left' : 'right'} width='20%'>
                             Units
