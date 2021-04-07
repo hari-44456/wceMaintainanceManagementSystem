@@ -31,8 +31,9 @@ export default function UserComplaintForm() {
 
     const [department, setDepartment] = useState('');
     const [location, setLocation] = useState('');
-    const [workType, setWorkType] = useState('')
-    const [workDetails, setWorkDetails] = useState('')
+    const [workType, setWorkType] = useState('');
+    const [workDetails, setWorkDetails] = useState('');
+    const [otherWork, setOtherWork] = useState('');
     const [errors, setErrors] = useState({});
 
     const resetForm = () => {
@@ -67,7 +68,7 @@ export default function UserComplaintForm() {
 
     return (
         <form className="user-complaint-form">
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
                 <Grid item xs={12} md={4}>
                     <Grid>
                         <FormControl className={classes.formControl}>
@@ -76,7 +77,7 @@ export default function UserComplaintForm() {
                                 fullWidth
                                 required
                                 autoFocus
-                                inputProps={{ 'data-testid': 'username' }}
+                                inputProps={{ 'data-testid': 'department' }}
                                 label="Department"
                                 variant="outlined"
                                 size="small"
@@ -105,6 +106,8 @@ export default function UserComplaintForm() {
                             />
                         </FormControl>
                     </Grid>
+                </Grid>
+                <Grid item xs={12} md={8}>
                     <Grid className={classes.style}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <Grid>
@@ -117,7 +120,7 @@ export default function UserComplaintForm() {
                             </Grid>
                             <FormGroup>
                                 <Grid container>
-                                    <Grid item xs={6} md={6}>
+                                    <Grid item xs={6} md={3}>
                                         <FormControlLabel
                                             control={
                                                 <Radio
@@ -129,6 +132,8 @@ export default function UserComplaintForm() {
                                             }
                                             label="Electrical"
                                         />
+                                    </Grid>
+                                    <Grid item xs={6} md={3}>
                                         <FormControlLabel
                                             control={
                                                 <Radio
@@ -141,7 +146,7 @@ export default function UserComplaintForm() {
                                             label="Plumbing"
                                         />
                                     </Grid>
-                                    <Grid item xs={6} md={6}>
+                                    <Grid item xs={6} md={3}>
                                         <FormControlLabel
                                             control={
                                                 <Radio
@@ -153,6 +158,8 @@ export default function UserComplaintForm() {
                                             }
                                             label="Repair"
                                         />
+                                    </Grid>
+                                    <Grid item xs={6} md={3}>
                                         <FormControlLabel
                                             control={
                                                 <Radio
@@ -166,7 +173,8 @@ export default function UserComplaintForm() {
                                         />
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={12} md={12}>
+                                <Grid container>
+                                    <Grid item xs={6} md={3}>
                                         <FormControlLabel
                                             control={
                                                 <Radio
@@ -178,6 +186,27 @@ export default function UserComplaintForm() {
                                             }
                                             label="Other"
                                         />
+                                    </Grid>
+                                    { workType === 'Other'
+                                        ?   (<Grid item xs={6} md={3}>
+                                                <FormControl className={classes.formControl}>
+                                                    <TextField
+                                                        className={classes.style}
+                                                        fullWidth
+                                                        required
+                                                        autoFocus
+                                                        inputProps={{ 'data-testid': 'otherWork' }}
+                                                        size="small"
+                                                        placeholder='Describe work'
+                                                        value={otherWork}
+                                                        onChange={(event) => setOtherWork(event.target.value)}
+                                                        error={!!errors.otherWork}
+                                                        helperText={errors.otherWork ? errors.otherWork[0] : ' '}
+                                                    />
+                                                </FormControl>
+                                            </Grid>)
+                                        : (<Grid item xs={6} md={3}></Grid>)
+                                    }
                                 </Grid>
                             </FormGroup>
                         </FormControl>
@@ -189,8 +218,6 @@ export default function UserComplaintForm() {
                             {errors['workType'] ? errors['workType'][0] : ' '}
                         </Typography>
                     </Grid>
-                </Grid>
-                <Grid item xs={12} md={8}>
                     <FormControl className={classes.formControl}>
                         <TextField
                             className={classes.style}
