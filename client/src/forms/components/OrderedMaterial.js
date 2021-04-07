@@ -161,7 +161,7 @@ export default function OrderedMaterial() {
                     Add
                 </Button>
             </Grid>
-            <Grid xs={12} style={{marginTop: '9px'}}>
+            <Grid item xs={12} style={{marginTop: '2px'}}>
                 <OrderedMaterialTable orderedMaterials={orderedMaterials} availableMaterials={availableMaterials} setOrderedMaterials={setOrderedMaterials} type='ordered' />
             </Grid>
         </Grid>

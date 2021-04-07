@@ -82,7 +82,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
                 _id: selected[0]._id,
                 material: selected[0].material,
                 cost: selected[0].cost,
-                units: selected[0].units,
+                units: selected[0].quantity,
             });
         }else{
             setSelectedMaterial({
