@@ -58,6 +58,8 @@ export default function OrderedMaterial() {
     const addHandler = () => {
         OrderedMaterialValidator().validate({
             material,
+            approxCost,
+            units
         }).then(() => {
             const isAdded = isMaterialExists(orderedMaterials, material.trim());
             const isInStore = isMaterialExists(availableMaterials, material.trim());
@@ -92,7 +94,7 @@ export default function OrderedMaterial() {
                     Ordered By Administrative Officer
                 </Typography>
             </Grid>
-            <Grid item md={5} xs={12}>
+            <Grid item md={4} xs={12}>
                 <FormControl className={classes.formControl}>
                     <TextField
                         fullWidth
@@ -127,7 +129,7 @@ export default function OrderedMaterial() {
                     />
                 </FormControl>
             </Grid>
-            <Grid item md={2} xs={12}>
+            <Grid item md={3} xs={12}>
                 <FormControl className = {classes.formControl}>
                     <TextField
                         className={classes.numberInput}

@@ -100,7 +100,9 @@ export default function MaterialTable({ orderedMaterials, availableMaterials, se
 
     const saveHandler = (index) => {
         OrderedMaterialValidator().validate({
-            material
+            material,
+            approxCost,
+            units
         })
         .then(() => {
             checkDuplicate(material,index).then(() => {
