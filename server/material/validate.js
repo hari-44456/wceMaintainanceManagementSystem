@@ -44,12 +44,17 @@ const updateSchema = Joi.object()
   )
   .unknown(true);
 
-const deleteSchema = Joi.object().keys({
-  complaintId: Joi.string().required(),
-  type: Joi.string().required().valid('available', 'ordered'),
-  quantity: Joi.number().required(),
-});
-
+const deleteSchema = Joi.object()
+  .keys({
+    complaintId: Joi.string().required(),
+    type: Joi.string().required().valid('available', 'ordered'),
+  })
+  .when(Joi.object({ type: Joi.string().valid('available') }).unknown(true), {
+    then: Joi.object({
+      quantity: Joi.number().required(),
+    }),
+  })
+  .unknown(true);
 module.exports.validatePost = async (req, res, next) => {
   try {
     await schema.validateAsync(req.body);

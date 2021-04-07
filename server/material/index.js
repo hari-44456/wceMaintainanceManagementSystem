@@ -185,25 +185,26 @@ router.delete('/:id', validateDelete, async (req, res) => {
         success: 0,
         error: 'Id not provided',
       });
-    if (req.body.type === 'available')
+    if (req.body.type === 'available') {
       await Material.updateOne(
         { complaintId: req.body.complaintId },
         { $pull: { availableInStore: { _id: req.params.id } } }
       );
-    else
+      await Store.updateOne(
+        { _id: req.params.id },
+        { $inc: { quantity: req.body.quantity } }
+      );
+    } else
       await Material.updateOne(
         { complaintId: req.body.complaintId },
         { $pull: { orderedMaterial: { _id: req.params.id } } }
       );
 
-    await Store.updateOne(
-      { _id: req.params.id },
-      { $inc: { quantity: req.body.quantity } }
-    );
     return res.status(200).json({
       success: 1,
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       success: 0,
       error: 'Unable to delete record',
