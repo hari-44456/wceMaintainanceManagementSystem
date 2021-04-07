@@ -243,10 +243,10 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
             `/api/material/${data[index]._id}`,
             queryData
           );
-          console.log(result);
 
           const editedData = [...data];
           editedData[index] = {
+            _id: data[index]._id,
             material: selectedMaterial.material.trim(),
             cost: selectedMaterial.cost,
             units,
