@@ -59,7 +59,7 @@ export default function MaterialTable({
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error,addToast]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -187,7 +187,7 @@ export default function MaterialTable({
                 );
 
                 const editedData = [...orderedMaterials];
-                editedData[index] = {
+                editedData[index] = { 
                   _id: orderedMaterials[index]._id,
                   material: material.trim(),
                   approxCost,
