@@ -48,7 +48,6 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
     row: null,
   });
 
-  const [unitsBeforeEditing, setUnitsBeforeEditing] = useState(0);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -58,7 +57,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error, addToast]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -81,33 +80,6 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
     });
     setUnits(0);
     setErrors({});
-  };
-
-  const changeHandler = (event) => {
-    setSelectedMaterial({
-      ...selectedMaterial,
-      material: event.target.value,
-    });
-    const selected = storeMaterials.filter(
-      (item) => item.material === event.target.value
-    );
-    if (selected.length > 0) {
-      setSelectedMaterial({
-        ...selectedMaterial,
-        _id: selected[0]._id,
-        material: selected[0].material,
-        cost: selected[0].cost,
-        units: selected[0].quantity,
-      });
-    } else {
-      setSelectedMaterial({
-        ...selectedMaterial,
-        _id: null,
-        material: event.target.value,
-        cost: 0,
-        units: 0,
-      });
-    }
   };
 
   const isMaterialExists = (array, value) => {
@@ -239,14 +211,14 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
             quantity: units,
           };
 
-          const result = await axiosInstance.put(
+          await axiosInstance.put(
             `/api/material/${data[index]._id}`,
             queryData
           );
-          console.log(result);
 
           const editedData = [...data];
           editedData[index] = {
+            _id: data[index]._id,
             material: selectedMaterial.material.trim(),
             cost: selectedMaterial.cost,
             units,
@@ -281,31 +253,6 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
       <TableRow key={index}>
         <TableCell component="th" scope="row" width="40%">
           {selectedMaterial.material}
-          {/* <FormControl className={classes.formControl}>
-            <TextField
-              name="Store Materials"
-              label="Material"
-              autoComplete="off"
-              value={selectedMaterial.material}
-              onChange={(event) => changeHandler(event)}
-              error={!!errors.material}
-              helperText={errors.material ? errors.material[0] : ' '}
-              InputProps={{
-                endAdornment: (
-                  <datalist id="storeList">
-                    {storeMaterials.map((item, index) => (
-                      <option key={index} value={item.material}>
-                        {item.material}
-                      </option>
-                    ))}
-                  </datalist>
-                ),
-                inputProps: {
-                  list: 'storeList',
-                },
-              }}
-            />
-          </FormControl> */}
         </TableCell>
         <TableCell component="th" scope="row" align="right" width="20%">
           <FormControl>
