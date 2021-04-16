@@ -47,9 +47,10 @@ router.get('/:id', verify, async (req, res) => {
     }
 
     const result = await Complaint.find(query).select({
-      status: 1,
+      department: 1,
       date: 1,
-      title: 1,
+      workType: 1,
+      status: 1,
     });
     return res.status(200).json({
       success: 1,

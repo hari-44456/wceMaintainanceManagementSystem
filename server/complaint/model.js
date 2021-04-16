@@ -9,18 +9,15 @@ const ComplaintSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  title: {
-    type: String,
-    required: true,
-  },
   details: {
     type: String,
     required: true,
   },
   room: {
-    type: Number,
+    type: String,
+    required: true,
   },
-  nature: {
+  workType: {
     type: String,
     required: true,
   },
@@ -37,6 +34,7 @@ const ComplaintSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
+    default: 'Forwarded to HoD',
   },
   stage: {
     type: Number,

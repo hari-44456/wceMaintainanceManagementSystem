@@ -14,9 +14,9 @@ import Home from './Home/pages';
 import UserComplaintForm from './forms/components/UserComplaintForm';
 import HodForm from './forms/components/HodForm';
 import FormB from './forms/components/FormB2';
-
-import Store from './store';
-
+import Table from './Table/index';
+import Hod from './Table/HOD';
+import Admin from './Table/Admin';
 const App = () => {
   return (
     <Router>
@@ -26,8 +26,10 @@ const App = () => {
             <Redirect exact from="/" to={'/ui'} />
             <Route exact path="/ui" component={Home} />
             <Route path="/ui/login" component={Login} />
+            <Route exact path="/ui/table" component={Table} />
+            <Route exact path="/ui/table/hod" component={Hod} />
+            <Route exact path="/ui/table/admin" component={Admin} />
             <Route path="/ui/dashboard" component={Dashboards} />
-            <Route path="/ui/store" component={Store} />
             <Route
               exact
               path="/ui/forms/complaint"

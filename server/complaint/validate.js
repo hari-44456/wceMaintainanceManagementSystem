@@ -4,11 +4,22 @@ const schema = Joi.object()
   .keys({
     department: Joi.string().required('Department is required'),
     room: Joi.string().required('Location is Required'),
-    nature: Joi.string().required('Type of Complaint is required'),
+    workType: Joi.string()
+      .required('Type of Complaint is required')
+      .valid('Electrical', 'Plumbing', 'Repair', 'Furniture', 'Other'),
     signOfStudentOrStaff: Joi.string().required('Signature is required'),
     details: Joi.string().required('Details of Work is required'),
-    title: Joi.string().required('Complaint Title is Required'),
   })
+  .when(
+    Joi.object({ workType: Joi.string().required().valid('Other') }).unknown(
+      true
+    ),
+    {
+      then: Joi.object({
+        otherWork: Joi.string().required('Work Type Not Provided'),
+      }),
+    }
+  )
   .unknown(true);
 
 module.exports = async (req, res, next) => {
