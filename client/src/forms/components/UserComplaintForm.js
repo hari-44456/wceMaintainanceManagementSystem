@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     borderRadius: 0,
     margin: theme.spacing(2, 0),
+    width: '60%'
   },
   style: {
     margin: theme.spacing(1, 0),
@@ -367,7 +368,6 @@ export default function UserComplaintForm() {
           <Button
             className={[classes.button, classes.style].join(' ')}
             type="submit"
-            fullWidth
             size="large"
             color="secondary"
             variant="contained"

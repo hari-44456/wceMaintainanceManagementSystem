@@ -87,7 +87,7 @@ const data = [
 
 export default function TableD() {
   const classes = useStyles();
-  //pagination
+
   const [page,setPage]=useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [columnTosort,setColumn]=useState('ID');

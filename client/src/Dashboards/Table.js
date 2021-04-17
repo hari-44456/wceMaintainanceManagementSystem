@@ -136,7 +136,8 @@ export default function TableD({ data }) {
     setRows(orderBy(tmp, columnTosort, direction));
   };
 
-  const handleSearch = (searchedVal) =>
+  const handleSearch = (searchedVal) =>{
+    console.log(searchedVal);
     setRows(
       searchedVal
         ? rows.filter((row) =>
@@ -144,6 +145,7 @@ export default function TableD({ data }) {
           )
         : data
     );
+  }
 
   const cancelSearch = () => {
     setSearched('');
