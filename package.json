@@ -12,5 +12,8 @@
   "devDependencies": {
     "concurrently": "^6.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "material-ui-search-bar": "^1.0.0",
+    "react-toast-notifications": "^2.4.3"
+  }
 }
