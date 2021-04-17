@@ -114,10 +114,12 @@ export default function TableD({ data }) {
 
   const handleSortDrop = (event) => {
     const columnName = event.target.value;
-    setSort(event.target.value);
-    const editedData = [...rows];
+    setSort(columnName);
+    const editedData = [...data];
     editedData.sort(
-      (a, b) => a[columnName].toLowerCase() > b[columnName].toLowerCase()
+      (a, b) =>
+        a[columnName].toString().toLowerCase() >
+        b[columnName].toString().toLowerCase()
     );
     setRows(editedData);
   };
