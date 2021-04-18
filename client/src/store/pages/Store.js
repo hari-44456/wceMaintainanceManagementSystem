@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 import { useToasts } from 'react-toast-notifications';
 
@@ -8,6 +9,7 @@ import axiosInstance from '../../helpers/axiosInstance';
 
 export default function Store() {
   const { addToast } = useToasts();
+  const history = useHistory();
 
   const [availableMaterial, setAvailableMaterial] = useState([]);
 
@@ -39,6 +41,7 @@ export default function Store() {
         } else throw new Error();
       } catch (error) {
         try {
+          if (error.response.status === 403) history.push('/ui/login/admin');
           setError(error.response.data.error);
         } catch (error) {
           setError('Unable to fetch data');
