@@ -7,7 +7,7 @@ module.exports.verify = async (req, res, next) => {
 
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
       if (err) {
-        return res.status(400).json({
+        return res.status(403).json({
           success: 0,
           error: 'Invalid token',
         });
@@ -29,7 +29,7 @@ module.exports.verifyAdmin = async (req, res, next) => {
 
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
       if (err) {
-        return res.status(400).json({
+        return res.status(403).json({
           success: 0,
           error: 'Invalid token',
         });
