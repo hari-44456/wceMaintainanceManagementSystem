@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     type: Number, // 0-> Student/Staff 1-> HoD 2->AO 3->Maintenance Commitee
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);

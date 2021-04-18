@@ -4,6 +4,7 @@ const { verify } = require('../verifyAuthToken');
 const verifySchema = require('./validate');
 const Complaint = require('./model');
 const User = require('../login/model');
+const sendMail = require('../mail');
 
 const isValid = (id) => {
   switch (id) {
@@ -69,14 +70,20 @@ router.get('/:id', verify, async (req, res) => {
 router.post('/', verify, verifySchema, async (req, res) => {
   try {
     req.body.userId = req.user;
+    const { email } = await User.findOne({ _id: req.user }).select({
+      email: 1,
+    });
+
     const newComplaint = new Complaint(req.body);
     const result = await newComplaint.save();
+
+    await sendMail(email, 'Complaint Received successfully...');
+
     return res.status(200).json({
       success: 1,
       result,
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       success: 0,
       error: 'Unable to Create Complaint',
