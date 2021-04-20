@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TableD({
+export default function Util({
   searched,
   setSearched,
   sort,
@@ -43,9 +43,9 @@ export default function TableD({
   handleSortDrop,
   handleFilter,
   cancelSearch,
+  match,
 }) {
   const classes = useStyles();
-
   return (
     <>
       <div className="Title">
@@ -123,12 +123,14 @@ export default function TableD({
             </div>
           </Box>
           <Box p={1} bgcolor="grey.300">
-            <Link to="/ui/forms/complaint">
-              <Button size="large" variant="contained" color="primary">
-                <AddIcon />
-                New Complaint
-              </Button>
-            </Link>
+            {match.url.substring(match.url.lastIndexOf('/')) === 'student' && (
+              <Link to="/ui/forms/complaint">
+                <Button size="large" variant="contained" color="primary">
+                  <AddIcon />
+                  New Complaint
+                </Button>
+              </Link>
+            )}
           </Box>
         </Box>
       </div>

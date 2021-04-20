@@ -6,7 +6,7 @@ import Table from './Table';
 import Util from './Util';
 import axiosInstance from '../helpers/axiosInstance';
 
-const UserDashboard = () => {
+const UserDashboard = ({ match }) => {
   const { addToast } = useToasts();
 
   const [data, setData] = useState([]);
@@ -116,6 +116,7 @@ const UserDashboard = () => {
         handleSortDrop={handleSortDrop}
         handleFilter={handleFilter}
         cancelSearch={cancelSearch}
+        match={match}
       />
       <br />
       <br />
@@ -125,6 +126,7 @@ const UserDashboard = () => {
         setDirection={setDirection}
         columnTosort={columnTosort}
         setColumnToSort={setColumnToSort}
+        match={match}
       />
     </>
   );

@@ -10,10 +10,12 @@ import {
   Paper,
   TablePagination,
   Typography,
+  Button,
 } from '@material-ui/core';
 import orderBy from 'lodash/orderBy';
 
 import './style.css';
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -52,7 +54,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const createData = (id, title, date, status, department) => ({
+const createData = (_id, id, title, date, status, department) => ({
+  _id,
   id,
   title,
   date,
@@ -61,6 +64,7 @@ const createData = (id, title, date, status, department) => ({
 });
 
 export default function TableD({
+  match,
   data,
   direction,
   setDirection,
@@ -76,7 +80,14 @@ export default function TableD({
   useEffect(() => {
     setRows(
       data.map((doc) =>
-        createData(doc.id, doc.title, doc.date, doc.status, doc.department)
+        createData(
+          doc._id,
+          doc.id,
+          doc.title,
+          doc.date,
+          doc.status,
+          doc.department
+        )
       )
     );
   }, [data]);
@@ -121,6 +132,7 @@ export default function TableD({
             <StyledTableCell align="right">
               <div onClick={() => handleSort('department')}>Departement</div>
             </StyledTableCell>
+            <StyledTableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -144,6 +156,22 @@ export default function TableD({
                 <StyledTableCell align="right">{row.status}</StyledTableCell>
                 <StyledTableCell align="right">
                   {row.department}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Link
+                    to={{
+                      pathname: `view/${match.url.substring(
+                        match.url.lastIndexOf('/') + 1
+                      )}`,
+                      state: {
+                        complaintId: row._id,
+                      },
+                    }}
+                  >
+                    <Button>View</Button>
+                  </Link>
+                  <Button>Accept</Button>
+                  <Button>Reject</Button>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

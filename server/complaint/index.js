@@ -91,4 +91,35 @@ router.post('/', verify, verifySchema, async (req, res) => {
   }
 });
 
+router.get('/details/:id', verify, async (req, res) => {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Complaint id not provided',
+      });
+
+    const complaint = await Complaint.findOne({ _id: req.params.id })
+      .populate('userId', 'email')
+      .exec();
+
+    if (!complaint)
+      return res.status(400).json({
+        success: 0,
+        error: 'Could not find requested complaint',
+      });
+
+    return res.status(200).json({
+      success: 1,
+      complaint,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Unable to find details',
+    });
+  }
+});
+
 module.exports = router;

@@ -5,6 +5,7 @@ import AdminDashboard from './AdminDashboard';
 import HodDashboard from './HodDashboard';
 import UserDashboard from './UserDashboard';
 import axiosInstance from '../helpers/axiosInstance';
+import ComplaintView from '../complaintViews';
 
 const Dashboards = ({ match }) => {
   const history = useHistory();
@@ -20,6 +21,7 @@ const Dashboards = ({ match }) => {
     };
     isAuthenticated();
   }, []);
+
   return (
     <Switch>
       <Route
@@ -35,6 +37,10 @@ const Dashboards = ({ match }) => {
       <Route
         path={`${match.url}/hod`}
         render={(props) => <HodDashboard {...props} />}
+      />
+      <Route
+        path={`${match.url}/view`}
+        render={(props) => <ComplaintView {...props} />}
       />
     </Switch>
   );
