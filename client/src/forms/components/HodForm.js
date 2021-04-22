@@ -14,14 +14,28 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     button: {
         borderRadius: 0,
-        margin: theme.spacing(2, 0),
+        width: '60%'
     },
-    style: {
-        margin: theme.spacing(2, 0),
+    acceptBtn: {
+        backgroundColor: 'green', 
+        color: 'white',
+		"&:hover": {
+			backgroundColor: "#006400"
+		}
     },
+    rejectBtn: {
+        backgroundColor: 'red', 
+        color: 'white',
+		"&:hover": {
+			backgroundColor: "#CD0000"
+		}
+    },
+    marginTop: {
+        margin: theme.spacing(2,0),
+    }
 }));
 
-export default function HodForm(){
+export default function HodForm({ rejectHandler }){
     const classes = useStyles();
 
     const [fundSource, setFundSource] = useState('');
@@ -135,17 +149,28 @@ export default function HodForm(){
                     </FormGroup>
                 </Grid>
             </FormControl>
-            <Grid>
-                <Button
-                    className={[classes.button, classes.style].join(' ')}
-                    type="submit"
-                    size="large"
-                    color="secondary"
-                    variant="contained"
-                    onClick={submitHandler}
-                >
-                    Submit
-                </Button>
+            <Grid container spacing={1} className={classes.marginTop}>
+                <Grid item md={4} xs={8}>
+                    <Button
+                        className={[classes.button, classes.rejectBtn].join(' ')}
+                        size="large"
+                        variant="contained"
+                        onClick={rejectHandler}
+                    >
+                        Reject Complaint
+                    </Button>
+                </Grid>
+                <Grid item md={4} xs={4}>
+                    <Button
+                        className={[classes.button, classes.acceptBtn].join(' ')}
+                        type="submit"
+                        size="large"
+                        variant="contained"
+                        onClick={submitHandler}
+                    >
+                        Submit
+                    </Button>
+                </Grid>
             </Grid>
         </form>
     )
