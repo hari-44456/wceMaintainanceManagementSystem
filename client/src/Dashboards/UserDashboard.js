@@ -3,7 +3,7 @@ import { useToasts } from 'react-toast-notifications';
 import orderBy from 'lodash/orderBy';
 
 import Table from './Table';
-import Util from './Util';
+import DashboardHeader from './DashboardHeader';
 import axiosInstance from '../helpers/axiosInstance';
 
 const UserDashboard = ({ match }) => {
@@ -104,7 +104,7 @@ const UserDashboard = ({ match }) => {
 
   return (
     <>
-      <Util
+      <DashboardHeader
         searched={searched}
         setSearched={setSearched}
         sort={sort}
