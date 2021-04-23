@@ -14,19 +14,25 @@ import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchBar from 'material-ui-search-bar';
 
-import './style.css';
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    backgroundColor: 'rgb(192, 45, 26)',
+    color:' #fff',
+  },
   formControl: {
     width: '100%',
   },
   searchBar: {
     width: '100%',
     height: '100%'
+  },
+  titleDiv: {
+    display: 'flex'
   }
 }));
 
-export default function Util({
+export default function DashboardHeader({
   searched,
   setSearched,
   sort,
@@ -39,9 +45,11 @@ export default function Util({
   const classes = useStyles();
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} className="Title">
-        <ReceiptIcon />
-        <h1>User Complaints</h1>
+      <Grid item xs={12} align="center" className={classes.title}>
+        <div className={classes.titleDiv}>
+          <ReceiptIcon />
+          <h1>User Complaints</h1>
+        </div>
       </Grid>
       <Grid item xs={12} style={{backgroundColor: 'lightgrey'}}>
         <Grid container spacing={2}>
