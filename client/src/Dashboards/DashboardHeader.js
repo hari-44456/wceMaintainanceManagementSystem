@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
   searchBar: {
     width: '100%',
     height: '100%'
-  },
-  titleDiv: {
-    display: 'flex'
   }
 }));
 
@@ -46,10 +43,8 @@ export default function DashboardHeader({
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} align="center" className={classes.title}>
-        <div className={classes.titleDiv}>
-          <ReceiptIcon />
-          <h1>User Complaints</h1>
-        </div>
+        <ReceiptIcon />
+        <h1>User Complaints</h1>
       </Grid>
       <Grid item xs={12} style={{backgroundColor: 'lightgrey'}}>
         <Grid container spacing={2}>
