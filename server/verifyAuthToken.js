@@ -28,17 +28,26 @@ module.exports.verifyAdmin = async (req, res, next) => {
     let token = req.cookies['auth-token'];
 
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
-      if (err) {
+      try {
+        if (err) {
+          return res.status(403).json({
+            success: 0,
+            error: 'Invalid token',
+          });
+        }
+        req.user = decoded.data;
+
+        const id = await User.findOne({ _id: decoded.data, role: 2 });
+
+        if (!id) throw new Error('Unauthorized ');
+        next();
+      } catch (error) {
         return res.status(403).json({
           success: 0,
-          error: 'Invalid token',
+          error: 'Unauthorized',
+          errorReturned: error,
         });
       }
-      req.user = decoded.data;
-
-      const id = await User.findOne({ _id: decoded.data, role: 2 });
-      if (!id) throw new Error();
-      next();
     });
   } catch (error) {
     return res.status(403).json({
