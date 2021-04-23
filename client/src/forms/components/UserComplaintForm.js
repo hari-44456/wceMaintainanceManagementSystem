@@ -8,8 +8,12 @@ import {
   FormLabel,
   FormGroup,
   FormControlLabel,
+  FormHelperText,
   Radio,
   Chip,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteOutline } from '@material-ui/icons';
@@ -22,7 +26,14 @@ const useStyles = makeStyles((theme) => ({
   button: {
     borderRadius: 0,
     margin: theme.spacing(2, 0),
-    width: '60%'
+    width: '60%',
+  },
+  submitBtn: {
+    backgroundColor: 'green', 
+        color: 'white',
+		"&:hover": {
+			backgroundColor: "#006400"
+		}
   },
   style: {
     margin: theme.spacing(1, 0),
@@ -69,6 +80,15 @@ export default function UserComplaintForm() {
     setSuccess(null);
   }, [success]);
 
+  const departments = [
+    "Civil",
+    "Computer Science and Engineering",
+    "Electrical",
+    "Electronics",
+    "Information Technology",
+    "Mechanical",
+  ];
+
   const resetForm = () => {
     setDepartment('');
     setLocation('');
@@ -82,6 +102,10 @@ export default function UserComplaintForm() {
   const handleChange = (event) => {
     setWorkType(event.target.value);
   };
+
+  const handleDeptChange =  (event) => {
+    setDepartment(event.target.value);
+  }
 
   const addLocationHandler = (event) => {
     event.preventDefault();
@@ -169,22 +193,25 @@ export default function UserComplaintForm() {
     <form className="user-complaint-form">
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
-          <Grid>
-            <FormControl className={classes.formControl}>
-              <TextField
-                className={classes.style}
-                fullWidth
-                required
-                autoFocus
-                inputProps={{ 'data-testid': 'department' }}
-                label="Department"
-                variant="outlined"
-                size="small"
+          <Grid className={classes.style}>
+            <FormControl className={classes.formControl} variant="outlined" error={!!errors.department} size="small">
+              <InputLabel>Department</InputLabel>
+              <Select
                 value={department}
-                onChange={(event) => setDepartment(event.target.value)}
-                error={!!errors.department}
-                helperText={errors.department ? errors.department[0] : ' '}
-              />
+                onChange={handleDeptChange}
+                label="Department"
+                inputProps={{
+                  name: 'department',
+                  id: 'outlined-department-native-simple',
+                }}
+              >
+                {
+                  departments.map((department,index) => 
+                    <MenuItem key={index} value={department}>{department}</MenuItem>
+                  )
+                }
+              </Select>
+              <FormHelperText>{errors.department ? errors.department[0] : ' '}</FormHelperText>
             </FormControl>
           </Grid>
           <form>
@@ -199,8 +226,8 @@ export default function UserComplaintForm() {
                     inputProps={{ 'data-testid': 'location' }}
                     label="Room/Location"
                     variant="outlined"
-                    size="small"
                     value={location}
+                    size="small"
                     onChange={(event) => setLocation(event.target.value)}
                     error={!!errors.locations}
                     helperText={errors.locations ? errors.locations[0] : ' '}
@@ -366,7 +393,7 @@ export default function UserComplaintForm() {
         </Grid>
         <Grid container justify="center" alignItems="center">
           <Button
-            className={[classes.button, classes.style].join(' ')}
+            className={[classes.button, classes.style,classes.submitBtn].join(' ')}
             type="submit"
             size="large"
             color="secondary"
