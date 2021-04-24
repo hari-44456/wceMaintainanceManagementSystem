@@ -1,7 +1,11 @@
 const router = require('express').Router();
 
 const { verify } = require('../verifyAuthToken');
-const verifySchema = require('./validate');
+const {
+  validateCreateSchema,
+  validateAcceptSchema,
+  validateRejectSchema,
+} = require('./validate');
 const Complaint = require('./model');
 const User = require('../login/model');
 const sendMail = require('../mail');
@@ -67,7 +71,7 @@ router.get('/:id', verify, async (req, res) => {
   }
 });
 
-router.post('/', verify, verifySchema, async (req, res) => {
+router.post('/', verify, validateCreateSchema, async (req, res) => {
   try {
     req.body.userId = req.user;
     const { email } = await User.findOne({ _id: req.user }).select({
@@ -119,6 +123,82 @@ router.get('/details/:id', verify, async (req, res) => {
     return res.status(400).json({
       success: 0,
       error: 'Unable to find details',
+    });
+  }
+});
+
+router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Complaint id not provided',
+      });
+
+    const {
+      userId: { email },
+    } = await Complaint.findOne({ _id: req.params.id })
+      .populate('userId', 'email')
+      .exec();
+
+    await Complaint.updateOne(
+      { _id: req.params.id },
+      {
+        $set: {
+          stage: 2,
+          sourceOfFund: 'Other '
+            ? req.body.otherSourceOfFund
+            : req.body.sourceOfFund,
+
+          status: 'Forwarded to Administrative Officer',
+        },
+      }
+    );
+
+    await sendMail(email, 'Forwarded to Administrative OFficer');
+    return res.status(200).json({
+      success: 1,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Could not complate operation',
+    });
+  }
+});
+
+router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Complaint id not provided',
+      });
+
+    const {
+      userId: { email },
+    } = await Complaint.findOne({ _id: req.params.id })
+      .populate('userId', 'email')
+      .exec();
+
+    req.body.status = 'Rejected by Hod';
+    await Complaint.updateOne(
+      { _id: req.params.id },
+      {
+        $set: req.body,
+      }
+    );
+    await sendMail(email, 'Rejected by Hod');
+
+    return res.status(200).json({
+      success: 1,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Could not complate operation',
     });
   }
 });
