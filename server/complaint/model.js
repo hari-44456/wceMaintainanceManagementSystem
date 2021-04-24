@@ -21,6 +21,9 @@ const ComplaintSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  otherWork: {
+    type: String,
+  },
   signOfStudentOrStaff: {
     type: String,
     required: true,
