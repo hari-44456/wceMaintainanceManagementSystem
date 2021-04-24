@@ -44,10 +44,6 @@ const HodView = (props) => {
   const [buttonVisibility, setButtonVisibility] = useState(true);
   const [editComplaint, setEditComplaint] = useState(true);
 
-  const [reason, setReason] = useState('');
-  const [sourceOfFund, setSourceOfFund] = useState('');
-  const [otherSourceOfFund, setOtherSourceOFFund] = useState('');
-
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -59,7 +55,7 @@ const HodView = (props) => {
       });
     }
     setError(null);
-  }, [error]);
+  }, [error, addToast]);
 
   useEffect(() => {
     if (success) {
@@ -69,7 +65,7 @@ const HodView = (props) => {
       });
     }
     setSuccess(null);
-  }, [success]);
+  }, [success,addToast]);
 
   useEffect(() => {
     (async () => {
@@ -87,7 +83,7 @@ const HodView = (props) => {
             'Forwarded to Administrative OFficer' ||
           result.data.complaint.stage >= 2
         )
-          setEditComplaint(false);
+        setEditComplaint(false);
         setComplaint(result.data.complaint);
       } catch (error) {
         try {
@@ -98,7 +94,7 @@ const HodView = (props) => {
         }
       }
     })();
-  }, []);
+  }, [history, props]);
 
   const acceptHandler = () => {
     setNextForm('HodForm');
@@ -108,53 +104,6 @@ const HodView = (props) => {
   const rejectHandler = () => {
     setNextForm('RejectReasonForm');
     setButtonVisibility(false);
-  };
-
-  const handleSetOtherSourceOfFund = (data) => setOtherSourceOFFund(data);
-
-  const acceptComplaint = async () => {
-    try {
-      const queryData = {
-        sourceOfFund,
-        otherSourceOfFund,
-      };
-      const result = await axiosInstance.post(
-        `/api/complaint/accept/${props.location.state.complaintId}/`,
-        queryData
-      );
-      console.log(result);
-      if (!result.data.success) throw new Error();
-      setSuccess('Complaint forwarded to Administrative Officer');
-      history.push('/ui/dashboard/hod');
-    } catch (error) {
-      try {
-        setError(error.response.data.error);
-      } catch (error) {
-        setError('Could not complete operation');
-      }
-    }
-  };
-
-  const rejectComplaint = async () => {
-    try {
-      const queryData = {
-        reasonForRejection: reason,
-      };
-      const result = await axiosInstance.post(
-        `/api/complaint/reject/${props.location.state.complaintId}/`,
-        queryData
-      );
-      console.log(result);
-      if (!result.data.success) throw new Error();
-      history.push('/ui/dashboard/hod');
-      setSuccess('Sent rejection status');
-    } catch (error) {
-      try {
-        setError(error.response.data.error);
-      } catch (error) {
-        setError('Could not complete operation');
-      }
-    }
   };
 
   const formButtons = () => {
@@ -193,22 +142,10 @@ const HodView = (props) => {
     return (
       <>
         {nextForm === 'HodForm' && (
-          <HodForm
-            rejectHandler={rejectHandler}
-            sourceOfFund={sourceOfFund}
-            setSourceOfFund={setSourceOfFund}
-            otherSourceOfFund={otherSourceOfFund}
-            handleSetOtherSourceOfFund={handleSetOtherSourceOfFund}
-            acceptComplaint={acceptComplaint}
-          />
+          <HodForm props={props} rejectHandler={rejectHandler} />
         )}
         {nextForm === 'RejectReasonForm' && (
-          <RejectReasonForm
-            acceptHandler={acceptHandler}
-            reason={reason}
-            setReason={setReason}
-            rejectComplaint={rejectComplaint}
-          />
+          <RejectReasonForm props={props} acceptHandler={acceptHandler} />
         )}
       </>
     );

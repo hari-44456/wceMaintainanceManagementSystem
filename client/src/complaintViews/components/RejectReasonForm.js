@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  FormControl,
-  Grid,
-  makeStyles,
-  TextField,
-} from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { Button, FormControl, Grid, makeStyles, TextField } from '@material-ui/core';
+
+import axiosInstance from '../../helpers/axiosInstance';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -24,15 +21,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RejectReasonForm({
-  acceptHandler,
-  reason,
-  setReason,
-  rejectComplaint,
-}) {
+export default function RejectReasonForm({ props, acceptHandler }) {
   const classes = useStyles();
+  const history = useHistory();
 
+  const [reason, setReason] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [errors, setErrors] = useState('');
+
+  const rejectComplaint = async () => {
+    try {
+      const queryData = {
+        reasonForRejection: reason,
+      };
+      const result = await axiosInstance.post(
+        `/api/complaint/reject/${props.location.state.complaintId}/`,
+        queryData
+      );
+      console.log(result);
+      if (!result.data.success) throw new Error();
+      history.push('/ui/dashboard/hod');
+      setSuccess('Sent rejection status');
+    } catch (error) {
+      try {
+        setError(error.response.data.error);
+      } catch (error) {
+        setError('Could not complete operation');
+      }
+    }
+  };
 
   const submitHandler = () => {
     if (reason.trim() === '') {

@@ -6,7 +6,6 @@ import {
   FormControl,
   Select,
   Button,
-  Box,
   Grid,
 } from '@material-ui/core';
 import ReceiptIcon from '@material-ui/icons/Receipt';
@@ -86,10 +85,10 @@ export default function DashboardHeader({
               'student' && (
               <Link to="/ui/forms/complaint">
                 <Button
-                  size="large"
+                  fullWidth
                   variant="contained"
                   color="primary"
-                  style={{ marginTop: '5px' }}
+                  style={{ height: '100%' }}
                 >
                   <AddIcon />
                   New Complaint

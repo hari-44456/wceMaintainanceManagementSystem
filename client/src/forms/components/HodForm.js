@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   FormControl,
@@ -11,6 +12,8 @@ import {
   TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
+import axiosInstance from '../../helpers/axiosInstance';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -39,17 +42,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HodForm({
-  rejectHandler,
-  sourceOfFund,
-  setSourceOfFund,
-  otherSourceOfFund,
-  handleSetOtherSourceOfFund,
-  acceptComplaint,
-}) {
+export default function HodForm({ props, rejectHandler }) {
   const classes = useStyles();
+  const history = useHistory();
 
+  const [sourceOfFund, setSourceOfFund] = useState('');
+  const [otherSourceOfFund, setOtherSourceOFFund] = useState('');
   const [errors, setErrors] = useState({});
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = (event) => {
     setSourceOfFund(event.target.value);
@@ -73,6 +74,30 @@ export default function HodForm({
     return success
       ? Promise.resolve(validationResult)
       : Promise.reject(validationResult);
+  };
+
+  const acceptComplaint = async () => {
+    try {
+      const queryData = {
+        sourceOfFund,
+        otherSourceOfFund,
+      };
+      const result = await axiosInstance.post(
+        `/api/complaint/accept/${props.location.state.complaintId}/`,
+        queryData
+      );
+      if (!result.data.success) throw new Error();
+      setSuccess('Complaint forwarded to Administrative Officer');
+      history.push('/ui/dashboard/hod');
+    } catch (error) {
+      console.log(error);
+      try {
+        setError(error.response.data.error);
+      } catch (error) {
+        console.log(error);
+        setError('Could not complete operation');
+      }
+    }
   };
 
   const submitHandler = (event) => {
@@ -168,7 +193,7 @@ export default function HodForm({
                       placeholder="Describe source of fund"
                       value={otherSourceOfFund}
                       onChange={(event) =>
-                        handleSetOtherSourceOfFund(event.target.value)
+                        setOtherSourceOFFund(event.target.value)
                       }
                       error={!!errors.otherSourceOfFund}
                       helperText={
