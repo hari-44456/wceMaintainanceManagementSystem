@@ -170,8 +170,6 @@ export default function TableD({
                   >
                     <Button>View</Button>
                   </Link>
-                  <Button>Accept</Button>
-                  <Button>Reject</Button>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
