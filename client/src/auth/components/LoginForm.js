@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   IconButton,
@@ -8,10 +8,10 @@ import {
   FormControl,
   Grid,
 } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import LoginValidator from '../utils/LoginValidator';
 import axiosInstance from '../../helpers/axiosInstance';
@@ -29,15 +29,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DisplayAlert = ({ error }) => (
-  <Alert severity="error">
-    <AlertTitle>{error}</AlertTitle>
-  </Alert>
-);
-
 export default function LoginForm({ type }) {
   const classes = useStyles();
   const history = useHistory();
+  const { addToast } = useToasts();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -48,6 +43,15 @@ export default function LoginForm({ type }) {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
+  useEffect(() => {
+    if (loginError)
+      addToast(loginError, {
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    setLoginError(null);
+  }, [loginError]);
+
   const resetForm = () => {
     setUsername('');
     setPassword('');
@@ -56,57 +60,57 @@ export default function LoginForm({ type }) {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    try {
-      LoginValidator()
-        .validate({
-          username,
-          password,
-        })
-        .then(
-          () => resetForm(),
-          (error) => setErrors(error.errors)
-        );
 
-      const data = {
+    LoginValidator()
+      .validate({
         username,
         password,
-      };
+      })
+      .then(async () => {
+        try {
+          const data = {
+            username,
+            password,
+          };
 
-      const result = await axiosInstance.post('/api/login', data);
+          const result = await axiosInstance.post('/api/login', data);
 
-      let typeCheck;
-      switch (result.data.role) {
-        case 0:
-          typeCheck = 'student';
-          break;
-        case 1:
-          typeCheck = 'hod';
-          break;
-        case 2:
-          typeCheck = 'admin';
-          break;
-        case 3:
-          typeCheck = 'commitee';
-          break;
-        default:
-          break;
-      }
+          let typeCheck;
+          switch (result.data.role) {
+            case 0:
+              typeCheck = 'student';
+              break;
+            case 1:
+              typeCheck = 'hod';
+              break;
+            case 2:
+              typeCheck = 'admin';
+              break;
+            case 3:
+              typeCheck = 'commitee';
+              break;
+            default:
+              break;
+          }
 
-      if (!result.data.success || typeCheck !== type) throw new Error();
+          if (!result.data.success || typeCheck !== type) throw new Error();
 
-      history.push(`/ui/dashboard/${type}`);
-    } catch (err) {
-      try {
-        setLoginError(err.response.data.error);
-      } catch (error) {
-        setLoginError('Invalid Credentials');
-      }
-    }
+          history.push(`/ui/dashboard/${type}`);
+
+          resetForm();
+        } catch (error) {
+          try {
+            setLoginError(error.response.data.error);
+          } catch (error) {
+            setLoginError('Invalid Credentials');
+          }
+        }
+      })
+      .catch((error) => setErrors(error.errors));
   };
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
-      {loginError !== '' ? <DisplayAlert error={loginError} /> : ''}
       <form className="login-form">
         <Grid>
           <FormControl>
