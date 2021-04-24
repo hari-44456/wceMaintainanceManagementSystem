@@ -7,26 +7,25 @@ import {
   Select,
   Button,
   Box,
-  Grid
+  Grid,
 } from '@material-ui/core';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchBar from 'material-ui-search-bar';
 
-
 const useStyles = makeStyles((theme) => ({
   title: {
     backgroundColor: 'rgb(192, 45, 26)',
-    color:' #fff',
+    color: ' #fff',
   },
   formControl: {
     width: '100%',
   },
   searchBar: {
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 }));
 
 export default function DashboardHeader({
@@ -46,7 +45,7 @@ export default function DashboardHeader({
         <ReceiptIcon />
         <h1>User Complaints</h1>
       </Grid>
-      <Grid item xs={12} style={{backgroundColor: 'lightgrey'}}>
+      <Grid item xs={12} style={{ backgroundColor: 'lightgrey' }}>
         <Grid container spacing={2}>
           <Grid item md={3} xs={6}>
             <SearchBar
@@ -57,18 +56,9 @@ export default function DashboardHeader({
             />
           </Grid>
           <Grid item md={3} xs={6}>
-            <FormControl
-              variant="outlined"
-              className={classes.formControl}
-            >
-              <InputLabel>
-                Sort By
-              </InputLabel>
-              <Select
-                value={sort}
-                onChange={handleSortDrop}
-                label="Sort By"
-              >
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>Sort By</InputLabel>
+              <Select value={sort} onChange={handleSortDrop} label="Sort By">
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
@@ -81,18 +71,9 @@ export default function DashboardHeader({
             </FormControl>
           </Grid>
           <Grid item md={3} xs={6}>
-            <FormControl
-              variant="outlined"
-              className={classes.formControl}
-            >
-              <InputLabel>
-                Filter By
-              </InputLabel>
-              <Select
-                value={filter}
-                onChange={handleFilter}
-                label="Filter By"
-              >
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>Filter By</InputLabel>
+              <Select value={filter} onChange={handleFilter} label="Filter By">
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
@@ -101,9 +82,15 @@ export default function DashboardHeader({
             </FormControl>
           </Grid>
           <Grid item md={3} xs={6}>
-            {match.url.substring(match.url.lastIndexOf('/')) === 'student' && (
+            {match.url.substring(match.url.lastIndexOf('/') + 1) ===
+              'student' && (
               <Link to="/ui/forms/complaint">
-                <Button size="large" variant="contained" color="primary">
+                <Button
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: '5px' }}
+                >
                   <AddIcon />
                   New Complaint
                 </Button>
