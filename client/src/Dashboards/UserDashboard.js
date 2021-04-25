@@ -33,9 +33,9 @@ const UserDashboard = ({ match }) => {
   }, [error]);
 
   useEffect(() => {
-    const fetchComplaints = async () => {
+    (async () => {
       try {
-        const result = await axiosInstance.get('/api/complaint/student');
+        const result = await axiosInstance.get('/api/complaint/hod');
 
         const tmpData = result.data.complaints.map((doc, index) => {
           const currDate = new Date(doc.date);
@@ -45,6 +45,7 @@ const UserDashboard = ({ match }) => {
           }/${currDate.getFullYear()}`;
 
           return {
+            _id: doc._id,
             id: index + 1,
             title: doc.workType,
             status: doc.status,
@@ -52,7 +53,6 @@ const UserDashboard = ({ match }) => {
             department: doc.department,
           };
         });
-
         setData(tmpData);
         setTableData(tmpData);
       } catch (error) {
@@ -62,8 +62,7 @@ const UserDashboard = ({ match }) => {
           setError('Unable to fetch data');
         }
       }
-    };
-    fetchComplaints();
+    })();
   }, []);
 
   const handleSortDrop = (event) => {
