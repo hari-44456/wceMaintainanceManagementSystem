@@ -65,7 +65,7 @@ const HodView = (props) => {
       });
     }
     setSuccess(null);
-  }, [success,addToast]);
+  }, [success, addToast]);
 
   useEffect(() => {
     (async () => {
@@ -77,13 +77,8 @@ const HodView = (props) => {
         const result = await axiosInstance.get(
           `/api/complaint/details/${props.location.state.complaintId}`
         );
-        if (
-          result.data.complaint.status === 'Rejected by Hod' ||
-          result.data.complaint.status ===
-            'Forwarded to Administrative OFficer' ||
-          result.data.complaint.stage >= 2
-        )
-        setEditComplaint(false);
+        if (result.data.complaint.rejected || result.data.complaint.stage >= 2)
+          setEditComplaint(false);
         setComplaint(result.data.complaint);
       } catch (error) {
         try {
