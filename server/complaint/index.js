@@ -182,14 +182,14 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
       .populate('userId', 'email')
       .exec();
 
-    req.body.status = 'Rejected by Hod';
+    req.body.rejected = true;
     await Complaint.updateOne(
       { _id: req.params.id },
       {
         $set: req.body,
       }
     );
-    await sendMail(email, 'Rejected by Hod');
+    await sendMail(email, req.body.reasonForRejection);
 
     return res.status(200).json({
       success: 1,

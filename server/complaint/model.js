@@ -24,6 +24,13 @@ const ComplaintSchema = new mongoose.Schema({
   otherWork: {
     type: String,
   },
+  reasonForRejection: {
+    type: String,
+  },
+  rejected: {
+    type: Boolean,
+    default: false,
+  },
   signOfStudentOrStaff: {
     type: String,
     required: true,
