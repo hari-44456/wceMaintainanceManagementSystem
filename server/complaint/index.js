@@ -146,9 +146,10 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
       {
         $set: {
           stage: 2,
-          sourceOfFund: 'Other '
-            ? req.body.otherSourceOfFund
-            : req.body.sourceOfFund,
+          sourceOfFund:
+            req.body.sourceOfFund === 'Other'
+              ? req.body.otherSourceOfFund
+              : req.body.sourceOfFund,
 
           status: 'Forwarded to Administrative Officer',
         },
@@ -183,6 +184,8 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
       .exec();
 
     req.body.rejected = true;
+    req.body.status = 'Rejected by Hod';
+
     await Complaint.updateOne(
       { _id: req.params.id },
       {
