@@ -78,15 +78,9 @@ const UserDashboard = ({ match }) => {
   };
 
   const handleFilter = (event) => {
-    setFilter(event.target.value);
-    const lowerCaseQuery = query.toLowerCase();
-
-    const tmp = query
-      ? data.filter((x) =>
-          x.columnToQuery.toLowerCase().includes(lowerCaseQuery)
-        )
-      : data;
-    setTableData(orderBy(tmp, columnTosort, direction));
+    const filterValue = event.target.value;
+    setFilter(filterValue);
+    setTableData(data.filter((x) => x.status == filterValue));
   };
 
   useEffect(() => {
