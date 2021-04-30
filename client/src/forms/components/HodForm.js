@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   FormControl,
@@ -45,12 +46,31 @@ const useStyles = makeStyles((theme) => ({
 export default function HodForm({ props, rejectHandler }) {
   const classes = useStyles();
   const history = useHistory();
+  const { addToast } = useToasts();
 
   const [sourceOfFund, setSourceOfFund] = useState('');
   const [otherSourceOfFund, setOtherSourceOFFund] = useState('');
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  useEffect(() => {
+    if (error)
+      addToast(error, {
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    setError(null);
+  }, [error]);
+
+  useEffect(() => {
+    if (success)
+      addToast(success, {
+        appearance: 'success',
+        autoDismiss: true,
+      });
+    setSuccess(null);
+  }, [success]);
 
   const handleChange = (event) => {
     setSourceOfFund(event.target.value);

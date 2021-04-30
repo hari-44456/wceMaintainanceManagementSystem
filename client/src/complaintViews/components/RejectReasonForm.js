@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, FormControl, Grid, makeStyles, TextField } from '@material-ui/core';
+import { useToasts } from 'react-toast-notifications';
+import {
+  Button,
+  FormControl,
+  Grid,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 
 import axiosInstance from '../../helpers/axiosInstance';
 
@@ -24,11 +31,30 @@ const useStyles = makeStyles((theme) => ({
 export default function RejectReasonForm({ props, acceptHandler }) {
   const classes = useStyles();
   const history = useHistory();
+  const { addToast } = useToasts();
 
   const [reason, setReason] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [errors, setErrors] = useState('');
+
+  useEffect(() => {
+    if (error)
+      addToast(error, {
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    setError(null);
+  }, [error]);
+
+  useEffect(() => {
+    if (success)
+      addToast(success, {
+        appearance: 'success',
+        autoDismiss: true,
+      });
+    setSuccess(null);
+  }, [success]);
 
   const rejectComplaint = async () => {
     try {
