@@ -21,6 +21,9 @@ const ComplaintSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sourceOfFund: {
+    type: String,
+  },
   otherWork: {
     type: String,
   },
