@@ -41,8 +41,10 @@ export default function DashboardHeader({
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} align="center" className={classes.title}>
-        <ReceiptIcon />
-        <h1>User Complaints</h1>
+        <h1>
+          <ReceiptIcon />
+          User Complaints
+        </h1>
       </Grid>
       <Grid item xs={12} style={{ backgroundColor: 'lightgrey' }}>
         <Grid container spacing={2}>
