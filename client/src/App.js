@@ -11,9 +11,8 @@ import { ToastProvider } from 'react-toast-notifications';
 import Login from './auth';
 import Dashboards from './dashboards';
 import Home from './Home/pages';
-import Complaint from './forms/pages/Complaint';
-import HodForm from './forms/components/HodForm';
-import FormB from './forms/components/FormB2';
+
+import Forms from './forms';
 import Store from './store/pages/Store';
 
 const App = () => {
@@ -28,9 +27,7 @@ const App = () => {
                 <Route exact path="/ui" component={Home} />
                 <Route path="/ui/login" component={Login} />
                 <Route path="/ui/dashboard" component={Dashboards} />
-                <Route exact path="/ui/forms/complaint" component={Complaint} />
-                <Route exact path="/ui/forms/hod" component={HodForm} />
-                <Route exact path="/ui/forms/formb" component={FormB} />
+                <Route path="/ui/forms/" component={Forms} />
                 <Route exact path="/ui/store" component={Store} />
               </Switch>
             </ToastProvider>
