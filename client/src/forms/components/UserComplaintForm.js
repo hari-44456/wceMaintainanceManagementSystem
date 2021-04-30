@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   TextField,
@@ -29,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
     width: '60%',
   },
   submitBtn: {
-    backgroundColor: 'green', 
-        color: 'white',
-		"&:hover": {
-			backgroundColor: "#006400"
-		}
+    backgroundColor: 'green',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#006400',
+    },
   },
   style: {
     margin: theme.spacing(1, 0),
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 export default function UserComplaintForm() {
   const classes = useStyles();
   const { addToast } = useToasts();
+  const history = useHistory();
 
   const [department, setDepartment] = useState('');
   const [location, setLocation] = useState('');
@@ -81,12 +83,12 @@ export default function UserComplaintForm() {
   }, [success]);
 
   const departments = [
-    "Civil",
-    "Computer Science and Engineering",
-    "Electrical",
-    "Electronics",
-    "Information Technology",
-    "Mechanical",
+    'Civil',
+    'Computer Science and Engineering',
+    'Electrical',
+    'Electronics',
+    'Information Technology',
+    'Mechanical',
   ];
 
   const resetForm = () => {
@@ -103,9 +105,9 @@ export default function UserComplaintForm() {
     setWorkType(event.target.value);
   };
 
-  const handleDeptChange =  (event) => {
+  const handleDeptChange = (event) => {
     setDepartment(event.target.value);
-  }
+  };
 
   const addLocationHandler = (event) => {
     event.preventDefault();
@@ -173,6 +175,8 @@ export default function UserComplaintForm() {
               if (!result.data.success) throw new Error();
               setSuccess('Complaint Forwarded to HoD');
 
+              history.push('/ui/dashboard/student');
+
               resetForm();
             } catch (error) {
               try {
@@ -194,7 +198,12 @@ export default function UserComplaintForm() {
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
           <Grid className={classes.style}>
-            <FormControl className={classes.formControl} variant="outlined" error={!!errors.department} size="small">
+            <FormControl
+              className={classes.formControl}
+              variant="outlined"
+              error={!!errors.department}
+              size="small"
+            >
               <InputLabel>Department</InputLabel>
               <Select
                 value={department}
@@ -205,13 +214,15 @@ export default function UserComplaintForm() {
                   id: 'outlined-department-native-simple',
                 }}
               >
-                {
-                  departments.map((department,index) => 
-                    <MenuItem key={index} value={department}>{department}</MenuItem>
-                  )
-                }
+                {departments.map((department, index) => (
+                  <MenuItem key={index} value={department}>
+                    {department}
+                  </MenuItem>
+                ))}
               </Select>
-              <FormHelperText>{errors.department ? errors.department[0] : ' '}</FormHelperText>
+              <FormHelperText>
+                {errors.department ? errors.department[0] : ' '}
+              </FormHelperText>
             </FormControl>
           </Grid>
           <form>
@@ -393,7 +404,9 @@ export default function UserComplaintForm() {
         </Grid>
         <Grid container justify="center" alignItems="center">
           <Button
-            className={[classes.button, classes.style,classes.submitBtn].join(' ')}
+            className={[classes.button, classes.style, classes.submitBtn].join(
+              ' '
+            )}
             type="submit"
             size="large"
             color="secondary"
