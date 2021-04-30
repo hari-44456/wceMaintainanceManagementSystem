@@ -69,6 +69,7 @@ const HodDashboard = ({ match }) => {
 
   const handleSortDrop = (event) => {
     const columnName = event.target.value;
+    if (columnName === '') return;
     setSort(columnName);
     const editedData = [...data];
     editedData.sort(
