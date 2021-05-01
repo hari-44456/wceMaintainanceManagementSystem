@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import LoginValidator from '../utils/LoginValidator';
+import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +35,7 @@ export default function LoginForm() {
   const history = useHistory();
   const { addToast } = useToasts();
 
+  const [isLoading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
@@ -54,7 +56,7 @@ export default function LoginForm() {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
     LoginValidator()
       .validate({
         username,
@@ -95,6 +97,8 @@ export default function LoginForm() {
           } catch (error) {
             setLoginError('Invalid Credentials');
           }
+        } finally {
+          setLoading(false);
         }
       })
       .catch((error) => setErrors(error.errors));
@@ -184,6 +188,7 @@ export default function LoginForm() {
           >
             Login
           </Button>
+          {isLoading && <Loader />}
         </Grid>
       </form>
     </Grid>
