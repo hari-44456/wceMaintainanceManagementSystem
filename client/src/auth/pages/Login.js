@@ -16,7 +16,7 @@ export default function StudentLogin() {
   return (
     <Grid container justify="center" alignItems="center">
       <Typography variant="h4" className={classes.style}>
-        Student Login
+        Login
       </Typography>
       <LoginForm type="student" />
     </Grid>

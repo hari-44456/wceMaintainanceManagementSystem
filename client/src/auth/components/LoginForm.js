@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginForm({ type }) {
+export default function LoginForm() {
   const classes = useStyles();
   const history = useHistory();
   const { addToast } = useToasts();
@@ -52,12 +52,6 @@ export default function LoginForm({ type }) {
     setLoginError(null);
   }, [loginError]);
 
-  const resetForm = () => {
-    setUsername('');
-    setPassword('');
-    setErrors({});
-  };
-
   const submitHandler = async (event) => {
     event.preventDefault();
 
@@ -75,29 +69,26 @@ export default function LoginForm({ type }) {
 
           const result = await axiosInstance.post('/api/login', data);
 
-          let typeCheck;
+          let type;
           switch (result.data.role) {
             case 0:
-              typeCheck = 'student';
+              type = 'student';
               break;
             case 1:
-              typeCheck = 'hod';
+              type = 'hod';
               break;
             case 2:
-              typeCheck = 'admin';
+              type = 'admin';
               break;
             case 3:
-              typeCheck = 'commitee';
+              type = 'commitee';
               break;
             default:
               break;
           }
-
-          if (!result.data.success || typeCheck !== type) throw new Error();
+          if (!type) throw new Error();
 
           history.push(`/ui/dashboard/${type}`);
-
-          resetForm();
         } catch (error) {
           try {
             setLoginError(error.response.data.error);
