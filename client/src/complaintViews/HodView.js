@@ -82,7 +82,7 @@ const HodView = (props) => {
         setComplaint(result.data.complaint);
       } catch (error) {
         try {
-          if (error.response.status === 403) history.push('/ui/login/hod');
+          if (error.response.status === 403) history.push('/ui/login');
           setError(error.response.data.error);
         } catch (error) {
           history.push('/ui/dashboard/hod');

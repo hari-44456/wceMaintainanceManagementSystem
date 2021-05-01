@@ -41,7 +41,7 @@ export default function Store() {
         } else throw new Error();
       } catch (error) {
         try {
-          if (error.response.status === 403) history.push('/ui/login/admin');
+          if (error.response.status === 403) history.push('/ui/login');
           setError(error.response.data.error);
         } catch (error) {
           setError('Unable to fetch data');

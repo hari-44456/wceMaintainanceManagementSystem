@@ -13,9 +13,9 @@ const Forms = ({ match }) => {
     const isAuthenticated = async () => {
       try {
         const result = await axiosInstance.get('/api/isAuthenticated');
-        if (!result.data.success) history.push('/ui/login/student');
+        if (!result.data.success) history.push('/ui/login');
       } catch (error) {
-        history.push('/ui/login/student');
+        history.push('/ui/login');
       }
     };
     isAuthenticated();
