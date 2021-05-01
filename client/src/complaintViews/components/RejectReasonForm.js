@@ -9,6 +9,7 @@ import {
   TextField,
 } from '@material-ui/core';
 
+import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +34,7 @@ export default function RejectReasonForm({ props, acceptHandler }) {
   const history = useHistory();
   const { addToast } = useToasts();
 
+  const [isLoading, setLoading] = useState(false);
   const [reason, setReason] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -45,7 +47,7 @@ export default function RejectReasonForm({ props, acceptHandler }) {
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error, addToast]);
 
   useEffect(() => {
     if (success)
@@ -54,10 +56,11 @@ export default function RejectReasonForm({ props, acceptHandler }) {
         autoDismiss: true,
       });
     setSuccess(null);
-  }, [success]);
+  }, [success, addToast]);
 
   const rejectComplaint = async () => {
     try {
+      setLoading(true);
       const queryData = {
         reasonForRejection: reason,
       };
@@ -65,14 +68,16 @@ export default function RejectReasonForm({ props, acceptHandler }) {
         `/api/complaint/reject/${props.location.state.complaintId}/`,
         queryData
       );
-      console.log(result);
       if (!result.data.success) throw new Error();
       history.push('/ui/dashboard/hod');
       setSuccess('Sent rejection status');
     } catch (error) {
+      setLoading(false);
       try {
+        setLoading(false);
         setError(error.response.data.error);
       } catch (error) {
+        setLoading(false);
         setError('Could not complete operation');
       }
     }
@@ -131,6 +136,9 @@ export default function RejectReasonForm({ props, acceptHandler }) {
           Submit
         </Button>
       </Grid>
+      {
+        isLoading ? <Loader /> : null
+      }
     </Grid>
   );
 }

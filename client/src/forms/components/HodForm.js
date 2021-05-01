@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +49,7 @@ export default function HodForm({ props, rejectHandler }) {
   const history = useHistory();
   const { addToast } = useToasts();
 
+  const [isLoading, setLoading] = useState(false);
   const [sourceOfFund, setSourceOfFund] = useState('');
   const [otherSourceOfFund, setOtherSourceOFFund] = useState('');
   const [errors, setErrors] = useState({});
@@ -61,7 +63,7 @@ export default function HodForm({ props, rejectHandler }) {
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error, addToast]);
 
   useEffect(() => {
     if (success)
@@ -70,7 +72,7 @@ export default function HodForm({ props, rejectHandler }) {
         autoDismiss: true,
       });
     setSuccess(null);
-  }, [success]);
+  }, [success, addToast]);
 
   const handleChange = (event) => {
     setSourceOfFund(event.target.value);
@@ -98,6 +100,7 @@ export default function HodForm({ props, rejectHandler }) {
 
   const acceptComplaint = async () => {
     try {
+      setLoading(true);
       const queryData = {
         sourceOfFund,
         otherSourceOfFund,
@@ -110,11 +113,11 @@ export default function HodForm({ props, rejectHandler }) {
       setSuccess('Complaint forwarded to Administrative Officer');
       history.push('/ui/dashboard/hod');
     } catch (error) {
-      console.log(error);
+      setLoading(false);
       try {
         setError(error.response.data.error);
       } catch (error) {
-        console.log(error);
+        setLoading(false);
         setError('Could not complete operation');
       }
     }
@@ -129,6 +132,7 @@ export default function HodForm({ props, rejectHandler }) {
         setErrors({});
       },
       (err) => {
+        setLoading(false);
         setErrors(err.errors);
       }
     );
@@ -261,6 +265,9 @@ export default function HodForm({ props, rejectHandler }) {
           </Button>
         </Grid>
       </Grid>
+      {
+        isLoading ? <Loader /> : null
+      }
     </form>
   );
 }

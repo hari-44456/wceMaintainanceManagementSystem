@@ -20,6 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DeleteOutline } from '@material-ui/icons';
 import { useToasts } from 'react-toast-notifications';
 
+import Loader from '../../helpers/components/Loader';
 import UserComplaintFormValidator from '../utils/UserComplaintFormValidator';
 import axiosInstance from '../../helpers/axiosInstance';
 
@@ -58,6 +59,7 @@ export default function UserComplaintForm() {
   const [locations, setLocations] = useState([]);
   const [workType, setWorkType] = useState('');
   const [workDetails, setWorkDetails] = useState('');
+  const [isLoading, setLoading] = useState(false);
   const [otherWork, setOtherWork] = useState('');
   const [errors, setErrors] = useState({});
 
@@ -71,7 +73,7 @@ export default function UserComplaintForm() {
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error, addToast]);
 
   useEffect(() => {
     if (success)
@@ -80,7 +82,7 @@ export default function UserComplaintForm() {
         autoDismiss: true,
       });
     setSuccess(null);
-  }, [success]);
+  }, [success,addToast]);
 
   const departments = [
     'Civil',
@@ -159,6 +161,7 @@ export default function UserComplaintForm() {
               });
               return;
             }
+            setLoading(true);
             const queryData = {
               room: locations.toString(),
               department,
@@ -179,16 +182,17 @@ export default function UserComplaintForm() {
 
               resetForm();
             } catch (error) {
-              try {
-                setError(error.response.data.error);
-              } catch (error) {
-                setError('Could not add complaint');
-              }
+              setLoading(false);
+              setError(error.response.data.error);
             }
           },
-          (error) => setErrors(error.errors)
+          (error) => {
+            setErrors(error.errors);
+            setLoading(false);
+          }
         );
     } catch (error) {
+      setLoading(false);
       setErrors(error.errors);
     }
   };
@@ -416,6 +420,7 @@ export default function UserComplaintForm() {
             Submit
           </Button>
         </Grid>
+        {isLoading ? <Loader/> : null}
       </Grid>
     </form>
   );

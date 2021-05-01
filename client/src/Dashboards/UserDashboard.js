@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import orderBy from 'lodash/orderBy';
 
+import Loader from '../helpers/components/Loader';
 import Table from './Table';
 import DashboardHeader from './DashboardHeader';
 import axiosInstance from '../helpers/axiosInstance';
@@ -10,6 +10,7 @@ const UserDashboard = ({ match }) => {
   const { addToast } = useToasts();
 
   const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [tableData, setTableData] = useState([]);
@@ -30,12 +31,13 @@ const UserDashboard = ({ match }) => {
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error,addToast]);
 
   useEffect(() => {
     (async () => {
       try {
-        const result = await axiosInstance.get('/api/complaint/hod');
+        const result = await axiosInstance.get('/api/complaint/student');
+        setLoading(false);
 
         const tmpData = result.data.complaints.map((doc, index) => {
           const currDate = new Date(doc.date);
@@ -80,7 +82,7 @@ const UserDashboard = ({ match }) => {
   const handleFilter = (event) => {
     const filterValue = event.target.value;
     setFilter(filterValue);
-    setTableData(data.filter((x) => x.status == filterValue));
+    setTableData(data.filter((x) => x.status === filterValue));
   };
 
   useEffect(() => {
@@ -91,7 +93,7 @@ const UserDashboard = ({ match }) => {
           )
         : data
     );
-  }, [searched]);
+  }, [searched,data]);
 
   const cancelSearch = () => setSearched('');
 
@@ -113,14 +115,18 @@ const UserDashboard = ({ match }) => {
       />
       <br />
       <br />
-      <Table
-        data={tableData}
-        direction={direction}
-        setDirection={setDirection}
-        columnTosort={columnTosort}
-        setColumnToSort={setColumnToSort}
-        match={match}
-      />
+
+      {isLoading 
+        ? <Loader /> 
+        : <Table
+            data={tableData}
+            direction={direction}
+            setDirection={setDirection}
+            columnTosort={columnTosort}
+            setColumnToSort={setColumnToSort}
+            match={match}
+          />
+      }
     </>
   );
 };
