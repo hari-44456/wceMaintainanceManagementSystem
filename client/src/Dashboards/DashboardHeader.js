@@ -36,6 +36,7 @@ export default function DashboardHeader({
   handleFilter,
   cancelSearch,
   match,
+  filterValues,
 }) {
   const classes = useStyles();
   return (
@@ -78,7 +79,10 @@ export default function DashboardHeader({
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={'Forwarded to HoD'}>Forwarded to Hod</MenuItem>
+                {filterValues.map((filter) => (
+                  <MenuItem value={filter}>{filter}</MenuItem>
+                ))}
+                {/* <MenuItem value={'Forwarded to HoD'}>Forwarded to Hod</MenuItem>
                 <MenuItem value={'Rejected by Hod'}>Rejected by Hod</MenuItem>
                 <MenuItem value={'Forwarded to Administrative Officer'}>
                   Forwarded to Administrative Officer
@@ -91,7 +95,7 @@ export default function DashboardHeader({
                 </MenuItem>
                 <MenuItem value={'Rejected by Maintenance Commitee'}>
                   Rejected by Maintenance Commitee
-                </MenuItem>
+                </MenuItem> */}
               </Select>
             </FormControl>
           </Grid>

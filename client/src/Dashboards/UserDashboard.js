@@ -31,7 +31,7 @@ const UserDashboard = ({ match }) => {
         autoDismiss: true,
       });
     setError(null);
-  }, [error,addToast]);
+  }, [error, addToast]);
 
   useEffect(() => {
     (async () => {
@@ -82,7 +82,9 @@ const UserDashboard = ({ match }) => {
   const handleFilter = (event) => {
     const filterValue = event.target.value;
     setFilter(filterValue);
-    setTableData(data.filter((x) => x.status === filterValue));
+    filterValue
+      ? setTableData(data.filter((x) => x.status === filterValue))
+      : setTableData(data);
   };
 
   useEffect(() => {
@@ -93,9 +95,18 @@ const UserDashboard = ({ match }) => {
           )
         : data
     );
-  }, [searched,data]);
+  }, [searched, data]);
 
   const cancelSearch = () => setSearched('');
+
+  const filterValues = [
+    'Forwarded to HoD',
+    'Rejected by Hod',
+    'Forwarded to Administrative Officer',
+    'Rejected by Administrative Officer',
+    'Forwarded to Maintenance Commitee',
+    'Rejected by Maintenance Commitee',
+  ];
 
   return (
     <>
@@ -112,21 +123,23 @@ const UserDashboard = ({ match }) => {
         handleFilter={handleFilter}
         cancelSearch={cancelSearch}
         match={match}
+        filterValues={filterValues}
       />
       <br />
       <br />
 
-      {isLoading 
-        ? <Loader /> 
-        : <Table
-            data={tableData}
-            direction={direction}
-            setDirection={setDirection}
-            columnTosort={columnTosort}
-            setColumnToSort={setColumnToSort}
-            match={match}
-          />
-      }
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Table
+          data={tableData}
+          direction={direction}
+          setDirection={setDirection}
+          columnTosort={columnTosort}
+          setColumnToSort={setColumnToSort}
+          match={match}
+        />
+      )}
     </>
   );
 };
