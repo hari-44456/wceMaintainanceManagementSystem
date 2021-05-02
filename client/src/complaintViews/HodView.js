@@ -121,7 +121,6 @@ const HodView = (props) => {
             className={[classes.button, classes.acceptBtn].join(' ')}
             type="submit"
             size="large"
-            color="theme.palette.success.main"
             variant="contained"
             onClick={acceptHandler}
             fullWidth
