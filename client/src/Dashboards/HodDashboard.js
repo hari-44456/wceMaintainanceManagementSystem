@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
 
-import Loader from '../helpers/components/Loader';
 import Table from './Table';
 import DashboardHeader from './DashboardHeader';
+import Loader from '../helpers/components/Loader';
 import axiosInstance from '../helpers/axiosInstance';
 
 const HodDashboard = ({ match }) => {
@@ -61,14 +61,18 @@ const HodDashboard = ({ match }) => {
         setTableData(tmpData);
       } catch (error) {
         try {
+          setLoading(false);
           setError(error.response.data.error);
         } catch (error) {
+          setLoading(false);
           setError('Unable to fetch data');
         }
       }
     };
     fetchComplaints();
   }, []);
+
+  console.log(data);
 
   const handleSortDrop = (event) => {
     const columnName = event.target.value;
@@ -83,14 +87,6 @@ const HodDashboard = ({ match }) => {
     setTableData(editedData);
   };
 
-  const handleFilter = (event) => {
-    const filterValue = event.target.value;
-    setFilter(filterValue);
-    filterValue
-      ? setTableData(data.filter((x) => x.status === filterValue))
-      : setTableData(data);
-  };
-
   useEffect(() => {
     setTableData(
       searched && searched.length
@@ -100,6 +96,14 @@ const HodDashboard = ({ match }) => {
         : data
     );
   }, [searched, data]);
+
+  const handleFilter = (event) => {
+    const filterValue = event.target.value;
+    setFilter(filterValue);
+    filterValue
+      ? setTableData(data.filter((x) => x.status === filterValue))
+      : setTableData(data);
+  };
 
   const cancelSearch = () => setSearched('');
 

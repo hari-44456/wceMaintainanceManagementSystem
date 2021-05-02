@@ -20,7 +20,7 @@ const Dashboards = ({ match }) => {
       }
     };
     isAuthenticated();
-  }, []);
+  }, [history]);
 
   return (
     <Switch>

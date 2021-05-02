@@ -1,28 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { useToasts } from 'react-toast-notifications';
 
 import Table from './Table';
+import DashboardHeader from './DashboardHeader';
+import Loader from '../helpers/components/Loader';
 import axiosInstance from '../helpers/axiosInstance';
 
-const DisplayAlert = ({ error }) => (
-  <Alert severity="error">
-    <AlertTitle>{error}</AlertTitle>
-  </Alert>
-);
+const AdminDashboard = ({ match }) => {
+  const { addToast } = useToasts();
 
-const AdminDashboard = () => {
   const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+
   const [error, setError] = useState(null);
+
+  const [tableData, setTableData] = useState([]);
+
+  const [searched, setSearched] = useState('');
+  const [sort, setSort] = useState('');
+
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState('');
+
+  const [direction, setDirection] = useState('asc');
+  const [columnTosort, setColumnToSort] = useState('id');
+
+  const filterValues = [
+    'Forwarded to Administrative Officer',
+    'Rejected by Administrative Officer',
+    'Forwarded to Maintenance Commitee',
+    'Rejected by Maintenance Commitee',
+  ];
+
+  useEffect(() => {
+    if (error)
+      addToast(error, {
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    setError(null);
+  }, [error, addToast]);
 
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
         const result = await axiosInstance.get('/api/complaint/ao');
         setData(result.data.complaints);
+        console.log(result.data.complaints)
+        setLoading(false);
       } catch (error) {
         try {
+          setLoading(false);
           setError(error.response.data.error);
         } catch (error) {
+          setLoading(false);
           setError('Unable to fetch data');
         }
       }
@@ -30,10 +61,71 @@ const AdminDashboard = () => {
     fetchComplaints();
   }, []);
 
+  useEffect(() => {
+    setTableData(
+      searched && searched.length
+        ? data.filter(
+            (row) => row.title.toLowerCase().search(searched.toLowerCase()) >= 0
+          )
+        : data
+    );
+  }, [searched, data]);
+
+  const handleSortDrop = (event) => {
+    const columnName = event.target.value;
+    if (columnName === '') return;
+    setSort(columnName);
+    const editedData = [...data];
+    editedData.sort(
+      (a, b) =>
+        a[columnName].toString().toLowerCase() >
+        b[columnName].toString().toLowerCase()
+    );
+    setTableData(editedData);
+  };
+
+  const handleFilter = (event) => {
+    const filterValue = event.target.value;
+    setFilter(filterValue);
+    filterValue
+      ? setTableData(data.filter((x) => x.status === filterValue))
+      : setTableData(data);
+  };
+
+  const cancelSearch = () => setSearched('');
+
   return (
     <>
-      {error && <DisplayAlert error={error} />}
-      <Table complaints={data} />
+      <DashboardHeader
+        searched={searched}
+        setSearched={setSearched}
+        sort={sort}
+        setSort={setSort}
+        query={query}
+        setQuery={setQuery}
+        filter={filter}
+        setFilter={setFilter}
+        handleSortDrop={handleSortDrop}
+        handleFilter={handleFilter}
+        cancelSearch={cancelSearch}
+        match={match}
+        filterValues={filterValues}
+      />
+      <br />
+      <br />
+
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Table
+          data={tableData}
+          direction={direction}
+          setDirection={setDirection}
+          columnTosort={columnTosort}
+          setColumnToSort={setColumnToSort}
+          match={match}
+        />
+      )}
     </>
   );
 };

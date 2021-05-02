@@ -77,6 +77,8 @@ export default function TableD({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState(data);
 
+  console.log(data);
+
   useEffect(() => {
     setRows(
       data.map((doc) =>
@@ -138,7 +140,7 @@ export default function TableD({
         <TableBody>
           {rows
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row) => (
+            .map((row,index) => (
               <StyledTableRow key={row.id}>
                 <TableCell component="th" scope="row">
                   <Typography
@@ -148,7 +150,7 @@ export default function TableD({
                     }}
                   >
                     {' '}
-                    {row.id}
+                    {page*10+index+1}
                   </Typography>
                 </TableCell>
                 <StyledTableCell align="right">{row.title}</StyledTableCell>
