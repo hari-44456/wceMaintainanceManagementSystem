@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '20px',
     padding: '10px',
   },
+  statusDiv: {
+    marginTop: '-10px',
+    padding: '10px',
+  }
 }));
 
 const HodView = (props) => {
@@ -104,7 +108,7 @@ const HodView = (props) => {
   const formButtons = () => {
     return (
       <Grid container spacing={1} style={{ marginTop: '15px' }}>
-        <Grid item md={4} xs={8}>
+        <Grid item md={4} xs={6}>
           <Button
             className={[classes.button, classes.rejectBtn].join(' ')}
             type="submit"
@@ -116,7 +120,7 @@ const HodView = (props) => {
             Reject Complaint
           </Button>
         </Grid>
-        <Grid item md={4} xs={4}>
+        <Grid item md={4} xs={6}>
           <Button
             className={[classes.button, classes.acceptBtn].join(' ')}
             type="submit"
@@ -177,7 +181,9 @@ const HodView = (props) => {
           <DisplayNextForm />{' '}
         </div>
       ) : (
-        <DisplayComplaintStatus />
+        <div className={classes.statusDiv}>
+          <DisplayComplaintStatus />
+        </div>
       )}
     </React.Fragment>
   );

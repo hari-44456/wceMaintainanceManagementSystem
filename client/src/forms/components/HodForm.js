@@ -9,8 +9,8 @@ import {
   FormControlLabel,
   Radio,
   FormLabel,
-  Typography,
   TextField,
+  FormHelperText,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -20,7 +20,6 @@ import axiosInstance from '../../helpers/axiosInstance';
 const useStyles = makeStyles((theme) => ({
   button: {
     borderRadius: 0,
-    width: '60%',
   },
   formControl: {
     width: '100%',
@@ -75,6 +74,7 @@ export default function HodForm({ props, rejectHandler }) {
   }, [success, addToast]);
 
   const handleChange = (event) => {
+    setErrors({});
     setSourceOfFund(event.target.value);
   };
 
@@ -205,10 +205,9 @@ export default function HodForm({ props, rejectHandler }) {
                 label="Other"
               />
               {sourceOfFund === 'Other' ? (
-                <Grid item xs={6} md={3}>
+                <Grid item xs={12} md={8}>
                   <FormControl className={classes.formControl}>
                     <TextField
-                      className={classes.style}
                       fullWidth
                       required
                       autoFocus
@@ -232,17 +231,15 @@ export default function HodForm({ props, rejectHandler }) {
                 ''
               )}
             </Grid>
-            <Typography
-              variant="subtitle2"
-              color="error"
-              data-testid="non-field-errors"
-            >
-              {errors['sourceOfFund'] ? errors['sourceOfFund'][0] : ' '}
-            </Typography>
+            <FormHelperText error>
+              {
+                errors.sourceOfFund ? errors.sourceOfFund[0] : ' '
+              }
+            </FormHelperText>
           </FormGroup>
         </Grid>
       </FormControl>
-      <Grid container spacing={1} className={classes.marginTop}>
+      <Grid container className={classes.marginTop} spacing={1}>
         <Grid item md={4} xs={8}>
           <Button
             className={[classes.button, classes.rejectBtn].join(' ')}

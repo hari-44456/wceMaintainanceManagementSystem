@@ -15,7 +15,6 @@ import axiosInstance from '../../helpers/axiosInstance';
 const useStyles = makeStyles((theme) => ({
   button: {
     borderRadius: 0,
-    width: '60%',
   },
   formControl: {
     width: '100%',
@@ -26,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: '#006400',
     },
+  },
+  marginTop: {
+    margin: theme.spacing(1.5, 0.98),
   },
 }));
 
@@ -113,28 +115,29 @@ export default function RejectReasonForm({ props, acceptHandler }) {
           />
         </FormControl>
       </Grid>
-      <Grid md={7}></Grid>
-      <Grid md={4} xs={8}>
-        <Button
-          className={[classes.button].join(' ')}
-          size="large"
-          variant="contained"
-          onClick={acceptHandler}
-          color="primary"
-        >
-          Accept Complaint
-        </Button>
-      </Grid>
-      <Grid item md={4} xs={4}>
-        <Button
-          className={[classes.button, classes.acceptBtn].join(' ')}
-          type="submit"
-          size="large"
-          variant="contained"
-          onClick={submitHandler}
-        >
-          Submit
-        </Button>
+      <Grid container className={classes.marginTop} spacing={1}>
+        <Grid item md={4} xs={8}>
+          <Button
+            className={[classes.button].join(' ')}
+            size="large"
+            variant="contained"
+            onClick={acceptHandler}
+            color="primary"
+          >
+            Accept Complaint
+          </Button>
+        </Grid>
+        <Grid item md={4} xs={4}>
+          <Button
+            className={[classes.button, classes.acceptBtn].join(' ')}
+            type="submit"
+            size="large"
+            variant="contained"
+            onClick={submitHandler}
+          >
+            Submit
+          </Button>
+        </Grid>
       </Grid>
       {
         isLoading ? <Loader /> : null

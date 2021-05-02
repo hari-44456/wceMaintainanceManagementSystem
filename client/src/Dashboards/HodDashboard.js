@@ -35,7 +35,7 @@ const HodDashboard = ({ match }) => {
   }, [error, addToast]);
 
   useEffect(() => {
-    const fetchComplaints = async () => {
+    (async () => {
       try {
         const result = await axiosInstance.get('/api/complaint/hod');
         setLoading(false);
@@ -56,20 +56,16 @@ const HodDashboard = ({ match }) => {
             department: doc.department,
           };
         });
-
         setData(tmpData);
         setTableData(tmpData);
       } catch (error) {
         try {
-          setLoading(false);
           setError(error.response.data.error);
         } catch (error) {
-          setLoading(false);
           setError('Unable to fetch data');
         }
       }
-    };
-    fetchComplaints();
+    })();
   }, []);
 
   console.log(data);

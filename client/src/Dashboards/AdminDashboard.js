@@ -42,23 +42,37 @@ const AdminDashboard = ({ match }) => {
   }, [error, addToast]);
 
   useEffect(() => {
-    const fetchComplaints = async () => {
+    (async () => {
       try {
         const result = await axiosInstance.get('/api/complaint/ao');
-        setData(result.data.complaints);
-        console.log(result.data.complaints)
         setLoading(false);
+
+        const tmpData = result.data.complaints.map((doc, index) => {
+          const currDate = new Date(doc.date);
+
+          const date = `${currDate.getDate()}/${
+            currDate.getMonth() + 1
+          }/${currDate.getFullYear()}`;
+
+          return {
+            _id: doc._id,
+            id: index + 1,
+            title: doc.workType,
+            status: doc.status,
+            date,
+            department: doc.department,
+          };
+        });
+        setData(tmpData);
+        setTableData(tmpData);
       } catch (error) {
         try {
-          setLoading(false);
           setError(error.response.data.error);
         } catch (error) {
-          setLoading(false);
           setError('Unable to fetch data');
         }
       }
-    };
-    fetchComplaints();
+    })();
   }, []);
 
   useEffect(() => {
