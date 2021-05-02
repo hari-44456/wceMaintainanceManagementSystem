@@ -187,7 +187,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
         try {
           if (selectedMaterial.units < units) {
             setErrors({
-              units: ['Available Units: ' + selectedMaterial.units],
+              units: ['Availablity: ' + selectedMaterial.units],
             });
             return;
           }
