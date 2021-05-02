@@ -132,6 +132,7 @@ const AdminDashboard = ({ match }) => {
         <Loader />
       ) : (
         <Table
+          type='admin'
           data={tableData}
           direction={direction}
           setDirection={setDirection}

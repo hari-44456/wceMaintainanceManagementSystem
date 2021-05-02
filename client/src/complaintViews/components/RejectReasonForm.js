@@ -71,7 +71,7 @@ export default function RejectReasonForm({ props, acceptHandler }) {
         queryData
       );
       if (!result.data.success) throw new Error();
-      history.push('/ui/dashboard/hod');
+      history.push(`/ui/dashboard/${props.location.state.type}/`);
       setSuccess('Sent rejection status');
     } catch (error) {
       setLoading(false);

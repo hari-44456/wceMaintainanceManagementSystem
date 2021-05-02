@@ -64,6 +64,7 @@ const createData = (_id, id, title, date, status, department) => ({
 });
 
 export default function TableD({
+  type,
   match,
   data,
   direction,
@@ -166,6 +167,7 @@ export default function TableD({
                         match.url.lastIndexOf('/') + 1
                       )}`,
                       state: {
+                        type: type,
                         complaintId: row._id,
                       },
                     }}

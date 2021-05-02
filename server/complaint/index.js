@@ -96,7 +96,6 @@ router.post('/', verify, validateCreateSchema, async (req, res) => {
 });
 
 router.get('/details/:id', verify, async (req, res) => {
-  console.log('CAlled ROute');
   try {
     if (!req.params.id)
       return res.status(400).json({

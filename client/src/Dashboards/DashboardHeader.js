@@ -79,23 +79,9 @@ export default function DashboardHeader({
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                {filterValues.map((filter) => (
-                  <MenuItem value={filter}>{filter}</MenuItem>
+                {filterValues.map((filter, index) => (
+                  <MenuItem key={index} value={filter}>{filter}</MenuItem>
                 ))}
-                {/* <MenuItem value={'Forwarded to HoD'}>Forwarded to Hod</MenuItem>
-                <MenuItem value={'Rejected by Hod'}>Rejected by Hod</MenuItem>
-                <MenuItem value={'Forwarded to Administrative Officer'}>
-                  Forwarded to Administrative Officer
-                </MenuItem>
-                <MenuItem value={'Rejected by Administrative Officer'}>
-                  Rejected by Administrative Officer
-                </MenuItem>
-                <MenuItem value={'Forwarded to Maintenance Commitee'}>
-                  Forwarded to Maintenance Commitee
-                </MenuItem>
-                <MenuItem value={'Rejected by Maintenance Commitee'}>
-                  Rejected by Maintenance Commitee
-                </MenuItem> */}
               </Select>
             </FormControl>
           </Grid>

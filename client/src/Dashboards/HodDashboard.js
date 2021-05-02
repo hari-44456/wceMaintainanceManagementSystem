@@ -136,6 +136,7 @@ const HodDashboard = ({ match }) => {
         <Loader />
       ) : (
         <Table
+          type='hod'
           data={tableData}
           direction={direction}
           setDirection={setDirection}

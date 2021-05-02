@@ -54,21 +54,6 @@ export default function ComplaintDetails({ complaintData }) {
           <Typography variant="subtitle1">{complaintData.details}</Typography>
         </Grid>
       </Grid>
-      {complaintData.reasonForRejection && (
-        <Grid container spacing={2}>
-          <Grid item md={2} xs={3}>
-            <Typography variant="subtitle1">Rejection Remark</Typography>
-          </Grid>
-          <Grid item md={1} xs={1}>
-            <Typography variant="subtitle1">:</Typography>
-          </Grid>
-          <Grid item md={9} xs={8} style={{ overflowWrap: 'break-word' }}>
-            <Typography variant="subtitle1">
-              {complaintData.reasonForRejection}
-            </Typography>
-          </Grid>
-        </Grid>
-      )}
 
       {complaintData.sourceOfFund && (
         <Grid container spacing={2}>
@@ -81,6 +66,22 @@ export default function ComplaintDetails({ complaintData }) {
           <Grid item md={9} xs={8} style={{ overflowWrap: 'break-word' }}>
             <Typography variant="subtitle1">
               {complaintData.sourceOfFund}
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
+
+      {complaintData.reasonForRejection && (
+        <Grid container spacing={2}>
+          <Grid item md={2} xs={3}>
+            <Typography variant="subtitle1">Rejection Remark</Typography>
+          </Grid>
+          <Grid item md={1} xs={1}>
+            <Typography variant="subtitle1">:</Typography>
+          </Grid>
+          <Grid item md={9} xs={8} style={{ overflowWrap: 'break-word' }}>
+            <Typography variant="subtitle1">
+              {complaintData.reasonForRejection}
             </Typography>
           </Grid>
         </Grid>
