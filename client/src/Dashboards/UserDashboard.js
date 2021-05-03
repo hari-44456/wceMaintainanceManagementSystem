@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
+import { useHistory } from 'react-router-dom';
 
 import Loader from '../helpers/components/Loader';
 import Table from './Table';
@@ -8,6 +9,7 @@ import axiosInstance from '../helpers/axiosInstance';
 
 const UserDashboard = ({ match }) => {
   const { addToast } = useToasts();
+  const history = useHistory();
 
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ const UserDashboard = ({ match }) => {
         setTableData(tmpData);
       } catch (error) {
         try {
-          if (error.response.status === 403) history.pushState('/ui/login');
+          if (error.response.status === 403) history.push('/ui/login');
           setError(error.response.data.error);
         } catch (error) {
           setError('Unable to fetch data');
