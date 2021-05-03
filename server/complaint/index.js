@@ -14,7 +14,7 @@ const isValid = (id) => {
   switch (id) {
     case 'student':
     case 'hod':
-    case 'ao':
+    case 'admin':
     case 'commitee':
       return true;
     default:
@@ -65,7 +65,7 @@ router.get('/:id', verify, async (req, res) => {
       case 'hod':
         query = { department };
         break;
-      case 'ao':
+      case 'admin':
         query = { stage: { $gte: 2 } };
         break;
       case 'commitee':

@@ -46,7 +46,7 @@ const AdminDashboard = ({ match }) => {
   useEffect(() => {
     (async () => {
       try {
-        const result = await axiosInstance.get('/api/complaint/ao');
+        const result = await axiosInstance.get('/api/complaint/admin');
         setLoading(false);
 
         const tmpData = result.data.complaints.map((doc, index) => {
