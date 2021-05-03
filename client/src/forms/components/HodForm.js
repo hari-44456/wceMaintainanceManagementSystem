@@ -62,7 +62,7 @@ export default function HodForm({ props, rejectHandler }) {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     if (success)
@@ -71,7 +71,7 @@ export default function HodForm({ props, rejectHandler }) {
         autoDismiss: true,
       });
     setSuccess(null);
-  }, [success, addToast]);
+  }, [success]);
 
   const handleChange = (event) => {
     setErrors({});

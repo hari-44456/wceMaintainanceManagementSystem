@@ -67,7 +67,7 @@ export default function StoreMaterial() {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   const resetForm = () => {
     setSelectedMaterial({

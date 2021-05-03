@@ -73,7 +73,7 @@ export default function UserComplaintForm() {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     if (success)
@@ -82,7 +82,7 @@ export default function UserComplaintForm() {
         autoDismiss: true,
       });
     setSuccess(null);
-  }, [success,addToast]);
+  }, [success]);
 
   const departments = [
     'Civil',

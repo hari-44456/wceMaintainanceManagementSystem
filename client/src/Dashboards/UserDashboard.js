@@ -31,7 +31,7 @@ const UserDashboard = ({ match }) => {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     (async () => {

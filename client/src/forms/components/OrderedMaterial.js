@@ -63,7 +63,7 @@ export default function OrderedMaterial() {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   const resetForm = () => {
     setMaterial('');

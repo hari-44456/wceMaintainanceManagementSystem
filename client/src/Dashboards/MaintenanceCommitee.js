@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, AlertTitle } from '@material-ui/lab';
 
 import Table from './Table';
 import axiosInstance from '../helpers/axiosInstance';
-
-const DisplayAlert = ({ error }) => (
-  <Alert severity="error">
-    <AlertTitle>{error}</AlertTitle>
-  </Alert>
-);
 
 const MaintenanceCommiteeDashboard = () => {
   const [data, setData] = useState([]);
@@ -32,7 +25,6 @@ const MaintenanceCommiteeDashboard = () => {
 
   return (
     <>
-      {error && <DisplayAlert error={error} />}
       <Table complaints={data} />
     </>
   );
