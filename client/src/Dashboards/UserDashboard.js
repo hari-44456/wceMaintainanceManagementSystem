@@ -59,6 +59,7 @@ const UserDashboard = ({ match }) => {
         setTableData(tmpData);
       } catch (error) {
         try {
+          if (error.response.status === 403) history.pushState('/ui/login');
           setError(error.response.data.error);
         } catch (error) {
           setError('Unable to fetch data');

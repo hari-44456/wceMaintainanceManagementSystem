@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
+import { useHistory } from 'react-router-dom';
 
 import Table from './Table';
 import DashboardHeader from './DashboardHeader';
@@ -8,6 +9,7 @@ import axiosInstance from '../helpers/axiosInstance';
 
 const AdminDashboard = ({ match }) => {
   const { addToast } = useToasts();
+  const history = useHistory();
 
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -67,6 +69,8 @@ const AdminDashboard = ({ match }) => {
         setTableData(tmpData);
       } catch (error) {
         try {
+          if (error.response.status === 403) history.push('/ui/login');
+
           setError(error.response.data.error);
         } catch (error) {
           setError('Unable to fetch data');
@@ -132,7 +136,7 @@ const AdminDashboard = ({ match }) => {
         <Loader />
       ) : (
         <Table
-          type='admin'
+          type="admin"
           data={tableData}
           direction={direction}
           setDirection={setDirection}
