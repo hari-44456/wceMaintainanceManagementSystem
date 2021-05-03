@@ -233,7 +233,7 @@ export default function MaterialTable({
   const editModeForm = (index) => {
     return (
       <TableRow key={index}>
-        <TableCell component="th" scope="row" width="40%">
+        <TableCell component="th" scope="row" width="30%">
           <FormControl>
             <TextField
               fullWidth
@@ -249,7 +249,7 @@ export default function MaterialTable({
             />
           </FormControl>
         </TableCell>
-        <TableCell component="th" scope="row" align="right" width="20%">
+        <TableCell component="th" scope="row" align="right" width="25%">
           <FormControl>
             <TextField
               className={classes.numberInput}
@@ -294,7 +294,7 @@ export default function MaterialTable({
             />
           </FormControl>
         </TableCell>
-        <TableCell component="th" scope="row" align="center" width="20%">
+        <TableCell component="th" scope="row" align="center" width="25%">
           <IconButton onClick={() => saveHandler(index)}>
             <DoneOutline style={{ color: 'black' }} fontSize="small" />
           </IconButton>
@@ -306,16 +306,16 @@ export default function MaterialTable({
   function displayInfo(index, item) {
     return (
       <TableRow key={index}>
-        <TableCell component="th" scope="row" width="40%">
+        <TableCell component="th" scope="row" width="30%">
           {item.material}
         </TableCell>
-        <TableCell component="th" scope="row" align="right" width="20%">
+        <TableCell component="th" scope="row" align="right" width="25%">
           {type === 'availabe' ? item.cost : item.approxCost}
         </TableCell>
         <TableCell component="th" scope="row" align="right" width="20%">
           {item.units}
         </TableCell>
-        <TableCell component="th" scope="row" width="20%" align="center">
+        <TableCell component="th" scope="row" width="25%" align="center">
           <IconButton
             style={{ padding: '5px' }}
             size="small"
@@ -344,8 +344,8 @@ export default function MaterialTable({
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell width="40%">Material</TableCell>
-            <TableCell width="20%" align={inEditMode.state ? 'left' : 'right'}>
+            <TableCell width="30%">Material</TableCell>
+            <TableCell width="25%" align={inEditMode.state ? 'left' : 'right'}>
               {type === 'available' ? 'Cost' : 'Approx Cost'}
             </TableCell>
             <TableCell
@@ -356,7 +356,7 @@ export default function MaterialTable({
             >
               Units
             </TableCell>
-            <TableCell width="20%" align="center">
+            <TableCell width="25%" align="center">
               Actions
             </TableCell>
           </TableRow>

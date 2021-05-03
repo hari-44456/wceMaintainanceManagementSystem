@@ -67,7 +67,7 @@ export default function StoreMaterial() {
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error, addToast]);
 
   const resetForm = () => {
     setSelectedMaterial({
@@ -176,7 +176,9 @@ export default function StoreMaterial() {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h4">Available in Store</Typography>
+        <Grid container justify="center" alignItems='center'>
+          <Typography variant="h5">Available in Store</Typography>
+        </Grid>
       </Grid>
       <Grid item md={5} xs={12}>
         <FormControl className={classes.formControl}>
@@ -219,6 +221,7 @@ export default function StoreMaterial() {
             label="Cost"
             size="small"
             value={selectedMaterial.cost}
+            helperText=' '
           />
         </FormControl>
       </Grid>

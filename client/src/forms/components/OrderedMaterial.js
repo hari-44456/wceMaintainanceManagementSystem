@@ -63,7 +63,7 @@ export default function OrderedMaterial() {
         autoDismiss: true,
       });
     setError(null);
-  }, [error]);
+  }, [error, addToast]);
 
   const resetForm = () => {
     setMaterial('');
@@ -156,7 +156,9 @@ export default function OrderedMaterial() {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h4">Ordered By Administrative Officer</Typography>
+        <Grid container justify="center" alignItems='center'>
+          <Typography variant="h5">To Be Ordered</Typography>
+        </Grid>
       </Grid>
       <Grid item md={4} xs={12}>
         <FormControl className={classes.formControl}>
