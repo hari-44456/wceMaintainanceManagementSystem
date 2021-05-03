@@ -4,7 +4,6 @@ const User = require('./login/model');
 module.exports.verify = async (req, res, next) => {
   try {
     let token = req.cookies['auth-token'];
-
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
       if (err) {
         return res.status(403).json({
@@ -12,7 +11,7 @@ module.exports.verify = async (req, res, next) => {
           error: 'Invalid token',
         });
       }
-      req.user = decoded.data;
+      req.user = decoded;
       next();
     });
   } catch (error) {
@@ -26,7 +25,6 @@ module.exports.verify = async (req, res, next) => {
 module.exports.verifyAdmin = async (req, res, next) => {
   try {
     let token = req.cookies['auth-token'];
-
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
       try {
         if (err) {
@@ -35,11 +33,11 @@ module.exports.verifyAdmin = async (req, res, next) => {
             error: 'Invalid token',
           });
         }
-        req.user = decoded.data;
+        req.user = decoded;
 
-        const id = await User.findOne({ _id: decoded.data, role: 2 });
+        const user = await User.findOne({ _id: decoded._id, role: 2 });
 
-        if (!id) throw new Error('Unauthorized ');
+        if (!user) throw new Error('Unauthorized ');
         next();
       } catch (error) {
         return res.status(403).json({
