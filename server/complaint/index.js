@@ -73,12 +73,15 @@ router.get('/:id', verify, async (req, res) => {
         break;
     }
 
-    const result = await Complaint.find(query).select({
-      department: 1,
-      date: 1,
-      workType: 1,
-      status: 1,
-    });
+    const result = await Complaint.find(query)
+      .select({
+        department: 1,
+        date: 1,
+        workType: 1,
+        status: 1,
+      })
+      .sort({ date: -1 });
+
     return res.status(200).json({
       success: 1,
       complaints: result,
