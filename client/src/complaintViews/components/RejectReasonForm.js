@@ -65,6 +65,7 @@ export default function RejectReasonForm({ props, acceptHandler }) {
       setLoading(true);
       const queryData = {
         reasonForRejection: reason,
+        userType: props.location.state.type,
       };
       const result = await axiosInstance.post(
         `/api/complaint/reject/${props.location.state.complaintId}/`,
@@ -139,9 +140,7 @@ export default function RejectReasonForm({ props, acceptHandler }) {
           </Button>
         </Grid>
       </Grid>
-      {
-        isLoading ? <Loader /> : null
-      }
+      {isLoading ? <Loader /> : null}
     </Grid>
   );
 }

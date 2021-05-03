@@ -43,6 +43,9 @@ const accpetSchema = Joi.object()
 const rejectSchema = Joi.object()
   .keys({
     reasonForRejection: Joi.string().required(),
+    userType: Joi.string()
+      .required()
+      .valid('hod', 'admin', 'maintanance commitee'),
   })
   .unknown(true);
 

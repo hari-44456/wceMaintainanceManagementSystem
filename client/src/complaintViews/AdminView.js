@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AdminView(props){
+export default function AdminView(props) {
   const classes = useStyles();
   const history = useHistory();
   const { addToast } = useToasts();
@@ -77,10 +77,15 @@ export default function AdminView(props){
         const result = await axiosInstance.get(
           `/api/complaint/details/${props.location.state.complaintId}`
         );
-        if (result.data.complaint.rejected || result.data.complaint.stage >= 3){
+        if (
+          result.data.complaint.rejected ||
+          result.data.complaint.stage >= 3
+        ) {
           setEditComplaint(false);
           console.log('Is Rejected: - ' + result.data.complaint.rejected);
-          console.log('Greater than equal 3 : ' + result.data.complaint.stage >= 3);
+          console.log(
+            'Greater than equal 3 : ' + result.data.complaint.stage >= 3
+          );
         }
         setComplaint(result.data.complaint);
       } catch (error) {
@@ -186,4 +191,4 @@ export default function AdminView(props){
       )}
     </React.Fragment>
   );
-};
+}

@@ -183,7 +183,8 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
       .exec();
 
     req.body.rejected = true;
-    req.body.status = 'Rejected by Hod';
+
+    req.body.status = `Rejected by ${req.body.userType}`;
 
     await Complaint.updateOne(
       { _id: req.params.id },
