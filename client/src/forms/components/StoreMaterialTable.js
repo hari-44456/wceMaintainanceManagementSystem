@@ -58,7 +58,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     if (success)
@@ -67,7 +67,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
         autoDismiss: true,
       });
     setSuccess(null);
-  }, [success, addToast]);
+  }, [success]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -259,10 +259,10 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
   const editModeForm = (index) => {
     return (
       <TableRow key={index}>
-        <TableCell component="th" scope="row" width="40%">
+        <TableCell component="th" scope="row" width="30%">
           {selectedMaterial.material}
         </TableCell>
-        <TableCell component="th" scope="row" align="right" width="20%">
+        <TableCell component="th" scope="row" align="right" width="25%">
           <FormControl>
             <TextField
               className={classes.numberInput}
@@ -306,7 +306,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
             />
           </FormControl>
         </TableCell>
-        <TableCell component="th" scope="row" align="center" width="20%">
+        <TableCell component="th" scope="row" align="center" width="25%">
           <IconButton onClick={() => saveHandler(index)}>
             <DoneOutline style={{ color: 'black' }} fontSize="small" />
           </IconButton>
@@ -318,16 +318,16 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
   function displayInfo(index, item) {
     return (
       <TableRow key={index}>
-        <TableCell component="th" scope="row" width="40%">
+        <TableCell component="th" scope="row" width="30%">
           {item.material}
         </TableCell>
-        <TableCell component="th" scope="row" align="right" width="20%">
+        <TableCell component="th" scope="row" align="right" width="25%">
           {item.cost}
         </TableCell>
         <TableCell component="th" scope="row" align="right" width="20%">
           {item.units}
         </TableCell>
-        <TableCell component="th" scope="row" width="20%" align="center">
+        <TableCell component="th" scope="row" width="25%" align="center">
           <IconButton
             style={{ padding: '5px' }}
             size="small"
@@ -356,8 +356,8 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell width="40%">Material</TableCell>
-            <TableCell width="20%" align={inEditMode.state ? 'left' : 'right'}>
+            <TableCell width="30%">Material</TableCell>
+            <TableCell width="25%" align={inEditMode.state ? 'left' : 'right'}>
               Cost
             </TableCell>
             <TableCell
@@ -368,7 +368,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
             >
               Units
             </TableCell>
-            <TableCell width="20%" align="center">
+            <TableCell width="25%" align="center">
               Actions
             </TableCell>
           </TableRow>

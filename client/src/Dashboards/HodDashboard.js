@@ -34,7 +34,7 @@ const HodDashboard = ({ match }) => {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     (async () => {

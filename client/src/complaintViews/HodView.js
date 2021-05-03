@@ -59,7 +59,7 @@ const HodView = (props) => {
       });
     }
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     if (success) {
@@ -69,7 +69,7 @@ const HodView = (props) => {
       });
     }
     setSuccess(null);
-  }, [success, addToast]);
+  }, [success]);
 
   useEffect(() => {
     (async () => {

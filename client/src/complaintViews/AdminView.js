@@ -55,7 +55,7 @@ export default function AdminView(props) {
       });
     }
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     if (success) {
@@ -65,7 +65,7 @@ export default function AdminView(props) {
       });
     }
     setSuccess(null);
-  }, [success, addToast]);
+  }, [success]);
 
   useEffect(() => {
     (async () => {

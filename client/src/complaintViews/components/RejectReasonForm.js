@@ -49,7 +49,7 @@ export default function RejectReasonForm({ props, acceptHandler }) {
         autoDismiss: true,
       });
     setError(null);
-  }, [error, addToast]);
+  }, [error]);
 
   useEffect(() => {
     if (success)
@@ -58,7 +58,7 @@ export default function RejectReasonForm({ props, acceptHandler }) {
         autoDismiss: true,
       });
     setSuccess(null);
-  }, [success, addToast]);
+  }, [success]);
 
   const rejectComplaint = async () => {
     try {

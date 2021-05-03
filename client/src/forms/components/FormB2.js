@@ -35,7 +35,7 @@ const submitHandler = () => {
 export default function FormB2({ props, rejectHandler }){
     const classes = useStyles();
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
             <Grid item md={6} xs={12}>
                 <StoreMaterial />
             </Grid>
