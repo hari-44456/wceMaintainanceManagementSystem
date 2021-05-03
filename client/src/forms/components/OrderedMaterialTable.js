@@ -51,6 +51,7 @@ export default function MaterialTable({
   const [errors, setErrors] = useState({});
 
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     if (error)
@@ -59,7 +60,16 @@ export default function MaterialTable({
         autoDismiss: true,
       });
     setError(null);
-  }, [error,addToast]);
+  }, [error, addToast]);
+
+  useEffect(() => {
+    if (success)
+      addToast(success, {
+        appearance: 'success',
+        autoDismiss: true,
+      });
+    setSuccess(null);
+  }, [success, addToast]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -100,10 +110,8 @@ export default function MaterialTable({
           return i !== delIndex;
         })
       );
-      addToast('Deleted Successfully', {
-        appearance: 'success',
-        autoDismiss: true,
-      });
+
+      setSuccess('Deleted Successfully');
     } catch (error) {
       try {
         setError(error.response.data.error);
@@ -187,7 +195,7 @@ export default function MaterialTable({
                 );
 
                 const editedData = [...orderedMaterials];
-                editedData[index] = { 
+                editedData[index] = {
                   _id: orderedMaterials[index]._id,
                   material: material.trim(),
                   approxCost,

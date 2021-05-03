@@ -49,6 +49,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
   });
 
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     if (error)
@@ -58,6 +59,15 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
       });
     setError(null);
   }, [error, addToast]);
+
+  useEffect(() => {
+    if (success)
+      addToast(success, {
+        appearance: 'success',
+        autoDismiss: true,
+      });
+    setSuccess(null);
+  }, [success, addToast]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -132,10 +142,8 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
           return i !== delIndex;
         })
       );
-      addToast('Deleted Successfully', {
-        appearance: 'success',
-        autoDismiss: true,
-      });
+
+      setSuccess('Deleted Successfully');
     } catch (error) {
       try {
         setError(error.response.data.error);
