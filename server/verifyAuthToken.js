@@ -55,7 +55,10 @@ module.exports.verifyAdmin = async (req, res, next) => {
         }
         req.user = decoded;
 
-        const user = await User.findOne({ _id: decoded._id, role: 2 });
+        const user = await User.findOne({
+          _id: decoded._id,
+          role: { $gte: 2 },
+        });
 
         if (!user) throw new Error('Unauthorized ');
         next();
