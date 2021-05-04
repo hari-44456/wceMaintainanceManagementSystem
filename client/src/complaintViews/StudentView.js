@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { makeStyles, Typography } from '@material-ui/core';
-import { useToasts } from 'react-toast-notifications';
 
 import ComplaintDetails from './components/ComplaintDetails';
 import Loader from '../helpers/components/Loader';
 import axiosInstance from '../helpers/axiosInstance';
+import Notification from '../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -14,24 +14,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentView = (props) => {
+const StudentView = () => {
   const classes = useStyles();
 
   const history = useHistory();
-  const { addToast } = useToasts();
   const { complaintId } = useParams();
 
   const [complaint, setComplaint] = useState(null);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -47,7 +40,9 @@ const StudentView = (props) => {
       } catch (error) {
         try {
           if (error.response.status === 403) history.push('/ui/login');
-          setError(error.response.data.error);
+          setMessage(error.response.data.error);
+          setMessageType('error');
+          setOpen(true);
         } catch (error) {
           history.push('/ui/dashboard/student');
         }
@@ -59,6 +54,12 @@ const StudentView = (props) => {
 
   return (
     <>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <Typography variant="h4">Complaint Details</Typography>
       <div className={classes.div}>
         <ComplaintDetails complaintData={complaint} />

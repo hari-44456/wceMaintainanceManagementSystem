@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   IconButton,
@@ -11,11 +11,11 @@ import {
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 
 import LoginValidator from '../utils/LoginValidator';
 import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   forgotPassword: {
@@ -33,7 +33,10 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginForm() {
   const classes = useStyles();
   const history = useHistory();
-  const { addToast } = useToasts();
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   const [isLoading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
@@ -41,18 +44,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const [loginError, setLoginError] = useState('');
-
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
-
-  useEffect(() => {
-    if (loginError)
-      addToast(loginError, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setLoginError(null);
-  }, [loginError]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -93,9 +85,13 @@ export default function LoginForm() {
           history.push(`/ui/dashboard/${type}`);
         } catch (error) {
           try {
-            setLoginError(error.response.data.error);
+            setMessage(error.response.data.error);
+            setMessageType('error');
+            setOpen(true);
           } catch (error) {
-            setLoginError('Invalid Credentials');
+            setMessage('Invalid Credentials');
+            setMessageType('error');
+            setOpen(true);
           }
         } finally {
           setLoading(false);
@@ -106,6 +102,12 @@ export default function LoginForm() {
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <form className="login-form">
         <Grid>
           <FormControl>

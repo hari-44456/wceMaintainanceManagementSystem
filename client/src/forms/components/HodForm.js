@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 import {
   Button,
   FormControl,
@@ -16,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -46,32 +46,15 @@ const useStyles = makeStyles((theme) => ({
 export default function HodForm({ complaintId, rejectHandler }) {
   const classes = useStyles();
   const history = useHistory();
-  const { addToast } = useToasts();
 
   const [isLoading, setLoading] = useState(false);
   const [sourceOfFund, setSourceOfFund] = useState('');
   const [otherSourceOfFund, setOtherSourceOFFund] = useState('');
   const [errors, setErrors] = useState({});
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success)
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    setSuccess(null);
-  }, [success]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   const handleChange = (event) => {
     setErrors({});
@@ -110,16 +93,21 @@ export default function HodForm({ complaintId, rejectHandler }) {
         queryData
       );
       if (!result.data.success) throw new Error();
-      setSuccess('Complaint forwarded to Administrative Officer');
+      setMessage('Complaint forwarded to Administrative Officer');
+      setMessageType('success');
+      setOpen(true);
       history.push('/ui/dashboard/hod');
     } catch (error) {
       setLoading(false);
-      console.log(error)
       try {
-        setError(error.response.data.error);
+        setMessage(error.response.data.error);
+        setMessageType('error');
+        setOpen(true);
       } catch (error) {
         setLoading(false);
-        setError('Could not complete operation');
+        setMessage('Could not complete operation');
+        setMessageType('error');
+        setOpen(true);
       }
     }
   };
@@ -141,6 +129,12 @@ export default function HodForm({ complaintId, rejectHandler }) {
 
   return (
     <form className="hod-form">
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <FormControl>
         <Grid container>
           <Grid item xs={12}>
@@ -233,9 +227,7 @@ export default function HodForm({ complaintId, rejectHandler }) {
               )}
             </Grid>
             <FormHelperText error>
-              {
-                errors.sourceOfFund ? errors.sourceOfFund[0] : ' '
-              }
+              {errors.sourceOfFund ? errors.sourceOfFund[0] : ' '}
             </FormHelperText>
           </FormGroup>
         </Grid>
@@ -263,9 +255,7 @@ export default function HodForm({ complaintId, rejectHandler }) {
           </Button>
         </Grid>
       </Grid>
-      {
-        isLoading ? <Loader /> : null
-      }
+      {isLoading ? <Loader /> : null}
     </form>
   );
 }

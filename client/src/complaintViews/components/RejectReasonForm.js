@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 import {
   Button,
   FormControl,
@@ -11,6 +10,7 @@ import {
 
 import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -34,31 +34,14 @@ const useStyles = makeStyles((theme) => ({
 export default function RejectReasonForm({ type, complaintId, acceptHandler }) {
   const classes = useStyles();
   const history = useHistory();
-  const { addToast } = useToasts();
 
   const [isLoading, setLoading] = useState(false);
   const [reason, setReason] = useState('');
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const [errors, setErrors] = useState('');
 
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success)
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    setSuccess(null);
-  }, [success]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   const rejectComplaint = async () => {
     try {
@@ -72,15 +55,21 @@ export default function RejectReasonForm({ type, complaintId, acceptHandler }) {
       );
       if (!result.data.success) throw new Error();
       history.push(`/ui/dashboard/${type}/`);
-      setSuccess('Sent rejection status');
+      setMessage('Sent rejection status');
+      setMessageType('error');
+      setOpen(true);
     } catch (error) {
       setLoading(false);
       try {
         setLoading(false);
-        setError(error.response.data.error);
+        setMessage(error.response.data.error);
+        setMessageType('error');
+        setOpen(true);
       } catch (error) {
-        setLoading(false);
-        setError('Could not complete operation');
+        setMessage(false);
+        setMessage('Could not complete operation');
+        setMessageType('error');
+        setOpen(true);
       }
     }
   };
@@ -97,6 +86,12 @@ export default function RejectReasonForm({ type, complaintId, acceptHandler }) {
 
   return (
     <Grid container spacing={2}>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <Grid item md={5} xs={12}>
         <FormControl className={classes.formControl}>
           <TextField

@@ -18,11 +18,11 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteOutline } from '@material-ui/icons';
-import { useToasts } from 'react-toast-notifications';
 
 import Loader from '../../helpers/components/Loader';
 import UserComplaintFormValidator from '../utils/UserComplaintFormValidator';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserComplaintForm() {
   const classes = useStyles();
-  const { addToast } = useToasts();
   const history = useHistory();
 
   const [department, setDepartment] = useState('');
@@ -63,26 +62,9 @@ export default function UserComplaintForm() {
   const [otherWork, setOtherWork] = useState('');
   const [errors, setErrors] = useState({});
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success)
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    setSuccess(null);
-  }, [success]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   const departments = [
     'Civil',
@@ -176,14 +158,18 @@ export default function UserComplaintForm() {
                 queryData
               );
               if (!result.data.success) throw new Error();
-              setSuccess('Complaint Forwarded to HoD');
+              setMessage('Complaint Forwarded to HoD');
+              setMessageType('success');
+              setOpen(true);
 
               history.push('/ui/dashboard/student');
 
               resetForm();
             } catch (error) {
               setLoading(false);
-              setError(error.response.data.error);
+              setMessage(error.response.data.error);
+              setMessageType('error');
+              setOpen(true);
             }
           },
           (error) => {
@@ -199,6 +185,12 @@ export default function UserComplaintForm() {
 
   return (
     <form className="user-complaint-form">
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
           <Grid className={classes.style}>
@@ -420,7 +412,7 @@ export default function UserComplaintForm() {
             Submit
           </Button>
         </Grid>
-        {isLoading ? <Loader/> : null}
+        {isLoading ? <Loader /> : null}
       </Grid>
     </form>
   );

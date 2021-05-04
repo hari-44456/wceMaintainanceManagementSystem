@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 
 import axiosInstance from '../helpers/axiosInstance';
@@ -8,6 +7,7 @@ import ComplaintDetails from './components/ComplaintDetails';
 import HodForm from '../forms/components/HodForm';
 import RejectReasonForm from './components/RejectReasonForm';
 import Loader from '../helpers/components/Loader';
+import Notification from '../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 const HodView = (props) => {
   const classes = useStyles();
   const history = useHistory();
-  const { addToast } = useToasts();
   const { complaintId } = useParams();
 
   const [complaint, setComplaint] = useState(null);
@@ -49,28 +48,9 @@ const HodView = (props) => {
   const [buttonVisibility, setButtonVisibility] = useState(true);
   const [editComplaint, setEditComplaint] = useState(true);
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  useEffect(() => {
-    if (error) {
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    }
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success) {
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    }
-    setSuccess(null);
-  }, [success]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -88,8 +68,13 @@ const HodView = (props) => {
       } catch (error) {
         try {
           if (error.response.status === 403) history.push('/ui/login');
-          setError(error.response.data.error);
+          setMessage(error.response.data.error);
+          setMessageType('error');
+          setOpen(true);
         } catch (error) {
+          setMessage('Unable to fetch data');
+          setMessageType('error');
+          setOpen(true);
           history.push('/ui/dashboard/hod');
         }
       }
@@ -109,6 +94,12 @@ const HodView = (props) => {
   const formButtons = () => {
     return (
       <Grid container spacing={1} style={{ marginTop: '15px' }}>
+        <Notification
+          open={open}
+          setOpen={setOpen}
+          message={message}
+          type={messageType}
+        />
         <Grid item md={4} xs={6}>
           <Button
             className={[classes.button, classes.rejectBtn].join(' ')}
@@ -141,10 +132,14 @@ const HodView = (props) => {
     return (
       <>
         {nextForm === 'HodForm' && (
-          <HodForm complaintId={complaintId} rejectHandler={rejectHandler}/>
+          <HodForm complaintId={complaintId} rejectHandler={rejectHandler} />
         )}
         {nextForm === 'RejectReasonForm' && (
-          <RejectReasonForm type='hod' complaintId={complaintId} acceptHandler={acceptHandler} />
+          <RejectReasonForm
+            type="hod"
+            complaintId={complaintId}
+            acceptHandler={acceptHandler}
+          />
         )}
       </>
     );

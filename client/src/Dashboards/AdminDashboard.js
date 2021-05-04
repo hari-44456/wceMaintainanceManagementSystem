@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useToasts } from 'react-toast-notifications';
 import { useHistory } from 'react-router-dom';
 
 import Table from './Table';
 import DashboardHeader from './DashboardHeader';
 import Loader from '../helpers/components/Loader';
 import axiosInstance from '../helpers/axiosInstance';
+import Notification from '../helpers/components/Notification';
 
 const AdminDashboard = ({ match }) => {
-  const { addToast } = useToasts();
   const history = useHistory();
 
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
-
-  const [error, setError] = useState(null);
 
   const [tableData, setTableData] = useState([]);
 
@@ -27,21 +24,16 @@ const AdminDashboard = ({ match }) => {
   const [direction, setDirection] = useState('asc');
   const [columnTosort, setColumnToSort] = useState('id');
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+
   const filterValues = [
     'Forwarded to Administrative Officer',
     'Rejected by Administrative Officer',
     'Forwarded to Maintenance Commitee',
     'Rejected by Maintenance Commitee',
   ];
-
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
 
   useEffect(() => {
     (async () => {
@@ -71,9 +63,13 @@ const AdminDashboard = ({ match }) => {
         try {
           if (error.response.status === 403) history.push('/ui/login');
 
-          setError(error.response.data.error);
+          setMessage(error.response.data.error);
+          setMessageType('error');
+          setOpen(true);
         } catch (error) {
-          setError('Unable to fetch data');
+          setMessage('Unable to fetch data');
+          setMessageType('error');
+          setOpen(true);
         }
       }
     })();
@@ -114,6 +110,12 @@ const AdminDashboard = ({ match }) => {
 
   return (
     <>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <DashboardHeader
         searched={searched}
         setSearched={setSearched}
@@ -131,7 +133,6 @@ const AdminDashboard = ({ match }) => {
       />
       <br />
       <br />
-
       {isLoading ? (
         <Loader />
       ) : (

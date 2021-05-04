@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 import Table from './Table';
 import axiosInstance from '../helpers/axiosInstance';
+import Notification from '../helpers/components/Notification';
 
 const MaintenanceCommiteeDashboard = () => {
   const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -14,9 +14,13 @@ const MaintenanceCommiteeDashboard = () => {
         setData(result.data.complaints);
       } catch (error) {
         try {
-          setError(error.response.data.error);
+          setMessage(error.response.data.error);
+          setMessageType('error');
+          setOpen(true);
         } catch (error) {
-          setError('Unable to fetch data');
+          setMessage('Unable to fetch data');
+          setMessageType('error');
+          setOpen(true);
         }
       }
     };
@@ -25,6 +29,12 @@ const MaintenanceCommiteeDashboard = () => {
 
   return (
     <>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <Table complaints={data} />
     </>
   );

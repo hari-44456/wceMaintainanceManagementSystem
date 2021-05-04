@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 
 import axiosInstance from '../helpers/axiosInstance';
@@ -8,6 +7,7 @@ import ComplaintDetails from './components/ComplaintDetails';
 import FormB2 from '../forms/components/FormB2';
 import RejectReasonForm from './components/RejectReasonForm';
 import Loader from '../helpers/components/Loader';
+import Notification from '../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 export default function AdminView(props) {
   const classes = useStyles();
   const history = useHistory();
-  const { addToast } = useToasts();
   const { complaintId } = useParams();
 
   const [complaint, setComplaint] = useState(null);
@@ -45,28 +44,9 @@ export default function AdminView(props) {
   const [buttonVisibility, setButtonVisibility] = useState(true);
   const [editComplaint, setEditComplaint] = useState(true);
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  useEffect(() => {
-    if (error) {
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    }
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success) {
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    }
-    setSuccess(null);
-  }, [success]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -84,18 +64,18 @@ export default function AdminView(props) {
           result.data.complaint.stage >= 3
         ) {
           setEditComplaint(false);
-          console.log('Is Rejected: - ' + result.data.complaint.rejected);
-          console.log(
-            'Greater than equal 3 : ' + result.data.complaint.stage >= 3
-          );
         }
         setComplaint(result.data.complaint);
       } catch (error) {
         try {
           if (error.response.status === 403) history.push('/ui/login');
-          setError(error.response.data.error);
+          setMessage(error.response.data.error);
+          setMessageType('error');
+          setOpen(true);
         } catch (error) {
           history.push('/ui/dashboard/admin');
+          setMessageType('error');
+          setOpen(true);
         }
       }
     })();
@@ -114,6 +94,12 @@ export default function AdminView(props) {
   const formButtons = () => {
     return (
       <Grid container spacing={1} style={{ marginTop: '15px' }}>
+        <Notification
+          open={open}
+          setOpen={setOpen}
+          message={message}
+          type={messageType}
+        />
         <Grid item md={4} xs={8}>
           <Button
             className={[classes.button, classes.rejectBtn].join(' ')}
@@ -149,7 +135,11 @@ export default function AdminView(props) {
           <FormB2 complaintId={complaintId} rejectHandler={rejectHandler} />
         )}
         {nextForm === 'RejectReasonForm' && (
-          <RejectReasonForm type='admin' complaintId={complaintId} acceptHandler={acceptHandler} />
+          <RejectReasonForm
+            type="admin"
+            complaintId={complaintId}
+            acceptHandler={acceptHandler}
+          />
         )}
       </>
     );

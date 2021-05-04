@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useToasts } from 'react-toast-notifications';
 import { useHistory } from 'react-router-dom';
 
 import Table from './Table';
 import DashboardHeader from './DashboardHeader';
 import Loader from '../helpers/components/Loader';
 import axiosInstance from '../helpers/axiosInstance';
+import Notification from '../helpers/components/Notification';
 
 const HodDashboard = ({ match }) => {
-  const { addToast } = useToasts();
   const history = useHistory();
 
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
-
-  const [error, setError] = useState(null);
 
   const [tableData, setTableData] = useState([]);
 
@@ -27,14 +24,9 @@ const HodDashboard = ({ match }) => {
   const [direction, setDirection] = useState('asc');
   const [columnTosort, setColumnToSort] = useState('id');
 
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -63,15 +55,17 @@ const HodDashboard = ({ match }) => {
       } catch (error) {
         try {
           if (error.response.status === 403) history.push('/ui/login');
-          setError(error.response.data.error);
+          setMessage(error.response.data.error);
+          setMessageType('error');
+          setOpen(true);
         } catch (error) {
-          setError('Unable to fetch data');
+          setMessage('Unable to fetch data');
+          setMessageType('error');
+          setOpen(true);
         }
       }
     })();
   }, []);
-
-  console.log(data);
 
   const handleSortDrop = (event) => {
     const columnName = event.target.value;
@@ -117,6 +111,12 @@ const HodDashboard = ({ match }) => {
 
   return (
     <>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <DashboardHeader
         searched={searched}
         setSearched={setSearched}
@@ -134,7 +134,6 @@ const HodDashboard = ({ match }) => {
       />
       <br />
       <br />
-
       {isLoading ? (
         <Loader />
       ) : (
