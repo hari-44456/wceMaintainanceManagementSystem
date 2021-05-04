@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RejectReasonForm({ props, acceptHandler }) {
+export default function RejectReasonForm({ type, complaintId, acceptHandler }) {
   const classes = useStyles();
   const history = useHistory();
   const { addToast } = useToasts();
@@ -65,14 +65,13 @@ export default function RejectReasonForm({ props, acceptHandler }) {
       setLoading(true);
       const queryData = {
         reasonForRejection: reason,
-        userType: props.location.state.type,
       };
       const result = await axiosInstance.post(
-        `/api/complaint/reject/${props.location.state.complaintId}/`,
+        `/api/complaint/reject/${complaintId}/`,
         queryData
       );
       if (!result.data.success) throw new Error();
-      history.push(`/ui/dashboard/${props.location.state.type}/`);
+      history.push(`/ui/dashboard/${type}/`);
       setSuccess('Sent rejection status');
     } catch (error) {
       setLoading(false);

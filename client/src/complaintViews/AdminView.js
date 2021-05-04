@@ -146,10 +146,10 @@ export default function AdminView(props) {
     return (
       <>
         {nextForm === 'MaterialForm' && (
-          <FormB2 props={props} rejectHandler={rejectHandler} />
+          <FormB2 complaintId={complaintId} rejectHandler={rejectHandler} />
         )}
         {nextForm === 'RejectReasonForm' && (
-          <RejectReasonForm props={props} acceptHandler={acceptHandler} />
+          <RejectReasonForm type='admin' complaintId={complaintId} acceptHandler={acceptHandler} />
         )}
       </>
     );

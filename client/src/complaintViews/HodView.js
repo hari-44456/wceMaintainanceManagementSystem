@@ -141,10 +141,10 @@ const HodView = (props) => {
     return (
       <>
         {nextForm === 'HodForm' && (
-          <HodForm props={props} rejectHandler={rejectHandler} />
+          <HodForm complaintId={complaintId} rejectHandler={rejectHandler}/>
         )}
         {nextForm === 'RejectReasonForm' && (
-          <RejectReasonForm props={props} acceptHandler={acceptHandler} />
+          <RejectReasonForm type='hod' complaintId={complaintId} acceptHandler={acceptHandler} />
         )}
       </>
     );

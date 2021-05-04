@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 import {
   Button,
   FormControl,
@@ -15,7 +16,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
-import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -43,17 +43,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HodForm({ props, rejectHandler }) {
+export default function HodForm({ complaintId, rejectHandler }) {
   const classes = useStyles();
   const history = useHistory();
+  const { addToast } = useToasts();
 
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [sourceOfFund, setSourceOfFund] = useState('');
   const [otherSourceOfFund, setOtherSourceOFFund] = useState('');
   const [errors, setErrors] = useState({});
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  useEffect(() => {
+    if (error)
+      addToast(error, {
+        appearance: 'error',
+        autoDismiss: true,
+      });
+    setError(null);
+  }, [error]);
+
+  useEffect(() => {
+    if (success)
+      addToast(success, {
+        appearance: 'success',
+        autoDismiss: true,
+      });
+    setSuccess(null);
+  }, [success]);
 
   const handleChange = (event) => {
     setErrors({});
@@ -88,27 +106,20 @@ export default function HodForm({ props, rejectHandler }) {
         otherSourceOfFund,
       };
       const result = await axiosInstance.post(
-        `/api/complaint/accept/${props.location.state.complaintId}/`,
+        `/api/complaint/accept/${complaintId}/`,
         queryData
       );
       if (!result.data.success) throw new Error();
-
-      setMessage('Complaint forwarded to Administrative Officer');
-      setMessageType('success');
-      setOpen(true);
-      
+      setSuccess('Complaint forwarded to Administrative Officer');
       history.push('/ui/dashboard/hod');
     } catch (error) {
       setLoading(false);
+      console.log(error)
       try {
-        setMessage(error.response.data.error);
-        setMessageType('success');
-        setOpen(true);
+        setError(error.response.data.error);
       } catch (error) {
         setLoading(false);
-        setMessage('Could not complete operation');
-        setMessageType('success');
-        setOpen(true);
+        setError('Could not complete operation');
       }
     }
   };
@@ -130,7 +141,6 @@ export default function HodForm({ props, rejectHandler }) {
 
   return (
     <form className="hod-form">
-      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       <FormControl>
         <Grid container>
           <Grid item xs={12}>
