@@ -150,24 +150,6 @@ const HodView = (props) => {
     );
   };
 
-  const DisplayComplaintStatus = () => {
-    return (
-      <>
-        <Grid container spacing={2}>
-          <Grid item md={2} xs={3}>
-            <Typography variant="subtitle1">Complaint Status</Typography>
-          </Grid>
-          <Grid item md={1} xs={1}>
-            <Typography variant="subtitle1">:</Typography>
-          </Grid>
-          <Grid item md={9} xs={8} style={{ overflowWrap: 'break-word' }}>
-            <Typography variant="subtitle1">{complaint.status}</Typography>
-          </Grid>
-        </Grid>
-      </>
-    );
-  };
-
   if (!complaint) return <Loader />;
 
   return (
@@ -176,14 +158,10 @@ const HodView = (props) => {
       <div className={classes.div}>
         <ComplaintDetails complaintData={complaint} />
       </div>
-      {editComplaint ? (
+      {editComplaint && (
         <div className={classes.div}>
           {buttonVisibility && formButtons()}
           <DisplayNextForm />{' '}
-        </div>
-      ) : (
-        <div className={classes.statusDiv}>
-          <DisplayComplaintStatus />
         </div>
       )}
     </React.Fragment>
