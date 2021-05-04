@@ -54,7 +54,6 @@ module.exports.verifyAdmin = async (req, res, next) => {
           res.cookie('auth-token', refreshedToken, { httpOnly: true });
         }
         req.user = decoded;
-        console.log(decoded);
 
         const user = await User.findOne({ _id: decoded._id, role: 2 });
 
