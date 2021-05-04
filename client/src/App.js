@@ -10,6 +10,7 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import Login from './auth';
 import Dashboards from './dashboards';
+import ComplaintViews from './complaintViews';
 import Home from './Home/pages';
 
 import Forms from './forms';
@@ -29,6 +30,7 @@ const App = () => {
                 <Route path="/ui/dashboard" component={Dashboards} />
                 <Route path="/ui/forms/" component={Forms} />
                 <Route exact path="/ui/store" component={Store} />
+                <Route path="/ui/view" component={ComplaintViews} />
               </Switch>
             </ToastProvider>
           </Container>

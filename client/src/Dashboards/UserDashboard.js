@@ -135,6 +135,7 @@ const UserDashboard = ({ match }) => {
         <Loader />
       ) : (
         <Table
+          type="student"
           data={tableData}
           direction={direction}
           setDirection={setDirection}

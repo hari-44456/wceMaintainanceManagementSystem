@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 
@@ -35,13 +35,14 @@ const useStyles = makeStyles((theme) => ({
   statusDiv: {
     marginTop: '-10px',
     padding: '10px',
-  }
+  },
 }));
 
 const HodView = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const { addToast } = useToasts();
+  const { complaintId } = useParams();
 
   const [complaint, setComplaint] = useState(null);
   const [nextForm, setNextForm] = useState(null);
@@ -74,12 +75,12 @@ const HodView = (props) => {
   useEffect(() => {
     (async () => {
       try {
-        if (!props.location.state.complaintId) {
+        if (!complaintId) {
           history.push('/ui/dashboard/hod');
           return;
         }
         const result = await axiosInstance.get(
-          `/api/complaint/details/${props.location.state.complaintId}`
+          `/api/complaint/details/${complaintId}`
         );
         if (result.data.complaint.rejected || result.data.complaint.stage >= 2)
           setEditComplaint(false);

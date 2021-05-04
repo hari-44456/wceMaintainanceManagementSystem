@@ -5,7 +5,6 @@ import AdminDashboard from './AdminDashboard';
 import HodDashboard from './HodDashboard';
 import UserDashboard from './UserDashboard';
 import axiosInstance from '../helpers/axiosInstance';
-import ComplaintView from '../complaintViews';
 
 const Dashboards = ({ match }) => {
   const history = useHistory();
@@ -25,23 +24,27 @@ const Dashboards = ({ match }) => {
   return (
     <Switch>
       <Route
+        exact
         path={`${match.url}/student`}
         render={(props) => <UserDashboard {...props} />}
       />
 
       <Route
+        exact
         path={`${match.url}/admin`}
         render={(props) => <AdminDashboard {...props} />}
       />
 
       <Route
+        exact
         path={`${match.url}/hod`}
         render={(props) => <HodDashboard {...props} />}
       />
-      <Route
+
+      {/* <Route
         path={`${match.url}/view`}
         render={(props) => <ComplaintView {...props} />}
-      />
+      /> */}
     </Switch>
   );
 };
