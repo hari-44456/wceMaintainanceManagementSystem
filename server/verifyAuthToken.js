@@ -11,6 +11,16 @@ module.exports.verify = async (req, res, next) => {
           error: 'Invalid token',
         });
       }
+      if (new Date(Date.now() - decoded.exp).getMinutes() <= 10) {
+        const refreshedToken = jwt.sign(
+          { _id: decoded._id, userType: decoded.userType },
+          process.env.TOKEN_SECRET,
+          {
+            expiresIn: '1hr',
+          }
+        );
+        res.cookie('auth-token', refreshedToken, { httpOnly: true });
+      }
       req.user = decoded;
       next();
     });
@@ -33,7 +43,18 @@ module.exports.verifyAdmin = async (req, res, next) => {
             error: 'Invalid token',
           });
         }
+        if (new Date(Date.now() - decoded.exp).getMinutes() <= 10) {
+          const refreshedToken = jwt.sign(
+            { _id: decoded._id, userType: decoded.userType },
+            process.env.TOKEN_SECRET,
+            {
+              expiresIn: '1hr',
+            }
+          );
+          res.cookie('auth-token', refreshedToken, { httpOnly: true });
+        }
         req.user = decoded;
+        console.log(decoded);
 
         const user = await User.findOne({ _id: decoded._id, role: 2 });
 
