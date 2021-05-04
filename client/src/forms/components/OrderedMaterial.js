@@ -28,13 +28,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function OrderedMaterial() {
+export default function OrderedMaterial({
+  complaintId,
+  orderedMaterials,
+  setOrderedMaterials,
+}) {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [orderedMaterials, setOrderedMaterials] = useState([]);
+  // const [orderedMaterials, setOrderedMaterials] = useState([]);
   const [availableMaterials, setAvailableMaterials] = useState([]);
   const [material, setMaterial] = useState('');
   const [approxCost, setApproxCost] = useState(0);
@@ -100,7 +104,7 @@ export default function OrderedMaterial() {
             }
 
             const queryData = {
-              complaintId: '606d41353d209d69f01717e5',
+              complaintId,
               type: 'ordered',
               sign: 'AO SIGNATURE',
 
@@ -155,9 +159,14 @@ export default function OrderedMaterial() {
 
   return (
     <Grid container spacing={2}>
-      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <Grid item xs={12}>
-        <Grid container justify="center" alignItems='center'>
+        <Grid container justify="center" alignItems="center">
           <Typography variant="h5">To Be Ordered</Typography>
         </Grid>
       </Grid>
@@ -234,6 +243,7 @@ export default function OrderedMaterial() {
           availableMaterials={availableMaterials}
           setOrderedMaterials={setOrderedMaterials}
           type="ordered"
+          complaintId={complaintId}
         />
       </Grid>
     </Grid>

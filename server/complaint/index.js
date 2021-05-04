@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { verify } = require('../verifyAuthToken');
+const { verify, verifyAdmin } = require('../verifyAuthToken');
 const {
   validateCreateSchema,
   validateAcceptSchema,
@@ -9,6 +9,8 @@ const {
 const Complaint = require('./model');
 const User = require('../login/model');
 const sendMail = require('../mail');
+const Material = require('../material/model');
+const Store = require('../store/model');
 
 const isValid = (id) => {
   switch (id) {
@@ -92,6 +94,37 @@ router.get('/:id', verify, async (req, res) => {
       success: 0,
       error: 'Unable to fetch data',
       errorReturned: error,
+    });
+  }
+});
+
+router.get('/getMaterial/:id', verifyAdmin, async (req, res) => {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Complaint id not provided',
+      });
+
+    const existingMaterials = await Material.findOne(
+      { complaintId: req.params.id },
+      { availableInStore: 1, orderedMaterial: 1 }
+    ).populate({
+      path: 'availableInStore.materialId',
+      model: 'Store',
+      select: { material: 1, cost: 1 },
+    });
+
+    return res.status(200).json({
+      success: 1,
+      availableInStore: existingMaterials.availableInStore,
+      orderedMaterial: existingMaterials.orderedMaterial,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Could not find data',
     });
   }
 });

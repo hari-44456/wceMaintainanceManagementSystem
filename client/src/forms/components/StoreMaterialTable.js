@@ -28,7 +28,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function StoreMaterialTable({ storeMaterials, data, setData }) {
+export default function StoreMaterialTable({
+  storeMaterials,
+  data,
+  setData,
+  complaintId,
+}) {
   const classes = useStyles();
 
   const [selectedMaterial, setSelectedMaterial] = useState({
@@ -37,6 +42,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
     cost: 0,
     units: 0,
   });
+  const [unitsBeforeEditing, setUnitsBeforeEditing] = useState(0);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -107,7 +113,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
   const deleteHandler = async () => {
     try {
       const queryData = {
-        complaintId: '606d41353d209d69f01717e5',
+        complaintId,
         type: 'available',
         quantity: data[delIndex].units,
       };
@@ -159,6 +165,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
         units: selected[0].quantity,
       });
       setUnits(item.units);
+      setUnitsBeforeEditing(item.units);
     } else {
       setSelectedMaterial({
         ...selectedMaterial,
@@ -167,6 +174,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
         cost: 0,
         units,
       });
+      setUnitsBeforeEditing(item.units);
     }
   };
 
@@ -180,9 +188,13 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
     checkDuplicate(selectedMaterial.material, index).then(
       async () => {
         try {
-          if (selectedMaterial.units < units) {
+          if (selectedMaterial.units + unitsBeforeEditing < units) {
             setErrors({
-              units: ['Availablity: ' + selectedMaterial.units],
+              units: [
+                `Total Availablity:  ${
+                  selectedMaterial.units + unitsBeforeEditing
+                }`,
+              ],
             });
             return;
           }
@@ -200,9 +212,9 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
 
           // update call
           const queryData = {
-            complaintId: '606d41353d209d69f01717e5',
+            complaintId,
             type: 'available',
-            unitsBeforeEditing: data[index].units,
+            unitsBeforeEditing,
             quantity: units,
           };
 
@@ -346,7 +358,12 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
 
   return (
     <TableContainer component={Paper}>
-      <Notification open={open} setOpen={setOpen} message={message} type={messageType} /> 
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       {popoverVisible ? (
         <PopOver event={popoverEvent} content={popoverContent} />
       ) : null}

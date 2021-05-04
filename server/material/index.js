@@ -65,7 +65,7 @@ router.post('/', validatePost, async (req, res) => {
       if (!existingMaterial) {
         const newMaterial = new Material({
           complaintId: ObjectId(req.body.complaintId),
-          sign: Req.body.sign,
+          sign: req.body.sign,
           orderedMaterial: [
             {
               material: req.body.material,
@@ -130,7 +130,7 @@ router.put('/:id', validateUpdate, async (req, res) => {
       const response = await Material.updateOne(
         {
           complaintId: ObjectId(req.body.complaintId),
-          'availableInStore._id': ObjectId(req.params.id),
+          'availableInStore.materialId': ObjectId(req.params.id),
         },
         { $set: { 'availableInStore.$.quantity': req.body.quantity } },
         { new: true }

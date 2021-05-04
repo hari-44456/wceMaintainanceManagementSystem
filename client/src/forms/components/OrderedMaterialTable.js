@@ -34,6 +34,7 @@ export default function MaterialTable({
   availableMaterials,
   setOrderedMaterials,
   type,
+  complaintId,
 }) {
   const classes = useStyles();
 
@@ -77,7 +78,7 @@ export default function MaterialTable({
   const deleteHandler = async () => {
     try {
       const queryData = {
-        complaintId: '606d41353d209d69f01717e5',
+        complaintId,
         type: 'ordered',
       };
       const result = await axiosInstance.delete(
@@ -168,7 +169,7 @@ export default function MaterialTable({
                 });
 
                 const queryData = {
-                  complaintId: '606d41353d209d69f01717e5',
+                  complaintId,
                   type: 'ordered',
 
                   material: material.trim(),
@@ -191,7 +192,7 @@ export default function MaterialTable({
                 setMessage('Material Details Updated');
                 setMessageType('success');
                 setOpen(true);
-                
+
                 setErrors({});
               } catch (error) {
                 try {
@@ -332,7 +333,12 @@ export default function MaterialTable({
 
   return (
     <TableContainer component={Paper}>
-      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       {popoverVisible ? (
         <PopOver event={popoverEvent} content={popoverContent} />
       ) : null}

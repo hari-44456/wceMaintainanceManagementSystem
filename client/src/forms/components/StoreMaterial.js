@@ -27,13 +27,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function StoreMaterial() {
+export default function StoreMaterial({
+  complaintId,
+  materials,
+  setMaterials,
+}) {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [materials, setMaterials] = useState([]);
+  // const [materials, setMaterials] = useState([]);
   const [storeMaterials, setStoreMaterials] = useState([]);
   const [selectedMaterial, setSelectedMaterial] = useState({
     _id: null,
@@ -44,21 +48,20 @@ export default function StoreMaterial() {
   const [units, setUnits] = useState(0);
   const [errors, setErrors] = useState({});
 
-
   useEffect(() => {
     axiosInstance.get('/api/store').then((data) => {
+      console.log(data);
       setStoreMaterials(data.data.data);
+      setSelectedMaterial({
+        _id: null,
+        material: '',
+        cost: 0,
+        units: 0,
+      });
+      setUnits(0);
+      setMaterials([]);
+      setErrors([]);
     });
-
-    setSelectedMaterial({
-      _id: null,
-      material: '',
-      cost: 0,
-      units: 0,
-    });
-    setUnits(0);
-    setMaterials([]);
-    setErrors([]);
   }, []);
 
   const resetForm = () => {
@@ -103,7 +106,7 @@ export default function StoreMaterial() {
         }
 
         const queryData = {
-          complaintId: '606d41353d209d69f01717e5',
+          complaintId,
           type: 'available',
           sign: 'AO SIGNATURE',
 
@@ -174,9 +177,14 @@ export default function StoreMaterial() {
 
   return (
     <Grid container spacing={2}>
-      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <Grid item xs={12}>
-        <Grid container justify="center" alignItems='center'>
+        <Grid container justify="center" alignItems="center">
           <Typography variant="h5">Available in Store</Typography>
         </Grid>
       </Grid>
@@ -221,7 +229,7 @@ export default function StoreMaterial() {
             label="Cost"
             size="small"
             value={selectedMaterial.cost}
-            helperText=' '
+            helperText=" "
           />
         </FormControl>
       </Grid>
@@ -262,6 +270,7 @@ export default function StoreMaterial() {
           storeMaterials={storeMaterials}
           data={materials}
           setData={setMaterials}
+          complaintId={complaintId}
         />
       </Grid>
     </Grid>
