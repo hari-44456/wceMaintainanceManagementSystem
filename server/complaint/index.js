@@ -166,7 +166,7 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
       .exec();
 
     const status =
-      req.user.role === 'hod'
+      req.user.userType === 'hod'
         ? 'Forwarded to Administrative Officer'
         : 'Forwarded to Maintanance Commitee';
 
