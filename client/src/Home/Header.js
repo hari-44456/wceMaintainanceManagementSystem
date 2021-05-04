@@ -30,6 +30,12 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
         backgroundColor: '#c4c4c4',
     },
+  },
+  popover: {
+    [theme.breakpoints.down('sm')]: {
+      width: '90%',
+    },
+    width: '30%',
   }
 }));
 
@@ -123,10 +129,11 @@ export default function Header(props) {
                 <Avatar className={classes.avatar}>OP</Avatar>
               </IconButton>
               <Popper 
+                className={classes.popover}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                placement='bottom-end'
+                placement='bottom-start'
               >
                 <UserInfoAndMenu open={open} handleClose={handleClose}/>
               </Popper>
