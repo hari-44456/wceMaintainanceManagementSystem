@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import Notification from '../../helpers/components/Notification';
 import MaterialFormValidator from '../utils/MaterialFormValidator';
 
 const useStyles = makeStyles(() => ({
@@ -28,6 +29,9 @@ const useStyles = makeStyles(() => ({
 export default function MaterialForm({ submitHandler }) {
   const classes = useStyles();
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [material, setMaterial] = useState('');
   const [cost, setCost] = useState(0);
   const [units, setUnits] = useState(0);
@@ -51,6 +55,9 @@ export default function MaterialForm({ submitHandler }) {
         () => {
           submitHandler(material, cost, units).then(
             () => {
+              setMessage('Material Added to the List');
+              setMessageType('success');
+              setOpen(true);
               resetForm();
               setErrors({});
             },
@@ -67,6 +74,7 @@ export default function MaterialForm({ submitHandler }) {
 
   return (
     <form>
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h4">Add Material To Store</Typography>

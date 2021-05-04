@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer,
   Paper,
@@ -13,12 +13,12 @@ import {
 } from '@material-ui/core';
 import { DeleteOutline, DoneOutline, Edit } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { useToasts } from 'react-toast-notifications';
 
 import axiosInstance from '../../helpers/axiosInstance';
 import Confirmation from '../../helpers/components/Confirmation';
 import PopOver from '../../helpers/components/PopOver';
 import OrderedMaterialValidator from '../utils/OrderedMaterialValidator';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles(() => ({
   numberInput: {
@@ -36,8 +36,10 @@ export default function MaterialTable({
   type,
 }) {
   const classes = useStyles();
-  const { addToast } = useToasts();
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [material, setMaterial] = useState('');
   const [approxCost, setApproxCost] = useState(0);
   const [units, setUnits] = useState(0);
@@ -49,27 +51,6 @@ export default function MaterialTable({
   const [popoverEvent, setPopoverEvent] = useState(null);
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [errors, setErrors] = useState({});
-
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success)
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    setSuccess(null);
-  }, [success]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -110,13 +91,18 @@ export default function MaterialTable({
           return i !== delIndex;
         })
       );
-
-      setSuccess('Deleted Successfully');
+      setMessage('Material Removed from List');
+      setMessageType('success');
+      setOpen(true);
     } catch (error) {
       try {
-        setError(error.response.data.error);
+        setMessage(error.response.data.error);
+        setMessageType('error');
+        setOpen(true);
       } catch (error) {
-        setError('Error while deleting');
+        setMessage('Error while deleting');
+        setMessageType('error');
+        setOpen(true);
       }
     } finally {
       resetPopoverStates();
@@ -202,12 +188,20 @@ export default function MaterialTable({
                   units,
                 };
                 setOrderedMaterials(editedData);
+                setMessage('Material Details Updated');
+                setMessageType('success');
+                setOpen(true);
+                
                 setErrors({});
               } catch (error) {
                 try {
-                  setError(error.response.data.error);
+                  setMessage(error.response.data.error);
+                  setMessageType('error');
+                  setOpen(true);
                 } catch (error) {
-                  setError('Unable to update material');
+                  setMessage('Unable to update material');
+                  setMessageType('error');
+                  setOpen(true);
                 }
               }
             },
@@ -338,6 +332,7 @@ export default function MaterialTable({
 
   return (
     <TableContainer component={Paper}>
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       {popoverVisible ? (
         <PopOver event={popoverEvent} content={popoverContent} />
       ) : null}

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useToasts } from 'react-toast-notifications';
 import {
   Button,
   FormControl,
@@ -16,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Loader from '../../helpers/components/Loader';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -46,32 +46,14 @@ const useStyles = makeStyles((theme) => ({
 export default function HodForm({ props, rejectHandler }) {
   const classes = useStyles();
   const history = useHistory();
-  const { addToast } = useToasts();
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [sourceOfFund, setSourceOfFund] = useState('');
   const [otherSourceOfFund, setOtherSourceOFFund] = useState('');
   const [errors, setErrors] = useState({});
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success)
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    setSuccess(null);
-  }, [success]);
 
   const handleChange = (event) => {
     setErrors({});
@@ -110,15 +92,23 @@ export default function HodForm({ props, rejectHandler }) {
         queryData
       );
       if (!result.data.success) throw new Error();
-      setSuccess('Complaint forwarded to Administrative Officer');
+
+      setMessage('Complaint forwarded to Administrative Officer');
+      setMessageType('success');
+      setOpen(true);
+      
       history.push('/ui/dashboard/hod');
     } catch (error) {
       setLoading(false);
       try {
-        setError(error.response.data.error);
+        setMessage(error.response.data.error);
+        setMessageType('success');
+        setOpen(true);
       } catch (error) {
         setLoading(false);
-        setError('Could not complete operation');
+        setMessage('Could not complete operation');
+        setMessageType('success');
+        setOpen(true);
       }
     }
   };
@@ -140,6 +130,7 @@ export default function HodForm({ props, rejectHandler }) {
 
   return (
     <form className="hod-form">
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       <FormControl>
         <Grid container>
           <Grid item xs={12}>

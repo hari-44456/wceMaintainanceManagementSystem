@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   TableContainer,
@@ -15,11 +15,11 @@ import {
 } from '@material-ui/core';
 import { DeleteOutline, DoneOutline, Edit } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { useToasts } from 'react-toast-notifications';
 
 import axiosInstance from '../../helpers/axiosInstance';
 import Confirmation from '../../helpers/components/Confirmation';
 import PopOver from '../../helpers/components/PopOver';
+import Notification from '../../helpers/components/Notification';
 import MaterialFormValidator from '../utils/MaterialFormValidator';
 
 const useStyles = makeStyles(() => ({
@@ -33,8 +33,10 @@ const useStyles = makeStyles(() => ({
 
 export default function MaterialTable({ data, setData }) {
   const classes = useStyles();
-  const { addToast } = useToasts();
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [material, setMaterial] = useState('');
   const [cost, setCost] = useState(0);
   const [units, setUnits] = useState(0);
@@ -46,17 +48,6 @@ export default function MaterialTable({ data, setData }) {
     state: false,
     row: null,
   });
-
-  const [serverError, setServerError] = useState(null);
-
-  useEffect(() => {
-    if (serverError)
-      addToast(serverError, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setServerError(null);
-  }, [serverError, addToast]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -112,16 +103,21 @@ export default function MaterialTable({ data, setData }) {
           return i !== delIndex;
         })
       );
-      addToast('Deleted Successfully', {
-        appearance: 'success',
-        autoDismiss: true,
-      });
+
+      setMessage('Removed Material from Store');
+      setMessageType('success');
+      setOpen(true);
+      
       resetPopoverStates();
     } catch (error) {
       try {
-        setServerError(error.response.data.error);
+        setMessage(error.response.data.error);
+        setMessageType('error');
+        setOpen(true);
       } catch (error) {
-        setServerError('Unable to delete material');
+        setMessage('Unable to delete material');
+        setMessageType('error');
+        setOpen(true);
       }
     }
   };
@@ -169,11 +165,19 @@ export default function MaterialTable({ data, setData }) {
                   _id: updatedMaterial._id,
                 };
                 setData(editedData);
+
+                setMessage('Material Details Updated');
+                setMessageType('success');
+                setOpen(true);
               } catch (error) {
                 try {
-                  setServerError(error.response.data.error);
+                  setMessage(error.response.data.error);
+                  setMessageType('error');
+                  setOpen(true);
                 } catch (error) {
-                  setServerError('Unable to update material');
+                  setMessage('Unable to update material');
+                  setMessageType('error');
+                  setOpen(true);
                 }
               }
             },
@@ -302,7 +306,8 @@ export default function MaterialTable({ data, setData }) {
   }
 
   return (
-    <>
+    <React.Fragment>
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       <Grid>
         <Typography variant="h4">Current Available Material</Typography>
       </Grid>
@@ -344,6 +349,6 @@ export default function MaterialTable({ data, setData }) {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </React.Fragment>
   );
 }

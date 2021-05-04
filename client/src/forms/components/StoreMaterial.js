@@ -7,10 +7,10 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
-import { useToasts } from 'react-toast-notifications';
 
 import StoreMaterialTable from './StoreMaterialTable';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles(() => ({
   numberInput: {
@@ -29,8 +29,10 @@ const useStyles = makeStyles(() => ({
 
 export default function StoreMaterial() {
   const classes = useStyles();
-  const { addToast } = useToasts();
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [materials, setMaterials] = useState([]);
   const [storeMaterials, setStoreMaterials] = useState([]);
   const [selectedMaterial, setSelectedMaterial] = useState({
@@ -42,7 +44,6 @@ export default function StoreMaterial() {
   const [units, setUnits] = useState(0);
   const [errors, setErrors] = useState({});
 
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     axiosInstance.get('/api/store').then((data) => {
@@ -59,15 +60,6 @@ export default function StoreMaterial() {
     setMaterials([]);
     setErrors([]);
   }, []);
-
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
 
   const resetForm = () => {
     setSelectedMaterial({
@@ -132,6 +124,9 @@ export default function StoreMaterial() {
             units,
           },
         ]);
+        setMessage('Material Added to the list');
+        setMessageType('success');
+        setOpen(true);
         resetForm();
       } else
         setErrors({
@@ -139,9 +134,13 @@ export default function StoreMaterial() {
         });
     } catch (error) {
       try {
-        setError(error.response.data.error);
+        setMessage(error.response.data.error);
+        setMessageType('error');
+        setOpen(true);
       } catch (error) {
-        setError('Error while adding item');
+        setMessage('Unable to add material');
+        setMessageType('error');
+        setOpen(true);
       }
     }
   };
@@ -175,6 +174,7 @@ export default function StoreMaterial() {
 
   return (
     <Grid container spacing={2}>
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       <Grid item xs={12}>
         <Grid container justify="center" alignItems='center'>
           <Typography variant="h5">Available in Store</Typography>

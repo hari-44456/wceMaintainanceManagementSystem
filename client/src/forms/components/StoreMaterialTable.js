@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer,
   Paper,
@@ -13,11 +13,11 @@ import {
 } from '@material-ui/core';
 import { DeleteOutline, DoneOutline, Edit } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { useToasts } from 'react-toast-notifications';
 
 import Confirmation from '../../helpers/components/Confirmation';
 import PopOver from '../../helpers/components/PopOver';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles(() => ({
   numberInput: {
@@ -30,7 +30,6 @@ const useStyles = makeStyles(() => ({
 
 export default function StoreMaterialTable({ storeMaterials, data, setData }) {
   const classes = useStyles();
-  const { addToast } = useToasts();
 
   const [selectedMaterial, setSelectedMaterial] = useState({
     _id: null,
@@ -38,6 +37,9 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
     cost: 0,
     units: 0,
   });
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [units, setUnits] = useState(0);
   const [popoverEvent, setPopoverEvent] = useState(null);
   const [popoverVisible, setPopoverVisible] = useState(false);
@@ -47,27 +49,6 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
     state: false,
     row: null,
   });
-
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    if (success)
-      addToast(success, {
-        appearance: 'success',
-        autoDismiss: true,
-      });
-    setSuccess(null);
-  }, [success]);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
@@ -143,12 +124,18 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
         })
       );
 
-      setSuccess('Deleted Successfully');
+      setMessage('Material Removed from List');
+      setMessageType('success');
+      setOpen(true);
     } catch (error) {
       try {
-        setError(error.response.data.error);
+        setMessage(error.response.data.error);
+        setMessageType('error');
+        setOpen(true);
       } catch (error) {
-        setError('Error while deleting material');
+        setMessage('Error while deleting');
+        setMessageType('error');
+        setOpen(true);
       }
     } finally {
       resetPopoverStates();
@@ -231,14 +218,23 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
             cost: selectedMaterial.cost,
             units,
           };
+
+          setMessage('Material Details Updated');
+          setMessageType('success');
+          setOpen(true);
+
           setData(editedData);
           resetForm();
           setErrors({});
         } catch (error) {
           try {
-            setError(error.response.data.error);
+            setMessage(error.response.data.error);
+            setMessageType('error');
+            setOpen(true);
           } catch (error) {
-            setError('Could not update data');
+            setMessage('Could not update data');
+            setMessageType('error');
+            setOpen(true);
           }
         }
       },
@@ -350,6 +346,7 @@ export default function StoreMaterialTable({ storeMaterials, data, setData }) {
 
   return (
     <TableContainer component={Paper}>
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} /> 
       {popoverVisible ? (
         <PopOver event={popoverEvent} content={popoverContent} />
       ) : null}

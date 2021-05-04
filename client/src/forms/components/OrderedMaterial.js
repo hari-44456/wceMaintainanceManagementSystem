@@ -7,10 +7,10 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { useToasts } from 'react-toast-notifications';
 
 import OrderedMaterialTable from './OrderedMaterialTable';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 import OrderedMaterialValidator from '../utils/OrderedMaterialValidator';
 
 const useStyles = makeStyles(() => ({
@@ -30,16 +30,16 @@ const useStyles = makeStyles(() => ({
 
 export default function OrderedMaterial() {
   const classes = useStyles();
-  const { addToast } = useToasts();
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [orderedMaterials, setOrderedMaterials] = useState([]);
   const [availableMaterials, setAvailableMaterials] = useState([]);
   const [material, setMaterial] = useState('');
   const [approxCost, setApproxCost] = useState(0);
   const [units, setUnits] = useState(0);
   const [errors, setErrors] = useState({});
-
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -55,15 +55,6 @@ export default function OrderedMaterial() {
     };
     getData();
   }, []);
-
-  useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
 
   const resetForm = () => {
     setMaterial('');
@@ -137,13 +128,22 @@ export default function OrderedMaterial() {
                 units,
               },
             ]);
+
+            setMessage('Material Added to the List');
+            setMessageType('success');
+            setOpen(true);
+
             setErrors({});
             resetForm();
           } catch (error) {
             try {
-              setError(error.response.data.error);
+              setMessage(error.response.data.error);
+              setMessageType('error');
+              setOpen(true);
             } catch (error) {
-              setError('Unable to add material');
+              setMessage('Unable to add material');
+              setMessageType('error');
+              setOpen(true);
             }
           }
         },
@@ -155,6 +155,7 @@ export default function OrderedMaterial() {
 
   return (
     <Grid container spacing={2}>
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       <Grid item xs={12}>
         <Grid container justify="center" alignItems='center'>
           <Typography variant="h5">To Be Ordered</Typography>

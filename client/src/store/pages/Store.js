@@ -1,32 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
-import { useToasts } from 'react-toast-notifications';
 
 import MaterialForm from '../components/MaterialForm';
 import MaterialTable from '../components/MaterialTable';
 import axiosInstance from '../../helpers/axiosInstance';
+import Notification from '../../helpers/components/Notification';
 
 export default function Store() {
-  const { addToast } = useToasts();
   const history = useHistory();
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [availableMaterial, setAvailableMaterial] = useState([]);
 
-  const [error, setError] = useState(null);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (error)
-      addToast(error, {
-        appearance: 'error',
-        autoDismiss: true,
-      });
-    setError(null);
-  }, [error]);
-
-  useEffect(() => {
-    const getMaterial = async () => {
+    (async () => {
       try {
         const result = await axiosInstance.get('/api/store');
         if (result.data.success) {
@@ -42,14 +34,17 @@ export default function Store() {
       } catch (error) {
         try {
           if (error.response.status === 403) history.push('/ui/login');
-          setError(error.response.data.error);
+          setMessage(error.response.data.error);
+          setMessageType('error');
+          setOpen(true);
         } catch (error) {
-          setError('Unable to fetch data');
+          setMessage('Unable to fetch data');
+          setMessageType('error');
+          setOpen(true);
         }
       }
-    };
-    getMaterial();
-  }, []);
+    })();
+  }, [history]);
 
   function isMaterialExists(array, value) {
     const count = array.reduce(
@@ -77,7 +72,7 @@ export default function Store() {
               _id: result.data._id,
             },
           ]);
-        else throw new Error('Unable tp add material to store');
+        else throw new Error('Unable to add material to store');
 
         setErrors({});
         return Promise.resolve({
@@ -98,6 +93,7 @@ export default function Store() {
 
   return (
     <Grid container>
+      <Notification open={open} setOpen={setOpen} message={message} type={messageType} />
       <Grid item lg={6} md={12}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
