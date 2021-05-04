@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }
 }));
+
 const ElevationScroll = (props) => {
   const { children, window } = props;
   const trigger = useScrollTrigger({
@@ -75,6 +76,11 @@ const UserInfoAndMenu = ({ open, handleClose }) => {
                 <Divider variant='middle' style={{backgroundColor: 'white'}}/>
               </Grid>
               <Grid item xs={12} align='center'>
+                <Button variant='outlined' className={classes.button}>
+                  View Profile
+                </Button>
+              </Grid>
+              <Grid item xs={12} align="center">
                 <Button variant='outlined' className={classes.button}>
                   Logout
                 </Button>
