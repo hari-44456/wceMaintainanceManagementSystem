@@ -63,7 +63,7 @@ export default function ComplaintDetails({ complaintData }) {
           <Typography variant="subtitle1">:</Typography>
         </Grid>
         <Grid item md={9} xs={8} style={{ overflowWrap: 'break-word' }}>
-          <Typography variant="subtitle1">{complaint.status}</Typography>
+          <Typography variant="subtitle1">{complaintData.status}</Typography>
         </Grid>
       </Grid>
 
