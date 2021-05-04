@@ -11,7 +11,7 @@ import Login from './auth';
 import Dashboards from './dashboards';
 import ComplaintViews from './complaintViews';
 import Home from './Home/pages';
-
+import Header from './Home/Header';
 import Forms from './forms';
 import Store from './store/pages/Store';
 
@@ -21,6 +21,7 @@ const App = () => {
       <Container className="App">
         <Paper elevation={3} square style={{ padding: '20px' }}>
           <Container>
+            <Header />
             <Switch>
               <Redirect exact from="/" to={'/ui'} />
               <Route exact path="/ui" component={Home} />
