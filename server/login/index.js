@@ -6,10 +6,13 @@ const validateSchema = require('./validate');
 
 router.post('/', validateSchema, async (req, res) => {
   try {
-    const user = await User.findOne({
-      username: req.body.username,
-      password: req.body.password,
-    });
+    const user = await User.findOne(
+      {
+        username: req.body.username,
+        password: req.body.password,
+      },
+      { role: 1 }
+    );
 
     if (!user)
       return res.status(400).json({
@@ -17,9 +20,30 @@ router.post('/', validateSchema, async (req, res) => {
         error: 'Username or Password is incorrect',
       });
 
-    const token = jwt.sign({ data: user._id }, process.env.TOKEN_SECRET, {
-      expiresIn: '1hr',
-    });
+    let userType = 'student';
+    switch (user.role) {
+      case 0:
+        userType = 'student';
+        break;
+      case 1:
+        userType = 'hod';
+        break;
+      case 2:
+        userType = 'admin';
+        break;
+      case 3:
+        userType = 'maintananceCommitee';
+        break;
+    }
+
+    const token = jwt.sign(
+      { _id: user._id, userType },
+      process.env.TOKEN_SECRET,
+      {
+        expiresIn: '1hr',
+      }
+    );
+
     res.cookie('auth-token', token, { httpOnly: true });
 
     return res.status(200).json({
@@ -27,6 +51,7 @@ router.post('/', validateSchema, async (req, res) => {
       role: user.role,
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       success: 0,
       error: 'Unable To Login..Try Again after some time',

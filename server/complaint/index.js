@@ -14,11 +14,24 @@ const isValid = (id) => {
   switch (id) {
     case 'student':
     case 'hod':
-    case 'ao':
+    case 'admin':
     case 'commitee':
       return true;
     default:
       return false;
+  }
+};
+
+const getRole = (id) => {
+  switch (id) {
+    case 0:
+      return 'student';
+    case 1:
+      return 'hod';
+    case 2:
+      return 'admin';
+    case 3:
+      return 'maintananceCommitee';
   }
 };
 
@@ -30,20 +43,29 @@ router.get('/:id', verify, async (req, res) => {
         error: 'Invalid Request',
       });
 
-    const { department } = await User.findOne({ _id: req.user }).select({
+    const { department, role } = await User.findOne({
+      _id: req.user._id,
+    }).select({
       _id: 0,
       department: 1,
+      role: 1,
     });
+
+    if (req.params.id !== getRole(role))
+      return res.status(403).json({
+        success: 0,
+        error: 'Unauthorized',
+      });
 
     let query;
     switch (req.params.id) {
       case 'student':
-        query = { userId: req.user };
+        query = { userId: req.user._id };
         break;
       case 'hod':
         query = { department };
         break;
-      case 'ao':
+      case 'admin':
         query = { stage: { $gte: 2 } };
         break;
       case 'commitee':
@@ -51,12 +73,15 @@ router.get('/:id', verify, async (req, res) => {
         break;
     }
 
-    const result = await Complaint.find(query).select({
-      department: 1,
-      date: 1,
-      workType: 1,
-      status: 1,
-    });
+    const result = await Complaint.find(query)
+      .select({
+        department: 1,
+        date: 1,
+        workType: 1,
+        status: 1,
+      })
+      .sort({ date: -1 });
+
     return res.status(200).json({
       success: 1,
       complaints: result,
@@ -73,8 +98,8 @@ router.get('/:id', verify, async (req, res) => {
 
 router.post('/', verify, validateCreateSchema, async (req, res) => {
   try {
-    req.body.userId = req.user;
-    const { email } = await User.findOne({ _id: req.user }).select({
+    req.body.userId = req.user._id;
+    const { email } = await User.findOne({ _id: req.user._id }).select({
       email: 1,
     });
 
@@ -140,6 +165,11 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
       .populate('userId', 'email')
       .exec();
 
+    const status =
+      req.user.userType === 'hod'
+        ? 'Forwarded to Administrative Officer'
+        : 'Forwarded to Maintanance Commitee';
+
     await Complaint.updateOne(
       { _id: req.params.id },
       {
@@ -149,13 +179,12 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
             req.body.sourceOfFund === 'Other'
               ? req.body.otherSourceOfFund
               : req.body.sourceOfFund,
-
-          status: 'Forwarded to Administrative Officer',
+          status,
         },
       }
     );
 
-    await sendMail(email, 'Forwarded to Administrative OFficer');
+    await sendMail(email, status);
     return res.status(200).json({
       success: 1,
     });
@@ -184,7 +213,7 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
 
     req.body.rejected = true;
 
-    req.body.status = `Rejected by ${req.body.userType}`;
+    req.body.status = `Rejected by ${req.user.userType}`;
 
     await Complaint.updateOne(
       { _id: req.params.id },
@@ -192,7 +221,11 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
         $set: req.body,
       }
     );
-    await sendMail(email, req.body.reasonForRejection);
+
+    await sendMail(
+      email,
+      `${req.body.status} \n Reason: ${req.body.reasonForRejection}`
+    );
 
     return res.status(200).json({
       success: 1,

@@ -9,18 +9,17 @@ const Dashboards = ({ match }) => {
   return (
     <Switch>
       <Route
-        path={`${match.url}/student`}
+        path={`${match.url}/student/:complaintId`}
         render={(props) => <StudentView {...props} />}
       />
 
       <Route
-        path={`${match.url}/admin`}
+        path={`${match.url}/admin/:complaintId`}
         render={(props) => <AdminView {...props} />}
       />
 
       <Route
-        path={`${match.url}/hod`}
-        exact
+        path={`${match.url}/hod/:complaintId`}
         render={(props) => <HodView {...props} />}
       />
     </Switch>

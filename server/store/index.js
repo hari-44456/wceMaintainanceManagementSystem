@@ -8,7 +8,7 @@ router.use('*', verify, (req, res, next) => next());
 
 router.get('/', async (req, res) => {
   try {
-    const data = await Store.find();
+    const data = await Store.find({ quantity: { $gt: 0 } });
     return res.status(200).json({
       success: 1,
       data,

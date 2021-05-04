@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 
@@ -38,6 +38,7 @@ export default function AdminView(props) {
   const classes = useStyles();
   const history = useHistory();
   const { addToast } = useToasts();
+  const { complaintId } = useParams();
 
   const [complaint, setComplaint] = useState(null);
   const [nextForm, setNextForm] = useState(null);
@@ -69,13 +70,14 @@ export default function AdminView(props) {
 
   useEffect(() => {
     (async () => {
+      console.log(complaintId);
       try {
-        if (!props.location.state.complaintId) {
+        if (!complaintId) {
           history.push('/ui/dashboard/admin');
           return;
         }
         const result = await axiosInstance.get(
-          `/api/complaint/details/${props.location.state.complaintId}`
+          `/api/complaint/details/${complaintId}`
         );
         if (
           result.data.complaint.rejected ||

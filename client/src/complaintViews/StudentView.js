@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { makeStyles, Typography } from '@material-ui/core';
 import { useToasts } from 'react-toast-notifications';
 
@@ -19,6 +19,7 @@ const StudentView = (props) => {
 
   const history = useHistory();
   const { addToast } = useToasts();
+  const { complaintId } = useParams();
 
   const [complaint, setComplaint] = useState(null);
   const [error, setError] = useState(null);
@@ -35,12 +36,12 @@ const StudentView = (props) => {
   useEffect(() => {
     (async () => {
       try {
-        if (!props.location.state.complaintId) {
+        if (!complaintId) {
           history.push('/ui/dashboard/student');
           return;
         }
         const result = await axiosInstance.get(
-          `/api/complaint/details/${props.location.state.complaintId}`
+          `/api/complaint/details/${complaintId}`
         );
         setComplaint(result.data.complaint);
       } catch (error) {

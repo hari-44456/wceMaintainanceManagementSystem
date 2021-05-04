@@ -141,7 +141,7 @@ export default function TableD({
         <TableBody>
           {rows
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row,index) => (
+            .map((row, index) => (
               <StyledTableRow key={row.id}>
                 <TableCell component="th" scope="row">
                   <Typography
@@ -151,7 +151,7 @@ export default function TableD({
                     }}
                   >
                     {' '}
-                    {page*10+index+1}
+                    {page * 10 + index + 1}
                   </Typography>
                 </TableCell>
                 <StyledTableCell align="right">{row.title}</StyledTableCell>
@@ -163,13 +163,7 @@ export default function TableD({
                 <StyledTableCell align="center">
                   <Link
                     to={{
-                      pathname: `view/${match.url.substring(
-                        match.url.lastIndexOf('/') + 1
-                      )}`,
-                      state: {
-                        type: type,
-                        complaintId: row._id,
-                      },
+                      pathname: `/ui/view/${type}/${row._id}`,
                     }}
                   >
                     <Button>View</Button>
