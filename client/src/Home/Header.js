@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -21,6 +21,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 import axiosInstance from '../helpers/axiosInstance';
+import { FormatColorResetRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -76,20 +77,28 @@ ElevationScroll.propTypes = {
   window: PropTypes.func,
 };
 
-const UserInfoAndMenu = ({ open, handleClose }) => {
+const UserInfoAndMenu = ({
+  open,
+  handleClose,
+  currentUser,
+  isLoggedIn,
+  setIsLoggedIn,
+}) => {
   const classes = useStyles();
   const history = useHistory();
-
-  const [currentUser, setCurrentUser] = useState({});
 
   const handleLogout = async () => {
     try {
       await axiosInstance.get('/api/logout');
     } catch (error) {
     } finally {
+      window.localStorage.removeItem('WCEMaintananceManagementSystemUser');
+      setIsLoggedIn(!isLoggedIn);
       history.push('/ui/login');
+      handleClose();
     }
   };
+
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <Slide direction="down" in={open} mountOnEnter unmountOnExit>
@@ -137,10 +146,21 @@ const UserInfoAndMenu = ({ open, handleClose }) => {
   );
 };
 
-export default function Header(props) {
+export default function Header({ isLoggedIn, setIsLoggedIn, ...props }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = useState(false);
+
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const user = JSON.parse(
+      window.localStorage.getItem('WCEMaintananceManagementSystemUser')
+    );
+    console.log(user);
+    if (user && user.isAuthenticated) setCurrentUser(user.currentUser);
+    else setCurrentUser(null);
+  }, [isLoggedIn]);
 
   const handleMenu = (event) => {
     setOpen(!open);
@@ -152,6 +172,8 @@ export default function Header(props) {
     setAnchorEl(null);
   };
 
+  if (!currentUser) return null;
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -159,7 +181,7 @@ export default function Header(props) {
         <AppBar className={classes.appbar}>
           <Toolbar>
             <Typography className={classes.title} variant="h5">
-              WCE Management System
+              WCE Maintanance Management System
             </Typography>
             <div>
               <IconButton onClick={handleMenu} color="inherit">
@@ -172,7 +194,13 @@ export default function Header(props) {
                 onClose={handleClose}
                 placement="bottom-start"
               >
-                <UserInfoAndMenu open={open} handleClose={handleClose} />
+                <UserInfoAndMenu
+                  open={open}
+                  handleClose={handleClose}
+                  currentUser={currentUser}
+                  setIsLoggedIn={setIsLoggedIn}
+                  isLoggedIn={isLoggedIn}
+                />
               </Popper>
             </div>
           </Toolbar>

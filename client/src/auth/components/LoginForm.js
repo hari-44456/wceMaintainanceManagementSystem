@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginForm() {
+export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -82,8 +82,18 @@ export default function LoginForm() {
           }
           if (!type) throw new Error();
 
+          window.localStorage.setItem(
+            'WCEMaintananceManagementSystemUser',
+            JSON.stringify({
+              isAuthenticated: 1,
+              currentUser: { name: result.data.name, email: result.data.email },
+            })
+          );
+          setIsLoggedIn(!isLoggedIn);
+
           history.push(`/ui/dashboard/${type}`);
         } catch (error) {
+          console.log(error);
           try {
             setMessage(error.response.data.error);
             setMessageType('error');

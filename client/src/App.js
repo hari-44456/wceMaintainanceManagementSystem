@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Redirect,
@@ -16,16 +16,28 @@ import Forms from './forms';
 import Store from './store/pages/Store';
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+  }, [isLoggedIn]);
+
   return (
     <Router>
       <Container className="App">
         <Paper elevation={3} square style={{ padding: '20px' }}>
           <Container>
-            <Header />
+            <Header setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
             <Switch>
               <Redirect exact from="/" to={'/ui'} />
               <Route exact path="/ui" component={Home} />
-              <Route path="/ui/login" component={Login} />
+              <Route
+                path="/ui/login"
+                render={(props) => (
+                  <Login {...{ setIsLoggedIn, isLoggedIn, ...props }} />
+                )}
+              />
+
               <Route path="/ui/dashboard" component={Dashboards} />
               <Route path="/ui/forms/" component={Forms} />
               <Route exact path="/ui/store" component={Store} />

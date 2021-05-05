@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StudentLogin() {
+export default function StudentLogin({ isLoggedIn, setIsLoggedIn }) {
   const classes = useStyles();
 
   return (
@@ -18,7 +18,7 @@ export default function StudentLogin() {
       <Typography variant="h4" className={classes.style}>
         Login
       </Typography>
-      <LoginForm type="student" />
+      <LoginForm setIsLoggedIn={setIsLoggedIn} />
     </Grid>
   );
 }
