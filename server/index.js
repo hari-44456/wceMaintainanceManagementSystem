@@ -44,6 +44,22 @@ app.get('/api/isAuthenticated', verify, (req, res) => {
   }
 });
 
+app.get('/api/logout', (req, res) => {
+  try {
+    res.clearCookie('auth-token');
+    return res.status(200).json({
+      success: 1,
+      message: 'Logged out Successfully',
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Unable to complet operation',
+    });
+  }
+});
+
 app.use('/api/login', require('./login'));
 app.use('/api/complaint', require('./complaint'));
 app.use('/api/store', require('./store'));

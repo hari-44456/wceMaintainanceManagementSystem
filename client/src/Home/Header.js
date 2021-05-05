@@ -1,19 +1,38 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { AppBar, Avatar, IconButton, Toolbar, Typography, CssBaseline, useScrollTrigger, Card, CardContent, Grid, Divider, Popper, Slide, Button, ClickAwayListener} from '@material-ui/core';
+import {
+  AppBar,
+  Avatar,
+  IconButton,
+  Toolbar,
+  Typography,
+  CssBaseline,
+  useScrollTrigger,
+  Card,
+  CardContent,
+  Grid,
+  Divider,
+  Popper,
+  Slide,
+  Button,
+  ClickAwayListener,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
+import axiosInstance from '../helpers/axiosInstance';
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
     backgroundColor: '#263238',
   },
   title: {
-    flexGrow: 1, 
-    color: 'white'
+    flexGrow: 1,
+    color: 'white',
   },
   avatar: {
-    color: 'black', 
-    backgroundColor: 'white'
+    color: 'black',
+    backgroundColor: 'white',
   },
   largeAvatar: {
     width: theme.spacing(7),
@@ -21,14 +40,14 @@ const useStyles = makeStyles((theme) => ({
   },
   infoCard: {
     backgroundColor: 'rgb(69, 69, 69, 1)',
-    color: 'white', 
+    color: 'white',
     marginTop: '3px',
   },
   button: {
     backgroundColor: 'white',
     color: 'black',
     '&:hover': {
-        backgroundColor: '#c4c4c4',
+      backgroundColor: '#c4c4c4',
     },
   },
   popover: {
@@ -36,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
       width: '90%',
     },
     width: '30%',
-  }
+  },
 }));
 
 const ElevationScroll = (props) => {
@@ -50,7 +69,7 @@ const ElevationScroll = (props) => {
   return React.cloneElement(children, {
     elevation: trigger ? 4 : 0,
   });
-}
+};
 
 ElevationScroll.propTypes = {
   children: PropTypes.element.isRequired,
@@ -59,6 +78,18 @@ ElevationScroll.propTypes = {
 
 const UserInfoAndMenu = ({ open, handleClose }) => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const [currentUser, setCurrentUser] = useState({});
+
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.get('/api/logout');
+    } catch (error) {
+    } finally {
+      history.push('/ui/login');
+    }
+  };
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <Slide direction="down" in={open} mountOnEnter unmountOnExit>
@@ -66,28 +97,35 @@ const UserInfoAndMenu = ({ open, handleClose }) => {
           <CardContent>
             <Grid container spacing={1} justify="center">
               <Grid item xs={12} align="center">
-                <Avatar className={[classes.largeAvatar, classes.avatar].join(' ')}>OP</Avatar>
+                <Avatar
+                  className={[classes.largeAvatar, classes.avatar].join(' ')}
+                >
+                  OP
+                </Avatar>
               </Grid>
-              <Grid item xs={12} align='center'>
-                <Typography variant='body2'>
-                  Narahari Papshetwar
-                </Typography>
+              <Grid item xs={12} align="center">
+                <Typography variant="body2">{currentUser.name}</Typography>
               </Grid>
-              <Grid item xs={12} align='center'>
-                <Typography variant='caption'>
-                  naraharipapshetwar@gmail.com
-                </Typography>
+              <Grid item xs={12} align="center">
+                <Typography variant="caption">{currentUser.email}</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Divider variant='middle' style={{backgroundColor: 'white'}}/>
+                <Divider
+                  variant="middle"
+                  style={{ backgroundColor: 'white' }}
+                />
               </Grid>
-              <Grid item xs={12} align='center'>
-                <Button variant='outlined' className={classes.button}>
+              <Grid item xs={12} align="center">
+                <Button variant="outlined" className={classes.button}>
                   View Profile
                 </Button>
               </Grid>
               <Grid item xs={12} align="center">
-                <Button variant='outlined' className={classes.button}>
+                <Button
+                  variant="outlined"
+                  className={classes.button}
+                  onClick={handleLogout}
+                >
                   Logout
                 </Button>
               </Grid>
@@ -96,8 +134,8 @@ const UserInfoAndMenu = ({ open, handleClose }) => {
         </Card>
       </Slide>
     </ClickAwayListener>
-  )
-}
+  );
+};
 
 export default function Header(props) {
   const classes = useStyles();
@@ -120,22 +158,21 @@ export default function Header(props) {
       <ElevationScroll {...props}>
         <AppBar className={classes.appbar}>
           <Toolbar>
-            <Typography className={classes.title} variant="h5">WCE Management System</Typography>
+            <Typography className={classes.title} variant="h5">
+              WCE Management System
+            </Typography>
             <div>
-              <IconButton
-                onClick={handleMenu}
-                color="inherit"
-              >
+              <IconButton onClick={handleMenu} color="inherit">
                 <Avatar className={classes.avatar}>OP</Avatar>
               </IconButton>
-              <Popper 
+              <Popper
                 className={classes.popover}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                placement='bottom-start'
+                placement="bottom-start"
               >
-                <UserInfoAndMenu open={open} handleClose={handleClose}/>
+                <UserInfoAndMenu open={open} handleClose={handleClose} />
               </Popper>
             </div>
           </Toolbar>
