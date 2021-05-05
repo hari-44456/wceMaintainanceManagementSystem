@@ -30,8 +30,15 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
         backgroundColor: '#c4c4c4',
     },
+  },
+  popover: {
+    [theme.breakpoints.down('sm')]: {
+      width: '90%',
+    },
+    width: '30%',
   }
 }));
+
 const ElevationScroll = (props) => {
   const { children, window } = props;
   const trigger = useScrollTrigger({
@@ -76,6 +83,11 @@ const UserInfoAndMenu = ({ open, handleClose }) => {
               </Grid>
               <Grid item xs={12} align='center'>
                 <Button variant='outlined' className={classes.button}>
+                  View Profile
+                </Button>
+              </Grid>
+              <Grid item xs={12} align="center">
+                <Button variant='outlined' className={classes.button}>
                   Logout
                 </Button>
               </Grid>
@@ -117,10 +129,11 @@ export default function Header(props) {
                 <Avatar className={classes.avatar}>OP</Avatar>
               </IconButton>
               <Popper 
+                className={classes.popover}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                placement='bottom-end'
+                placement='bottom-start'
               >
                 <UserInfoAndMenu open={open} handleClose={handleClose}/>
               </Popper>
