@@ -37,6 +37,31 @@ const getRole = (id) => {
   }
 };
 
+const delteMaterialAndUpdateStore = (complaintId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { availableInStore } = await Material.findOne(
+        { complaintId },
+        { availableInStore: 1 }
+      );
+
+      availableInStore.forEach(
+        async (material) =>
+          await Store.updateOne(
+            { _id: material.materialId },
+            { $inc: { quantity: material.quantity } }
+          )
+      );
+
+      await Material.deleteOne({ complaintId });
+
+      resolve(availableInStore);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 router.get('/:id', verify, async (req, res) => {
   try {
     if (!isValid(req.params.id))
@@ -117,8 +142,12 @@ router.get('/getMaterial/:id', verifyAdmin, async (req, res) => {
 
     return res.status(200).json({
       success: 1,
-      availableInStore: existingMaterials.availableInStore,
-      orderedMaterial: existingMaterials.orderedMaterial,
+      availableInStore: existingMaterials
+        ? existingMaterials.availableInStore
+        : [],
+      orderedMaterial: existingMaterials
+        ? existingMaterials.orderedMaterial
+        : [],
     });
   } catch (error) {
     console.log(error);
@@ -259,6 +288,9 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
       email,
       `${req.body.status} \n Reason: ${req.body.reasonForRejection}`
     );
+
+    if (req.user.userType === 'admin')
+      await delteMaterialAndUpdateStore(req.params.id);
 
     return res.status(200).json({
       success: 1,
