@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Avatar, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import LoginForm from '../components/LoginForm';
@@ -8,6 +8,17 @@ const useStyles = makeStyles((theme) => ({
   style: {
     marginTop: '2rem',
   },
+  paper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: theme.spacing(2),
+    padding: theme.spacing(3)
+  },
+  large: {
+    width: theme.spacing(8),
+    height: theme.spacing(8),
+  },
 }));
 
 export default function StudentLogin({ isLoggedIn, setIsLoggedIn }) {
@@ -15,10 +26,13 @@ export default function StudentLogin({ isLoggedIn, setIsLoggedIn }) {
 
   return (
     <Grid container justify="center" alignItems="center">
-      <Typography variant="h4" className={classes.style}>
-        Login
-      </Typography>
-      <LoginForm setIsLoggedIn={setIsLoggedIn} />
+      <div className={classes.paper}>
+          <Avatar alt="Some Logo" className={classes.large} />
+          <Typography component="h1" variant="h4">
+            Sign in
+          </Typography>
+        </div>
+      <LoginForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
     </Grid>
   );
 }

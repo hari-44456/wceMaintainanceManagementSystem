@@ -7,6 +7,9 @@ import {
   InputAdornment,
   FormControl,
   Grid,
+  CssBaseline,
+  Container,
+  Link
 } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,16 +21,30 @@ import axiosInstance from '../../helpers/axiosInstance';
 import Notification from '../../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
-  forgotPassword: {
-    textAlign: 'right',
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(1),
   },
-  button: {
-    borderRadius: 0,
-    margin: theme.spacing(2, 0),
+  submitBtn: {
+    margin: theme.spacing(3, 0, 2),
+    width: '40%',
+    backgroundColor: 'green',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#006400',
+    },
   },
-  style: {
-    margin: theme.spacing(1, 0),
+  formControl: {
+    width: '100%'
   },
+  container: {
+    backgroundColor: '#f1f3f4',
+    borderRadius: '10px',
+    padding: theme.spacing(3)
+  },
+  mainContainer: {
+    marginBottom: theme.spacing(4)
+  }
 }));
 
 export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
@@ -48,7 +65,6 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    setLoading(true);
     LoginValidator()
       .validate({
         username,
@@ -61,6 +77,7 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
             password,
           };
 
+          setLoading(true);
           const result = await axiosInstance.post('/api/login', data);
 
           let type;
@@ -93,9 +110,10 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
 
           history.push(`/ui/dashboard/${type}`);
         } catch (error) {
+          setLoading(false);
           console.log(error);
           try {
-            setMessage(error.response.data.error);
+            setMessage('Something went Wrong');
             setMessageType('error');
             setOpen(true);
           } catch (error) {
@@ -107,102 +125,113 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
           setLoading(false);
         }
       })
-      .catch((error) => setErrors(error.errors));
+      .catch((error) => {
+        setLoading(false);
+        setErrors(error.errors);
+      });
   };
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
+    <Container className={classes.mainContainer}>
       <Notification
         open={open}
         setOpen={setOpen}
         message={message}
         type={messageType}
       />
-      <form className="login-form">
-        <Grid>
-          <FormControl>
-            <TextField
-              className={classes.style}
-              fullWidth
-              required
-              autoFocus
-              inputProps={{ 'data-testid': 'username' }}
-              label="Username"
-              variant="outlined"
-              size="small"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              error={!!errors.username}
-              helperText={errors.username ? errors.username[0] : null}
-            />
-          </FormControl>
-        </Grid>
-        <Grid>
-          <FormControl>
-            <TextField
-              className={classes.style}
-              fullWidth
-              required
-              inputProps={{ 'data-testid': 'password' }}
-              type={showPassword ? 'text' : 'password'}
-              label="Password"
-              variant="outlined"
-              size="small"
-              autoComplete="false"
-              value={password}
-              error={!!errors.password}
-              helperText={errors.password ? errors.password[0] : null}
-              onChange={(event) => setPassword(event.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      data-testid="password-visibility"
-                      onClick={togglePasswordVisibility}
-                      edge="end"
-                      title={showPassword ? 'Hide Password' : 'Show Password'}
-                    >
-                      {showPassword ? (
-                        <Visibility fontSize="small" />
-                      ) : (
-                        <VisibilityOff fontSize="small" />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </FormControl>
-        </Grid>
-        <Typography
-          variant="subtitle2"
-          color="error"
-          data-testid="non-field-errors"
-        >
-          {errors['non_field_errors'] ? errors['non_field_errors'][0] : null}
-        </Typography>
-        <Typography
-          color="error"
-          variant="subtitle2"
-          className={classes.forgotPassword}
-        >
-          {/* <b>Forgot Password?</b> */}
-        </Typography>
-        <Grid container justify="center" alignItems="center">
-          <Button
-            className={[classes.button, classes.style].join(' ')}
-            // fullWidth
-            type="submit"
-            size="large"
-            color="secondary"
-            variant="contained"
-            onClick={submitHandler}
-          >
-            Login
-          </Button>
-          {isLoading && <Loader />}
-        </Grid>
-      </form>
-    </Grid>
+      <Container
+        component="main"
+        maxWidth="xs"
+        className={classes.container}
+      >
+        <CssBaseline />
+        <form className={classes.form} noValidate>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography component="h6" variant="h6">
+                Username
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  fullWidth
+                  required
+                  autoFocus
+                  inputProps={{ 'data-testid': 'username' }}
+                  label="Username"
+                  variant="outlined"
+                  size="small"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  error={!!errors.username}
+                  helperText={errors.username ? errors.username[0] : ' '}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography component="h6" variant="h6">
+                Password
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  className={classes.style}
+                  fullWidth
+                  required
+                  inputProps={{ 'data-testid': 'password' }}
+                  type={showPassword ? 'text' : 'password'}
+                  label="Password"
+                  variant="outlined"
+                  size="small"
+                  autoComplete="false"
+                  value={password}
+                  error={!!errors.password}
+                  helperText={errors.password ? errors.password[0] : ' '}
+                  onChange={(event) => setPassword(event.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          data-testid="password-visibility"
+                          onClick={togglePasswordVisibility}
+                          edge="end"
+                          title={showPassword ? 'Hide Password' : 'Show Password'}
+                        >
+                          {showPassword ? (
+                            <Visibility fontSize="small" />
+                          ) : (
+                            <VisibilityOff fontSize="small" />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Link href="#" variant="body2">
+                {'Forgot password?'}
+              </Link>
+            </Grid>
+            <Grid item xs={12} align='center'>
+              <Button
+                className={classes.submitBtn}
+                type="submit"
+                size="large"
+                color="primary"
+                variant="contained"
+                onClick={submitHandler}
+              >
+                Login
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+        {isLoading && <Loader />}
+      </Container>
+    </Container>
   );
 }
