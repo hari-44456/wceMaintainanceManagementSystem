@@ -9,7 +9,7 @@ import {
   Grid,
   CssBaseline,
   Container,
-  Link
+  Link,
 } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -35,16 +35,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   formControl: {
-    width: '100%'
+    width: '100%',
   },
   container: {
     backgroundColor: '#f1f3f4',
     borderRadius: '10px',
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   mainContainer: {
-    marginBottom: theme.spacing(4)
-  }
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
@@ -113,7 +113,7 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
           setLoading(false);
           console.log(error);
           try {
-            setMessage('Something went Wrong');
+            setMessage(error.response.data.error);
             setMessageType('error');
             setOpen(true);
           } catch (error) {
@@ -139,11 +139,7 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
         message={message}
         type={messageType}
       />
-      <Container
-        component="main"
-        maxWidth="xs"
-        className={classes.container}
-      >
+      <Container component="main" maxWidth="xs" className={classes.container}>
         <CssBaseline />
         <form className={classes.form} noValidate>
           <Grid container spacing={1}>
@@ -197,7 +193,9 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
                           data-testid="password-visibility"
                           onClick={togglePasswordVisibility}
                           edge="end"
-                          title={showPassword ? 'Hide Password' : 'Show Password'}
+                          title={
+                            showPassword ? 'Hide Password' : 'Show Password'
+                          }
                         >
                           {showPassword ? (
                             <Visibility fontSize="small" />
@@ -216,7 +214,7 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
                 {'Forgot password?'}
               </Link>
             </Grid>
-            <Grid item xs={12} align='center'>
+            <Grid item xs={12} align="center">
               <Button
                 className={classes.submitBtn}
                 type="submit"
