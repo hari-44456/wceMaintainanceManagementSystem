@@ -124,7 +124,7 @@ export default function TableD({
               <div onClick={() => handleSort('id')}>Id</div>
             </StyledTableCell>
             <StyledTableCell align="right">
-              <div onClick={() => handleSort('title')}>Complaint Title</div>
+              <div onClick={() => handleSort('title')}>Request Title</div>
             </StyledTableCell>
             <StyledTableCell align="right">
               <div onClick={() => handleSort('date')}>Date</div>

@@ -111,7 +111,7 @@ export default function FormB2({ complaintId, rejectHandler }) {
             variant="contained"
             onClick={rejectHandler}
           >
-            Reject Complaint
+            Reject Request
           </Button>
         </Grid>
         <Grid item md={4} xs={4}>

@@ -109,7 +109,7 @@ const HodView = (props) => {
             onClick={rejectHandler}
             fullWidth
           >
-            Reject Complaint
+            Reject Request
           </Button>
         </Grid>
         <Grid item md={4} xs={6}>
@@ -121,7 +121,7 @@ const HodView = (props) => {
             onClick={acceptHandler}
             fullWidth
           >
-            Accept Complaint
+            Accept Request
           </Button>
         </Grid>
       </Grid>
@@ -149,7 +149,7 @@ const HodView = (props) => {
 
   return (
     <React.Fragment>
-      <Typography variant="h4">Complaint Details</Typography>
+      <Typography variant="h4">Request Details</Typography>
       <div className={classes.div}>
         <ComplaintDetails complaintData={complaint} />
       </div>

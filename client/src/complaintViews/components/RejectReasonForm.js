@@ -77,7 +77,7 @@ export default function RejectReasonForm({ type, complaintId, acceptHandler }) {
   const submitHandler = () => {
     if (reason.trim() === '') {
       setErrors({
-        reason: ['Enter Reason for Complaint Rejection'],
+        reason: ['Enter Reason for Request Rejection'],
       });
       return;
     }
@@ -119,7 +119,7 @@ export default function RejectReasonForm({ type, complaintId, acceptHandler }) {
             onClick={acceptHandler}
             color="primary"
           >
-            Accept Complaint
+            Accept Request
           </Button>
         </Grid>
         <Grid item md={4} xs={4}>

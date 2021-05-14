@@ -93,7 +93,7 @@ export default function HodForm({ complaintId, rejectHandler }) {
         queryData
       );
       if (!result.data.success) throw new Error();
-      setMessage('Complaint forwarded to Administrative Officer');
+      setMessage('Request forwarded to Administrative Officer');
       setMessageType('success');
       setOpen(true);
       history.push('/ui/dashboard/hod');
@@ -240,7 +240,7 @@ export default function HodForm({ complaintId, rejectHandler }) {
             variant="contained"
             onClick={rejectHandler}
           >
-            Reject Complaint
+            Reject Request
           </Button>
         </Grid>
         <Grid item md={4} xs={4}>

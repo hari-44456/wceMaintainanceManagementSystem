@@ -6,7 +6,7 @@ export default function ComplaintDetails({ complaintData }) {
     <React.Fragment>
       <Grid container spacing={2}>
         <Grid item md={2} xs={3}>
-          <Typography variant="subtitle1">Complaint By</Typography>
+          <Typography variant="subtitle1">Request By</Typography>
         </Grid>
         <Grid item md={1} xs={1}>
           <Typography variant="subtitle1">:</Typography>
@@ -57,7 +57,7 @@ export default function ComplaintDetails({ complaintData }) {
 
       <Grid container spacing={2}>
         <Grid item md={2} xs={3}>
-          <Typography variant="subtitle1">Complaint Status</Typography>
+          <Typography variant="subtitle1">Request Status</Typography>
         </Grid>
         <Grid item md={1} xs={1}>
           <Typography variant="subtitle1">:</Typography>

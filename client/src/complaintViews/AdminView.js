@@ -109,7 +109,7 @@ export default function AdminView(props) {
             onClick={rejectHandler}
             fullWidth
           >
-            Reject Complaint
+            Reject Request
           </Button>
         </Grid>
         <Grid item md={4} xs={4}>
@@ -121,7 +121,7 @@ export default function AdminView(props) {
             onClick={acceptHandler}
             fullWidth
           >
-            Accept Complaint
+            Accept Request
           </Button>
         </Grid>
       </Grid>
@@ -150,7 +150,7 @@ export default function AdminView(props) {
       <>
         <Grid container spacing={2}>
           <Grid item md={2} xs={3}>
-            <Typography variant="subtitle1">Complaint Status</Typography>
+            <Typography variant="subtitle1">Request Status</Typography>
           </Grid>
           <Grid item md={1} xs={1}>
             <Typography variant="subtitle1">:</Typography>
@@ -169,7 +169,7 @@ export default function AdminView(props) {
 
   return (
     <React.Fragment>
-      <Typography variant="h4">Complaint Details</Typography>
+      <Typography variant="h4">Request Details</Typography>
       <div className={classes.div}>
         <ComplaintDetails complaintData={complaint} />
       </div>

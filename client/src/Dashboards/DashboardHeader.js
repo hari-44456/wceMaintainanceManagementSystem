@@ -44,7 +44,7 @@ export default function DashboardHeader({
       <Grid item xs={12} align="center" className={classes.title}>
         <h1>
           <ReceiptIcon />
-          User Complaints
+          User Requests
         </h1>
       </Grid>
       <Grid item xs={12} style={{ backgroundColor: 'lightgrey' }}>
@@ -80,7 +80,9 @@ export default function DashboardHeader({
                   <em>None</em>
                 </MenuItem>
                 {filterValues.map((filter, index) => (
-                  <MenuItem key={index} value={filter}>{filter}</MenuItem>
+                  <MenuItem key={index} value={filter}>
+                    {filter}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -96,7 +98,7 @@ export default function DashboardHeader({
                   style={{ height: '100%' }}
                 >
                   <AddIcon />
-                  New Complaint
+                  New Request
                 </Button>
               </Link>
             )}

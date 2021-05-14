@@ -60,7 +60,7 @@ const StudentView = () => {
         message={message}
         type={messageType}
       />
-      <Typography variant="h4">Complaint Details</Typography>
+      <Typography variant="h4">Request Details</Typography>
       <div className={classes.div}>
         <ComplaintDetails complaintData={complaint} />
       </div>

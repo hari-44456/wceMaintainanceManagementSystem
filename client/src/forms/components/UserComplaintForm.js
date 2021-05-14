@@ -158,7 +158,7 @@ export default function UserComplaintForm() {
                 queryData
               );
               if (!result.data.success) throw new Error();
-              setMessage('Complaint Forwarded to HoD');
+              setMessage('Request Forwarded to HoD');
               setMessageType('success');
               setOpen(true);
 
