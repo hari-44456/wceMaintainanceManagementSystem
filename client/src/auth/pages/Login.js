@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     margin: theme.spacing(2),
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   large: {
     width: theme.spacing(8),
@@ -27,11 +27,11 @@ export default function StudentLogin({ isLoggedIn, setIsLoggedIn }) {
   return (
     <Grid container justify="center" alignItems="center">
       <div className={classes.paper}>
-          <Avatar alt="Some Logo" className={classes.large} />
-          <Typography component="h1" variant="h4">
-            Sign in
-          </Typography>
-        </div>
+        <Avatar alt="Some Logo" className={classes.large} src="/logo.png" />
+        <Typography component="h1" variant="h4">
+          Sign in
+        </Typography>
+      </div>
       <LoginForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
     </Grid>
   );
