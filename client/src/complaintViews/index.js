@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import StudentView from './StudentView';
 import HodView from './HodView';
@@ -22,6 +22,8 @@ const Dashboards = ({ match }) => {
         path={`${match.url}/hod/:complaintId`}
         render={(props) => <HodView {...props} />}
       />
+
+      <Redirect to="/ui/error" />
     </Switch>
   );
 };

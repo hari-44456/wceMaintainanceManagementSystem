@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 
 import UserComplaintForm from './components/UserComplaintForm';
 import HodForm from './components/HodForm';
@@ -37,6 +37,8 @@ const Forms = ({ match }) => {
         path={`${match.url}/formb`}
         render={(props) => <FormB {...props} />}
       />
+
+      <Redirect to="/ui/error" />
     </Switch>
   );
 };

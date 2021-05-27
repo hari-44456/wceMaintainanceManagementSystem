@@ -14,6 +14,7 @@ import Home from './Home/pages';
 import Header from './Home/Header';
 import Forms from './forms';
 import Store from './store/pages/Store';
+import PageNotFound404 from './helpers/components/PageNotFound404';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,6 +43,7 @@ const App = () => {
               <Route path="/ui/forms/" component={Forms} />
               <Route exact path="/ui/store" component={Store} />
               <Route path="/ui/view" component={ComplaintViews} />
+              <Route path="/ui/error" component={PageNotFound404} />
             </Switch>
           </Container>
         </Paper>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 
 import AdminDashboard from './AdminDashboard';
 import HodDashboard from './HodDashboard';
@@ -41,10 +41,7 @@ const Dashboards = ({ match }) => {
         render={(props) => <HodDashboard {...props} />}
       />
 
-      {/* <Route
-        path={`${match.url}/view`}
-        render={(props) => <ComplaintView {...props} />}
-      /> */}
+      <Redirect to="/ui/error" />
     </Switch>
   );
 };
