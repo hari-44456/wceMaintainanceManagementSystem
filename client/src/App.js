@@ -44,6 +44,8 @@ const App = () => {
               <Route exact path="/ui/store" component={Store} />
               <Route path="/ui/view" component={ComplaintViews} />
               <Route path="/ui/error" component={PageNotFound404} />
+
+              <Redirect to="/ui/error" />
             </Switch>
           </Container>
         </Paper>
