@@ -36,7 +36,7 @@ const App = () => {
               <Route exact path="/ui/landing" component={landing} />
               <Route exact path="/ui/help" component={Help} />
               <Route exact path="/ui/contactPage" component={Contact} />
-              <Route exact path="/ui" component={Home} />
+              <Route exact path="/ui" component={landing} />
               <Route
                 path="/ui/login"
                 render={(props) => (
