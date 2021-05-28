@@ -14,8 +14,10 @@ import Home from './Home/pages';
 import Header from './Home/Header';
 import Forms from './forms';
 import Store from './store/pages/Store';
+import Contact from './LandingPage/Contactpage';
+import Help from './LandingPage/Help';
 import PageNotFound404 from './helpers/components/PageNotFound404';
-
+import landing from './LandingPage/index.js';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -31,7 +33,10 @@ const App = () => {
             <Header setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
             <Switch>
               <Redirect exact from="/" to={'/ui'} />
-              <Route exact path="/ui" component={Home} />
+              <Route exact path="/ui/landing" component={landing} />
+              <Route exact path="/ui/help" component={Help} />
+              <Route exact path="/ui/contactPage" component={Contact} />
+              <Route exact path="/ui" component={landing} />
               <Route
                 path="/ui/login"
                 render={(props) => (
