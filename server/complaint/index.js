@@ -11,6 +11,7 @@ const User = require('../login/model');
 const sendMail = require('../mail');
 const Material = require('../material/model');
 const Store = require('../store/model');
+const { generatePdf, removePdf } = require('../pdf');
 
 const isValid = (id) => {
   switch (id) {
@@ -246,7 +247,12 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
       }
     );
 
-    await sendMail(email, status);
+    if (req.user.userType === 'admin') {
+      await generatePdf();
+      await sendMail(email, status, true);
+      // await removePdf();
+    } else await sendMail(email, status, false);
+
     return res.status(200).json({
       success: 1,
     });
