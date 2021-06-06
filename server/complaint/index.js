@@ -176,6 +176,7 @@ router.post('/', verify, validateCreateSchema, async (req, res) => {
       result,
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       success: 0,
       error: 'Unable to Create Complaint',

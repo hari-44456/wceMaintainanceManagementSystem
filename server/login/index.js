@@ -34,6 +34,9 @@ router.post('/', validateSchema, async (req, res) => {
       case 3:
         userType = 'maintananceCommitee';
         break;
+      case 4:
+        userType = 'store';
+        break;
     }
 
     const token = jwt.sign(

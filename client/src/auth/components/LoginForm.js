@@ -94,6 +94,9 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
             case 3:
               type = 'commitee';
               break;
+            case 4:
+              type = 'store';
+              break;
             default:
               break;
           }
@@ -107,8 +110,12 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
             })
           );
           setIsLoggedIn(!isLoggedIn);
-
-          history.push(`/ui/dashboard/${type}`);
+          console.log(type);
+          if (type === 'store') {
+            history.push(`/ui/store`);
+          } else {
+            history.push(`/ui/dashboard/${type}`);
+          }
         } catch (error) {
           setLoading(false);
           console.log(error);
