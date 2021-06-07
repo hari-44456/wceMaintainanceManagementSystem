@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import BackArrow from '@material-ui/icons/KeyboardBackspace';
 
 import axiosInstance from '../helpers/axiosInstance';
 import ComplaintDetails from './components/ComplaintDetails';
@@ -8,6 +9,7 @@ import FormB2 from '../forms/components/FormB2';
 import RejectReasonForm from './components/RejectReasonForm';
 import Loader from '../helpers/components/Loader';
 import Notification from '../helpers/components/Notification';
+import GetWindowWidth from '../helpers/GetWindowWidth'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -38,12 +40,12 @@ export default function AdminView(props) {
   const classes = useStyles();
   const history = useHistory();
   const { complaintId } = useParams();
+  const { width } = GetWindowWidth();
 
   const [complaint, setComplaint] = useState(null);
   const [nextForm, setNextForm] = useState(null);
   const [buttonVisibility, setButtonVisibility] = useState(true);
   const [editComplaint, setEditComplaint] = useState(true);
-
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -169,7 +171,22 @@ export default function AdminView(props) {
 
   return (
     <React.Fragment>
-      <Typography variant="h4">Request Details</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={9}>
+          <Typography variant="h4">Request Details</Typography>
+        </Grid>
+        <Grid item xs={5} md={3} align={width>960?'right':'left'} className={classes.backButton}>
+          <Button
+            size='large'
+            fullWidth
+            variant="contained"
+            color="primary"
+            startIcon={<BackArrow />}
+          >
+            Back to Dashboard
+          </Button>
+        </Grid>
+      </Grid>
       <div className={classes.div}>
         <ComplaintDetails complaintData={complaint} />
       </div>
