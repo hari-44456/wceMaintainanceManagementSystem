@@ -10,14 +10,15 @@ import { Container, Paper } from '@material-ui/core';
 import Login from './auth';
 import Dashboards from './dashboards';
 import ComplaintViews from './complaintViews';
-import Home from './Home/pages';
-import Header from './Home/Header';
+import Header from './LandingPage/Header';
 import Forms from './forms';
 import Store from './store/pages/Store';
 import Contact from './LandingPage/Contactpage';
 import Help from './LandingPage/Help';
 import PageNotFound404 from './helpers/components/PageNotFound404';
 import landing from './LandingPage/index.js';
+import Footer from './LandingPage/Footer';
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -55,6 +56,7 @@ const App = () => {
           </Container>
         </Paper>
       </Container>
+      <Footer />
     </Router>
   );
 };

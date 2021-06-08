@@ -11,9 +11,9 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
 
 import ContactsIcon from '@material-ui/icons/Contacts';
-import Footer from './Footer';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
 }));
+
 const message = `WCE Maintenance Management System is web platform where all people from college are allowed to submit request related to college maintenance`;
 export default function ButtonAppBar() {
   const classes = useStyles();
@@ -50,25 +51,6 @@ export default function ButtonAppBar() {
   return (
     <>
       <div className={classes.root}>
-        <AppBar position="static" style={{ height: '100px' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <Avatar
-                alt="Some Logo"
-                className={classes.large}
-                src="/logo.png"
-              />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              Walchand College of Engineering ,Sangli
-            </Typography>
-          </Toolbar>
-        </AppBar>
         <br></br>
         <br></br>
         <div>
@@ -132,7 +114,6 @@ export default function ButtonAppBar() {
           </Paper>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

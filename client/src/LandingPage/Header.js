@@ -157,7 +157,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn, ...props }) {
     const user = JSON.parse(
       window.localStorage.getItem('WCEMaintananceManagementSystemUser')
     );
-    console.log(user);
+
     if (user && user.isAuthenticated) setCurrentUser(user.currentUser);
     else setCurrentUser(null);
   }, [isLoggedIn]);
@@ -172,8 +172,6 @@ export default function Header({ isLoggedIn, setIsLoggedIn, ...props }) {
     setAnchorEl(null);
   };
 
-  if (!currentUser) return null;
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -184,24 +182,28 @@ export default function Header({ isLoggedIn, setIsLoggedIn, ...props }) {
               WCE Maintanance Management System
             </Typography>
             <div>
-              <IconButton onClick={handleMenu} color="inherit">
-                <Avatar className={classes.avatar}>OP</Avatar>
-              </IconButton>
-              <Popper
-                className={classes.popover}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                placement="bottom-start"
-              >
-                <UserInfoAndMenu
-                  open={open}
-                  handleClose={handleClose}
-                  currentUser={currentUser}
-                  setIsLoggedIn={setIsLoggedIn}
-                  isLoggedIn={isLoggedIn}
-                />
-              </Popper>
+              {currentUser && (
+                <>
+                  <IconButton onClick={handleMenu} color="inherit">
+                    <Avatar className={classes.avatar}>OP</Avatar>
+                  </IconButton>
+                  <Popper
+                    className={classes.popover}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    placement="bottom-start"
+                  >
+                    <UserInfoAndMenu
+                      open={open}
+                      handleClose={handleClose}
+                      currentUser={currentUser}
+                      setIsLoggedIn={setIsLoggedIn}
+                      isLoggedIn={isLoggedIn}
+                    />
+                  </Popper>
+                </>
+              )}
             </div>
           </Toolbar>
         </AppBar>

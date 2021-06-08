@@ -1,70 +1,99 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Typography, Avatar } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import './Footer.css';
 import { Link } from 'react-router-dom';
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  foo: {
-    flexGrow: 1,
-    marginLeft: theme.spacing(2),
-  },
-}));
 
-export default function Footer() {
-  const classes = useStyles();
-  const preventDefault = (event) => event.preventDefault();
+function Footer() {
   return (
-    <div className={classes.root}>
-      <AppBar position="static" style={{ height: '100px' }}>
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <Avatar alt="Some Logo" className={classes.large} src="/logo.png" />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Walchand College of Engineering ,Sangli
-          </Typography>
-          <div className={classes.root}>
-            <Typography variant="h6" className={classes.foo}>
-              <Link to="/ui/help" style={{ color: '#FFF' }}>
-                Help |
-              </Link>
-              <Link
-                href="http://www.walchandsangli.ac.in/ContactUS.asp"
-                style={{ color: '#FFF' }}
-                onClick={preventDefault}
-              >
-                Contact |
-              </Link>
-
-              <Link
-                href="http://www.walchandsangli.ac.in/"
-                style={{ color: '#FFF' }}
-                onClick={preventDefault}
-              >
-                Offical Site
-              </Link>
-            </Typography>
+    <div className="footer-container">
+      <section className="footer-subscription">
+        <p className="footer-subscription-heading">
+          Walchand College of Engineering Sangli-416415
+        </p>
+      </section>
+      <div class="footer-links">
+        <div className="footer-link-wrapper">
+          <div class="footer-link-items">
+            <h2>About Us</h2>
+            <Link to="/sign-up">How it works</Link>
+            <Link to="/">Testimonials</Link>
+            <Link to="/">Careers</Link>
+            <Link to="/">Investors</Link>
+            <Link to="/">Terms of Service</Link>
           </div>
-        </Toolbar>
-      </AppBar>
+          <div class="footer-link-items">
+            <h2>Contact Us</h2>
+            <Link to="http://www.walchandsangli.ac.in/">Website</Link>
+            <Link to="/">Support</Link>
+          </div>
+        </div>
+        <div className="footer-link-wrapper">
+          <div class="footer-link-items">
+            <h2>Social Media</h2>
+            <Link to="/">Instagram</Link>
+            <Link to="/">Facebook</Link>
+            <Link to="/">Youtube</Link>
+            <Link to="/">Twitter</Link>
+          </div>
+        </div>
+      </div>
+      <section class="social-media">
+        <div class="social-media-wrap">
+          <div class="footer-logo">
+            <Link to="/" className="social-logo">
+              <div>
+                <img className="imglog" src="/logo.png" />
+                <h3>Walchand College of Engineering,Sangli</h3>
+              </div>
+              <i class="fab fa-typo3" />
+            </Link>
+          </div>
+          <small class="website-rights"></small>
+          <div class="social-icons">
+            <Link
+              class="social-icon-link facebook"
+              to="/"
+              target="_blank"
+              aria-label="Facebook"
+            >
+              <i class="fab fa-facebook-f" />
+            </Link>
+            <Link
+              class="social-icon-link instagram"
+              to="/"
+              target="_blank"
+              aria-label="Instagram"
+            >
+              <i class="fab fa-instagram" />
+            </Link>
+            <Link
+              class="social-icon-link youtube"
+              to="/"
+              target="_blank"
+              aria-label="Youtube"
+            >
+              <i class="fab fa-youtube" />
+            </Link>
+            <Link
+              class="social-icon-link twitter"
+              to="/"
+              target="_blank"
+              aria-label="Twitter"
+            >
+              <i class="fab fa-twitter" />
+            </Link>
+            <Link
+              class="social-icon-link twitter"
+              to="/"
+              target="_blank"
+              aria-label="LinkedIn"
+            >
+              <i class="fab fa-linkedin" />
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
+
+export default Footer;
