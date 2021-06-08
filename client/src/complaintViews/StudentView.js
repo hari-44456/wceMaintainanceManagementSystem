@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import { makeStyles, Typography, Grid, Button } from '@material-ui/core';
 import BackArrow from '@material-ui/icons/KeyboardBackspace';
 
@@ -7,7 +7,7 @@ import ComplaintDetails from './components/ComplaintDetails';
 import Loader from '../helpers/components/Loader';
 import axiosInstance from '../helpers/axiosInstance';
 import Notification from '../helpers/components/Notification';
-import GetWindowWidth from '../helpers/GetWindowWidth'
+import GetWindowWidth from '../helpers/GetWindowWidth';
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -65,16 +65,24 @@ const StudentView = () => {
         <Grid item xs={12} md={9}>
           <Typography variant="h4">Request Details</Typography>
         </Grid>
-        <Grid item xs={5} md={3} align={width>960?'right':'left'} className={classes.backButton}>
-          <Button
-            size='large'
-            fullWidth
-            variant="contained"
-            color="primary"
-            startIcon={<BackArrow />}
-          >
-            Back to Dashboard
-          </Button>
+        <Grid
+          item
+          xs={5}
+          md={3}
+          align={width > 960 ? 'right' : 'left'}
+          className={classes.backButton}
+        >
+          <Link to="/ui/dashboard/student">
+            <Button
+              size="large"
+              fullWidth
+              variant="contained"
+              color="primary"
+              startIcon={<BackArrow />}
+            >
+              Back to Dashboard
+            </Button>
+          </Link>
         </Grid>
       </Grid>
       <div className={classes.div}>
