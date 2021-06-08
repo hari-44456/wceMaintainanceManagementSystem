@@ -191,6 +191,7 @@ export default function UserComplaintForm() {
         message={message}
         type={messageType}
       />
+      <Typography variant="h4">User Request Form</Typography>
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
           <Grid className={classes.style}>
