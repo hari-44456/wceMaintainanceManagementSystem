@@ -22,7 +22,7 @@ const complaintSchema = Joi.object()
   )
   .unknown(true);
 
-const accpetSchema = Joi.object()
+const hodAccpetSchema = Joi.object()
   .keys({
     sourceOfFund: Joi.string()
       .required('Source of fund is not provided')
@@ -39,6 +39,12 @@ const accpetSchema = Joi.object()
     }
   )
   .unknown(true);
+
+const adminAccpetSchema = Joi.object().keys({
+  Civil: Joi.object({ isGranted: Joi.boolean().invalid(false) }),
+  Mechanical: Joi.object({ isGranted: Joi.boolean().invalid(false) }),
+  Electrical: Joi.object({ isGranted: Joi.boolean().invalid(false) }),
+});
 
 const rejectSchema = Joi.object()
   .keys({
@@ -60,7 +66,9 @@ module.exports.validateCreateSchema = async (req, res, next) => {
 
 module.exports.validateAcceptSchema = async (req, res, next) => {
   try {
-    await accpetSchema.validateAsync(req.body);
+    req.user.userType === 'hod'
+      ? await hodAccpetSchema.validateAsync(req.body)
+      : await adminAccpetSchema.validateAsync(req.body);
     next();
   } catch (error) {
     return res.status(422).json({
