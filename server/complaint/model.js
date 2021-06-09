@@ -53,6 +53,22 @@ const ComplaintSchema = new mongoose.Schema({
     type: Number,
     default: 1, // 1->Complaint is at student/staff and corresponding HoD 2-> at AO 3-> at commitee
   },
+  grantAccessTo: [
+    {
+      Civil: {
+        isGranted: { type: Boolean, default: false },
+        isSubmitted: { type: Boolean, default: false },
+      },
+      Mechanical: {
+        isGranted: { type: Boolean, default: false },
+        isSubmitted: { type: Boolean, default: false },
+      },
+      Electrical: {
+        isGranted: { type: Boolean, default: false },
+        isSubmitted: { type: Boolean, default: false },
+      },
+    },
+  ],
   date: {
     type: Date,
     default: Date.now,
