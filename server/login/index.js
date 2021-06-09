@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('./model');
 const validateSchema = require('./validate');
+const { userRole } = require('../utils/userRole');
 
 router.post('/', validateSchema, async (req, res) => {
   try {
@@ -20,24 +21,7 @@ router.post('/', validateSchema, async (req, res) => {
         error: 'Username or Password is incorrect',
       });
 
-    let userType = 'student';
-    switch (user.role) {
-      case 0:
-        userType = 'student';
-        break;
-      case 1:
-        userType = 'hod';
-        break;
-      case 2:
-        userType = 'admin';
-        break;
-      case 3:
-        userType = 'maintananceCommitee';
-        break;
-      case 4:
-        userType = 'store';
-        break;
-    }
+    let userType = userRole(user.role);
 
     const token = jwt.sign(
       { _id: user._id, userType },
