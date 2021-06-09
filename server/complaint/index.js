@@ -12,31 +12,7 @@ const sendMail = require('../mail');
 const Material = require('../material/model');
 const Store = require('../store/model');
 const { generatePdf, removePdf } = require('../pdf');
-
-const isValid = (id) => {
-  switch (id) {
-    case 'student':
-    case 'hod':
-    case 'admin':
-    case 'commitee':
-      return true;
-    default:
-      return false;
-  }
-};
-
-const getRole = (id) => {
-  switch (id) {
-    case 0:
-      return 'student';
-    case 1:
-      return 'hod';
-    case 2:
-      return 'admin';
-    case 3:
-      return 'maintananceCommitee';
-  }
-};
+const { userRole, validUserRoles } = require('../utils/userRole');
 
 const delteMaterialAndUpdateStore = (complaintId) => {
   return new Promise(async (resolve, reject) => {
@@ -65,7 +41,7 @@ const delteMaterialAndUpdateStore = (complaintId) => {
 
 router.get('/:id', verify, async (req, res) => {
   try {
-    if (!isValid(req.params.id))
+    if (!validUserRoles(req.params.id))
       return res.status(400).json({
         success: 0,
         error: 'Invalid Request',
@@ -79,7 +55,7 @@ router.get('/:id', verify, async (req, res) => {
       role: 1,
     });
 
-    if (req.params.id !== getRole(role))
+    if (req.params.id !== userRole(role))
       return res.status(403).json({
         success: 0,
         error: 'Unauthorized',
@@ -97,7 +73,10 @@ router.get('/:id', verify, async (req, res) => {
         query = { stage: { $gte: 2 } };
         break;
       case 'commitee':
-        query = { stage: { $gte: 3 } };
+        query = {
+          stage: { $gte: 3 },
+          [`grantAccessTo.${department}.isGranted`]: true,
+        };
         break;
     }
 
@@ -225,34 +204,53 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
 
     const {
       userId: { email },
-    } = await Complaint.findOne({ _id: req.params.id })
+      grantAccessTo,
+    } = await Complaint.findOne({ _id: req.params.id }, { grantAccessTo: 1 })
       .populate('userId', 'email')
       .exec();
 
-    const status =
-      req.user.userType === 'hod'
-        ? 'Forwarded to Administrative Officer'
-        : 'Forwarded to Maintanance Commitee';
-
-    await Complaint.updateOne(
-      { _id: req.params.id },
-      {
-        $set: {
-          stage: 2,
-          sourceOfFund:
-            req.body.sourceOfFund === 'Other'
-              ? req.body.otherSourceOfFund
-              : req.body.sourceOfFund,
-          status,
-        },
-      }
-    );
+    if (req.user.userType === 'hod') {
+      await Complaint.updateOne(
+        { _id: req.params.id },
+        {
+          $set: {
+            stage: 2,
+            sourceOfFund:
+              req.body.sourceOfFund === 'Other'
+                ? req.body.otherSourceOfFund
+                : req.body.sourceOfFund,
+            status: 'Forwarded to Administrative Officer',
+          },
+        }
+      );
+    }
 
     if (req.user.userType === 'admin') {
-      await generatePdf();
-      await sendMail(email, status, true);
+      grantAccessT = grantAccessTo[0];
+      if (req.body.Civil) grantAccessT.Civil = { isGranted: true };
+      if (req.body.Mechanical) grantAccessT.Mechanical = { isGranted: true };
+      if (req.body.Electrical) grantAccessT.Electrical = { isGranted: true };
+
+      await Complaint.updateOne(
+        { _id: req.params.id },
+        {
+          $set: {
+            stage: 3,
+            status: 'Forwarded to Maintanance Commitee',
+            grantAccessTo: [grantAccessT],
+          },
+        }
+      );
+
+      // await generatePdf();
+      // await sendMail(email, status, true);
       // await removePdf();
-    } else await sendMail(email, status, false);
+    }
+
+    if (req.user.userType === 'maintenancecommitee') {
+      //forward complaint to administraticve officer
+      //change grantAccessto object's isSubmitted field etc.
+    }
 
     return res.status(200).json({
       success: 1,
