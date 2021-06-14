@@ -92,7 +92,7 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
               type = 'admin';
               break;
             case 3:
-              type = 'commitee';
+              type = 'committee';
               break;
             case 4:
               type = 'store';

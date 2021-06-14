@@ -7,7 +7,7 @@ module.exports.userRole = (id) => {
     case 2:
       return 'admin';
     case 3:
-      return 'commitee';
+      return 'committee';
     case 4:
       return 'store';
     default:
@@ -20,8 +20,8 @@ module.exports.validUserRoles = (id) => {
     case 'student':
     case 'hod':
     case 'admin':
-    case 'commitee':
-    case 'commitee':
+    case 'committee':
+    case 'committee':
       return true;
     default:
       return false;

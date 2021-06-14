@@ -51,7 +51,7 @@ const ComplaintSchema = new mongoose.Schema({
   },
   stage: {
     type: Number,
-    default: 1, // 1->Complaint is at student/staff and corresponding HoD 2-> at AO 3-> at commitee
+    default: 1, // 1->Complaint is at student/staff and corresponding HoD 2-> at AO 3-> at committee
   },
   grantAccessTo: [
     {
