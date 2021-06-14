@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import StudentView from './StudentView';
 import HodView from './HodView';
 import AdminView from './AdminView';
+import CommiteeView from './CommiteeView';
 
 const Dashboards = ({ match }) => {
   return (
@@ -21,6 +22,11 @@ const Dashboards = ({ match }) => {
       <Route
         path={`${match.url}/hod/:complaintId`}
         render={(props) => <HodView {...props} />}
+      />
+
+      <Route
+        path={`${match.url}/committee/:complaintId`}
+        render={(props) => <CommiteeView {...props} />}
       />
 
       <Redirect to="/ui/error" />
