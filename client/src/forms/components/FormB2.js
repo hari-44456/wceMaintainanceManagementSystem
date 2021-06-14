@@ -6,7 +6,6 @@ import StoreMaterialForm from './StoreMaterial';
 import OrderedMaterialForm from './OrderedMaterial';
 import Notification from '../../helpers/components/Notification';
 import axiosInstance from '../../helpers/axiosInstance';
-import Loader from '../../helpers/components/Loader';
 
 const useStyles = makeStyles((theme) => ({
   button: {
