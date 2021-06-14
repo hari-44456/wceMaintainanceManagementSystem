@@ -81,7 +81,7 @@ export default function AdminView(props) {
         }
       }
     })();
-  }, [history, props]);
+  }, [complaintId, history, props]);
 
   const acceptHandler = () => {
     setNextForm('MaterialForm');
@@ -164,8 +164,6 @@ export default function AdminView(props) {
       </>
     );
   };
-
-  console.log(editComplaint);
 
   if (!complaint) return <Loader />;
 
