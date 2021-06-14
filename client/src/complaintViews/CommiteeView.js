@@ -5,11 +5,10 @@ import BackArrow from '@material-ui/icons/KeyboardBackspace';
 
 import axiosInstance from '../helpers/axiosInstance';
 import ComplaintDetails from './components/ComplaintDetails';
-import FormB from '../forms/components/HodForm';
-import RejectReasonForm from './components/RejectReasonForm';
+import FormB from '../forms/components/FormB2';
 import Loader from '../helpers/components/Loader';
-import Notification from '../helpers/components/Notification';
 import GetWindowWidth from '../helpers/GetWindowWidth';
+import Notification from '../helpers/components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -47,9 +46,6 @@ const CommiteeviewView = (props) => {
   const { width } = GetWindowWidth();
 
   const [complaint, setComplaint] = useState(null);
-  const [nextForm, setNextForm] = useState(null);
-  const [buttonVisibility, setButtonVisibility] = useState(true);
-  const [editComplaint, setEditComplaint] = useState(true);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -64,8 +60,7 @@ const CommiteeviewView = (props) => {
         const result = await axiosInstance.get(
           `/api/complaint/details/${complaintId}`
         );
-        if (result.data.complaint.rejected || result.data.complaint.stage >= 2)
-          setEditComplaint(false);
+
         setComplaint(result.data.complaint);
       } catch (error) {
         try {
@@ -83,74 +78,16 @@ const CommiteeviewView = (props) => {
     })();
   }, [history, props]);
 
-  const acceptHandler = () => {
-    setNextForm('MaterialForm');
-    setButtonVisibility(false);
-  };
-
-  const rejectHandler = () => {
-    setNextForm('RejectReasonForm');
-    setButtonVisibility(false);
-  };
-
-  const formButtons = () => {
-    return (
-      <Grid container spacing={1} style={{ marginTop: '15px' }}>
-        <Notification
-          open={open}
-          setOpen={setOpen}
-          message={message}
-          type={messageType}
-        />
-        <Grid item md={4} xs={6}>
-          <Button
-            className={[classes.button, classes.rejectBtn].join(' ')}
-            type="submit"
-            size="large"
-            variant="contained"
-            onClick={rejectHandler}
-            fullWidth
-          >
-            Reject Request
-          </Button>
-        </Grid>
-        <Grid item md={4} xs={6}>
-          <Button
-            className={[classes.button, classes.acceptBtn].join(' ')}
-            type="submit"
-            size="large"
-            variant="contained"
-            onClick={acceptHandler}
-            fullWidth
-          >
-            Accept Request
-          </Button>
-        </Grid>
-      </Grid>
-    );
-  };
-
-  const DisplayNextForm = () => {
-    return (
-      <>
-        {nextForm === 'MaterialForm' && (
-          <FormB complaintId={complaintId} rejectHandler={rejectHandler} />
-        )}
-        {nextForm === 'RejectReasonForm' && (
-          <RejectReasonForm
-            type="hod"
-            complaintId={complaintId}
-            acceptHandler={acceptHandler}
-          />
-        )}
-      </>
-    );
-  };
-
   if (!complaint) return <Loader />;
 
   return (
     <React.Fragment>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        type={messageType}
+      />
       <Grid container spacing={2}>
         <Grid item xs={12} md={9}>
           <Typography variant="h4">Request Details</Typography>
@@ -178,12 +115,9 @@ const CommiteeviewView = (props) => {
       <div className={classes.div}>
         <ComplaintDetails complaintData={complaint} />
       </div>
-      {editComplaint && (
-        <div className={classes.div}>
-          {buttonVisibility && formButtons()}
-          <DisplayNextForm />{' '}
-        </div>
-      )}
+      <div className={classes.div}>
+        <FormB complaintId={complaintId} />
+      </div>
     </React.Fragment>
   );
 };
