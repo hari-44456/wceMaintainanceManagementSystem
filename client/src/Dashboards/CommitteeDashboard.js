@@ -137,7 +137,7 @@ const CommitteeDashboard = ({ match }) => {
         <Loader />
       ) : (
         <Table
-          type="admin"
+          type="committee"
           data={tableData}
           direction={direction}
           setDirection={setDirection}
