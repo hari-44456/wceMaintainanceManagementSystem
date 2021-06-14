@@ -72,7 +72,7 @@ router.get('/:id', verify, async (req, res) => {
       case 'admin':
         query = { stage: { $gte: 2 } };
         break;
-      case 'commitee':
+      case 'committee':
         query = {
           stage: { $gte: 3 },
           [`grantAccessTo.${department}.isGranted`]: true,
@@ -226,7 +226,9 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
     }
 
     if (req.user.userType === 'admin') {
-      grantAccessT = grantAccessTo[0];
+      const grantAccessT = grantAccessTo.length
+        ? grantAccessTo[0]
+        : new Object();
       if (req.body.Civil) grantAccessT.Civil = { isGranted: true };
       if (req.body.Mechanical) grantAccessT.Mechanical = { isGranted: true };
       if (req.body.Electrical) grantAccessT.Electrical = { isGranted: true };
