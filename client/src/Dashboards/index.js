@@ -4,6 +4,7 @@ import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import AdminDashboard from './AdminDashboard';
 import HodDashboard from './HodDashboard';
 import UserDashboard from './UserDashboard';
+import CommiteeDashboard from './CommitteeDashboard';
 import axiosInstance from '../helpers/axiosInstance';
 
 const Dashboards = ({ match }) => {
@@ -39,6 +40,12 @@ const Dashboards = ({ match }) => {
         exact
         path={`${match.url}/hod`}
         render={(props) => <HodDashboard {...props} />}
+      />
+
+      <Route
+        exact
+        path={`${match.url}/committee`}
+        render={(props) => <CommiteeDashboard {...props} />}
       />
 
       <Redirect to="/ui/error" />

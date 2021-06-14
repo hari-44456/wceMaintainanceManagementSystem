@@ -5,11 +5,11 @@ import BackArrow from '@material-ui/icons/KeyboardBackspace';
 
 import axiosInstance from '../helpers/axiosInstance';
 import ComplaintDetails from './components/ComplaintDetails';
+import FormB from '../forms/components/HodForm';
 import RejectReasonForm from './components/RejectReasonForm';
 import Loader from '../helpers/components/Loader';
 import Notification from '../helpers/components/Notification';
 import GetWindowWidth from '../helpers/GetWindowWidth';
-import CommiteeSelect from '../forms/components/CommitteeSelect';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -34,9 +34,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '20px',
     padding: '10px',
   },
+  statusDiv: {
+    marginTop: '-10px',
+    padding: '10px',
+  },
 }));
 
-export default function AdminView(props) {
+const CommiteeviewView = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const { complaintId } = useParams();
@@ -52,21 +56,16 @@ export default function AdminView(props) {
 
   useEffect(() => {
     (async () => {
-      console.log(complaintId);
       try {
         if (!complaintId) {
-          history.push('/ui/dashboard/admin');
+          history.push('/ui/dashboard/commitee');
           return;
         }
         const result = await axiosInstance.get(
           `/api/complaint/details/${complaintId}`
         );
-        if (
-          result.data.complaint.rejected ||
-          result.data.complaint.stage >= 3
-        ) {
+        if (result.data.complaint.rejected || result.data.complaint.stage >= 2)
           setEditComplaint(false);
-        }
         setComplaint(result.data.complaint);
       } catch (error) {
         try {
@@ -75,16 +74,17 @@ export default function AdminView(props) {
           setMessageType('error');
           setOpen(true);
         } catch (error) {
-          history.push('/ui/dashboard/admin');
+          setMessage('Unable to fetch data');
           setMessageType('error');
           setOpen(true);
+          history.push('/ui/dashboard/committee');
         }
       }
     })();
-  }, [complaintId, history, props]);
+  }, [history, props]);
 
   const acceptHandler = () => {
-    setNextForm('CommiteeForm');
+    setNextForm('MaterialForm');
     setButtonVisibility(false);
   };
 
@@ -102,7 +102,7 @@ export default function AdminView(props) {
           message={message}
           type={messageType}
         />
-        <Grid item md={4} xs={8}>
+        <Grid item md={4} xs={6}>
           <Button
             className={[classes.button, classes.rejectBtn].join(' ')}
             type="submit"
@@ -114,7 +114,7 @@ export default function AdminView(props) {
             Reject Request
           </Button>
         </Grid>
-        <Grid item md={4} xs={4}>
+        <Grid item md={4} xs={6}>
           <Button
             className={[classes.button, classes.acceptBtn].join(' ')}
             type="submit"
@@ -130,35 +130,15 @@ export default function AdminView(props) {
     );
   };
 
-  const handleGrantAccessTo = async (data) => {
-    try {
-      await axiosInstance.post(`/api/complaint/accept/${complaintId}`, data);
-      history.push('/ui/dashboard/admin');
-    } catch (error) {
-      try {
-        setMessage(error.response.data.error);
-        setMessageType('error');
-        setOpen(true);
-      } catch (error) {
-        setMessage('Database Error..Try after Some time');
-        setMessageType('error');
-        setOpen(true);
-      }
-    }
-  };
-
   const DisplayNextForm = () => {
     return (
       <>
-        {nextForm === 'CommiteeForm' && (
-          <CommiteeSelect
-            rejectHandler={rejectHandler}
-            submitHandler={handleGrantAccessTo}
-          />
+        {nextForm === 'MaterialForm' && (
+          <FormB complaintId={complaintId} rejectHandler={rejectHandler} />
         )}
         {nextForm === 'RejectReasonForm' && (
           <RejectReasonForm
-            type="admin"
+            type="hod"
             complaintId={complaintId}
             acceptHandler={acceptHandler}
           />
@@ -182,7 +162,7 @@ export default function AdminView(props) {
           align={width > 960 ? 'right' : 'left'}
           className={classes.backButton}
         >
-          <Link to="/ui/dashboard/admin">
+          <Link to="/ui/dashboard/hod">
             <Button
               size="large"
               fullWidth
@@ -206,4 +186,6 @@ export default function AdminView(props) {
       )}
     </React.Fragment>
   );
-}
+};
+
+export default CommiteeviewView;
