@@ -41,9 +41,9 @@ const hodAccpetSchema = Joi.object()
   .unknown(true);
 
 const adminAccpetSchema = Joi.object().keys({
-  Civil: Joi.object({ isGranted: Joi.boolean().invalid(false) }),
-  Mechanical: Joi.object({ isGranted: Joi.boolean().invalid(false) }),
-  Electrical: Joi.object({ isGranted: Joi.boolean().invalid(false) }),
+  Civil: Joi.boolean(),
+  Mechanical: Joi.boolean(),
+  Electrical: Joi.boolean(),
 });
 
 const rejectSchema = Joi.object()
