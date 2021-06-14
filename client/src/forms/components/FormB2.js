@@ -103,7 +103,7 @@ export default function FormB2({ complaintId, rejectHandler }) {
         />
       </Grid>
       <Grid container className={classes.marginTop} spacing={1}>
-        <Grid item md={4} xs={8}>
+        {/* <Grid item md={4} xs={8}>
           <Button
             className={[classes.button, classes.rejectBtn].join(' ')}
             size="large"
@@ -112,7 +112,7 @@ export default function FormB2({ complaintId, rejectHandler }) {
           >
             Reject Request
           </Button>
-        </Grid>
+        </Grid> */}
         <Grid item md={4} xs={4}>
           <Button
             className={[classes.button, classes.acceptBtn].join(' ')}
