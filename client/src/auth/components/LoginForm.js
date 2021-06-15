@@ -106,7 +106,11 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
             'WCEMaintananceManagementSystemUser',
             JSON.stringify({
               isAuthenticated: 1,
-              currentUser: { name: result.data.name, email: result.data.email },
+              currentUser: {
+                _id: result.data._id,
+                name: result.data.name,
+                email: result.data.email,
+              },
             })
           );
           setIsLoggedIn(!isLoggedIn);
