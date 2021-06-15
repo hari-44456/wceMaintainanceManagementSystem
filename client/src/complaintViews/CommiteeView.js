@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CommiteeviewView = (props) => {
+const CommiteeView = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const { complaintId } = useParams();
@@ -78,6 +78,26 @@ const CommiteeviewView = (props) => {
     })();
   }, [history, props]);
 
+  const submitHandler = async () => {
+    try {
+      await axiosInstance.post(`/api/complaint/accept/${complaintId}`);
+
+      history.push('/ui/dashboard/committee');
+    } catch (error) {
+      try {
+        if (error.response.status === 403) history.push('/ui/login');
+        setMessage(error.response.data.error);
+        setMessageType('error');
+        setOpen(true);
+      } catch (error) {
+        setMessage('Database Error');
+        setMessageType('error');
+        setOpen(true);
+        history.push('/ui/dashboard/committee');
+      }
+    }
+  };
+
   if (!complaint) return <Loader />;
 
   return (
@@ -99,7 +119,7 @@ const CommiteeviewView = (props) => {
           align={width > 960 ? 'right' : 'left'}
           className={classes.backButton}
         >
-          <Link to="/ui/dashboard/hod">
+          <Link to="/ui/dashboard/committee">
             <Button
               size="large"
               fullWidth
@@ -117,9 +137,20 @@ const CommiteeviewView = (props) => {
       </div>
       <div className={classes.div}>
         <FormB complaintId={complaintId} />
+        <Grid item md={4} xs={4}>
+          <Button
+            className={[classes.button, classes.acceptBtn].join(' ')}
+            type="submit"
+            size="large"
+            variant="contained"
+            onClick={submitHandler}
+          >
+            Submit
+          </Button>
+        </Grid>
       </div>
     </React.Fragment>
   );
 };
 
-export default CommiteeviewView;
+export default CommiteeView;
