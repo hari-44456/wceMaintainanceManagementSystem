@@ -9,6 +9,10 @@ const AvailableInStoreSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  addedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
 const OrderedMaterialSchema = new mongoose.Schema({
@@ -23,6 +27,10 @@ const OrderedMaterialSchema = new mongoose.Schema({
   quantity: {
     type: Number,
     required: true,
+  },
+  addedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
 });
 
