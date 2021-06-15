@@ -62,6 +62,7 @@ router.post('/', validatePost, async (req, res) => {
       return res.status(200).json({
         success: 1,
         data,
+        _id: req.user._id,
       });
     } else {
       if (!existingMaterial) {
@@ -82,6 +83,7 @@ router.post('/', validatePost, async (req, res) => {
         return res.status(200).json({
           success: 1,
           data,
+          _id: req.user._id,
         });
       } else {
         existingMaterial.orderedMaterial.push({
@@ -94,6 +96,7 @@ router.post('/', validatePost, async (req, res) => {
         return res.status(200).json({
           success: 1,
           data,
+          _id: req.user._id,
         });
       }
     }
