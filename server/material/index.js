@@ -40,6 +40,7 @@ router.post('/', validatePost, async (req, res) => {
             {
               materialId: req.body.materialId,
               quantity: req.body.quantity,
+              addedBy: ObjectId(req.user._id),
             },
           ],
         });
@@ -49,6 +50,7 @@ router.post('/', validatePost, async (req, res) => {
         existingMaterial.availableInStore.push({
           materialId: ObjectId(req.body.materialId),
           quantity: req.body.quantity,
+          addedBy: ObjectId(req.user._id),
         });
         data = await existingMaterial.save();
       }
