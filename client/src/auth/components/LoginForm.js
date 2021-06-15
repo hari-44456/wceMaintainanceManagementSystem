@@ -110,6 +110,7 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }) {
                 _id: result.data._id,
                 name: result.data.name,
                 email: result.data.email,
+                department: result.data.department,
               },
             })
           );
