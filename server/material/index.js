@@ -73,6 +73,7 @@ router.post('/', validatePost, async (req, res) => {
               material: req.body.material,
               approxCost: req.body.approxCost,
               quantity: req.body.quantity,
+              addedBy: ObjectId(req.user._id),
             },
           ],
         });
@@ -87,6 +88,7 @@ router.post('/', validatePost, async (req, res) => {
           material: req.body.material,
           approxCost: req.body.approxCost,
           quantity: req.body.quantity,
+          addedBy: ObjectId(req.user._id),
         });
         const data = await existingMaterial.save();
         return res.status(200).json({
