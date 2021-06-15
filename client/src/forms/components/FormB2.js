@@ -113,17 +113,6 @@ export default function FormB2({ complaintId, rejectHandler }) {
             Reject Request
           </Button>
         </Grid> */}
-        <Grid item md={4} xs={4}>
-          <Button
-            className={[classes.button, classes.acceptBtn].join(' ')}
-            type="submit"
-            size="large"
-            variant="contained"
-            onClick={submitHandler}
-          >
-            Submit
-          </Button>
-        </Grid>
       </Grid>
     </Grid>
   );
