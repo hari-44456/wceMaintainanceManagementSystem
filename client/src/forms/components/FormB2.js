@@ -42,6 +42,8 @@ export default function FormB2({ complaintId, rejectHandler }) {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
+  const [currentUserId, setCurrentUserId] = useState(null);
+
   useEffect(() => {
     (async () => {
       try {
@@ -49,12 +51,22 @@ export default function FormB2({ complaintId, rejectHandler }) {
           `/api/complaint/getMaterial/${complaintId}`
         );
         console.log(result);
+
+        // get Current USer and give edit and delete option if that material is added by himself only
+        const user = window.localStorage.getItem(
+          'WCEMaintananceManagementSystemUser'
+        );
+        console.log(user);
+
+        setCurrentUserId(user._id);
+
         const existing = result.data.availableInStore.map((doc) => {
           return {
             _id: doc.materialId._id,
             material: doc.materialId.material,
             cost: doc.materialId.cost,
             units: doc.quantity,
+            addedBy: doc.addedBy,
           };
         });
         setStoreMaterials(existing);
@@ -64,6 +76,7 @@ export default function FormB2({ complaintId, rejectHandler }) {
           material: doc.material,
           approxCost: doc.approxCost,
           units: doc.quantity,
+          addedBy: doc.addedBy,
         }));
         setOrderedMaterials(orderExisting);
       } catch (error) {
@@ -93,6 +106,7 @@ export default function FormB2({ complaintId, rejectHandler }) {
           complaintId={complaintId}
           materials={storeMaterials}
           setMaterials={setStoreMaterials}
+          currentUserId={currentUserId}
         />
       </Grid>
       <Grid item md={6} xs={12}>
@@ -100,6 +114,7 @@ export default function FormB2({ complaintId, rejectHandler }) {
           complaintId={complaintId}
           orderedMaterials={orderedMaterials}
           setOrderedMaterials={setOrderedMaterials}
+          currentUserId={currentUserId}
         />
       </Grid>
       <Grid container className={classes.marginTop} spacing={1}>
