@@ -50,15 +50,13 @@ export default function FormB2({ complaintId, rejectHandler }) {
         const result = await axiosInstance.get(
           `/api/complaint/getMaterial/${complaintId}`
         );
-        console.log(result);
 
         // get Current USer and give edit and delete option if that material is added by himself only
-        const user = window.localStorage.getItem(
-          'WCEMaintananceManagementSystemUser'
+        const user = JSON.parse(
+          window.localStorage.getItem('WCEMaintananceManagementSystemUser')
         );
-        console.log(user);
 
-        setCurrentUserId(user._id);
+        setCurrentUserId(user.currentUser._id);
 
         const existing = result.data.availableInStore.map((doc) => {
           return {
