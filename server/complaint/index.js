@@ -249,9 +249,40 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
       // await removePdf();
     }
 
-    if (req.user.userType === 'maintenancecommitee') {
+    if (req.user.userType === 'committee') {
       //forward complaint to administraticve officer
       //change grantAccessto object's isSubmitted field etc.
+
+      const { department } = await User.findOne({ _id: req.user._id });
+      console.log(department);
+
+      const complaint = await Complaint.findOne({
+        _id: req.params.id,
+        [`grantAccessTo.${department}.isGranted`]: true,
+      });
+
+      if (complaint) {
+        complaint.grantAccessTo[0][department].isSubmitted = true;
+
+        const obj = complaint.grantAccessTo[0];
+
+        let flg = true;
+
+        if (obj.Civil.isGranted && !obj.Civil.isSubmitted) flg = false;
+
+        if (obj.Electrical.isGranted && !obj.Electrical.isSubmitted)
+          flg = false;
+
+        if (obj.Mechanical.isGranted && !obj.Mechanical.isSubmitted)
+          flg = false;
+
+        if (flg) {
+          complaint.status = 'Forwarded to Administrative officer';
+          complaint.stage++;
+        }
+
+        await complaint.save();
+      }
     }
 
     return res.status(200).json({
