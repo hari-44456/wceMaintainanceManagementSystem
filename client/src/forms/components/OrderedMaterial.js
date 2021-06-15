@@ -130,6 +130,7 @@ export default function OrderedMaterial({
                 material: material.trim(),
                 approxCost,
                 units,
+                addedBy: result.data._id,
               },
             ]);
 

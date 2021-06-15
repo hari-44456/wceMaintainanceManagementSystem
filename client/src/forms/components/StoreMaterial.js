@@ -125,6 +125,7 @@ export default function StoreMaterial({
             material: selectedMaterial.material.trim(),
             cost: selectedMaterial.cost,
             units,
+            addedBy: result.data._id,
           },
         ]);
         setMessage('Material Added to the list');
