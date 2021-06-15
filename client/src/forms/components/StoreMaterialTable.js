@@ -33,6 +33,7 @@ export default function StoreMaterialTable({
   data,
   setData,
   complaintId,
+  currentUserId,
 }) {
   const classes = useStyles();
 
@@ -335,23 +336,25 @@ export default function StoreMaterialTable({
         <TableCell component="th" scope="row" align="right" width="20%">
           {item.units}
         </TableCell>
-        <TableCell component="th" scope="row" width="25%" align="center">
-          <IconButton
-            style={{ padding: '5px' }}
-            size="small"
-            disabled={inEditMode.state}
-            onClick={() => editHandler(index, item)}
-          >
-            <Edit style={{ color: 'black' }} fontSize="small" />
-          </IconButton>
-          <IconButton
-            style={{ padding: '5px' }}
-            size="small"
-            onClick={(event) => showPopover(event, index)}
-          >
-            <DeleteOutline style={{ color: 'red' }} fontSize="small" />
-          </IconButton>
-        </TableCell>
+        {item.addedBy === currentUserId && (
+          <TableCell component="th" scope="row" width="25%" align="center">
+            <IconButton
+              style={{ padding: '5px' }}
+              size="small"
+              disabled={inEditMode.state}
+              onClick={() => editHandler(index, item)}
+            >
+              <Edit style={{ color: 'black' }} fontSize="small" />
+            </IconButton>
+            <IconButton
+              style={{ padding: '5px' }}
+              size="small"
+              onClick={(event) => showPopover(event, index)}
+            >
+              <DeleteOutline style={{ color: 'red' }} fontSize="small" />
+            </IconButton>
+          </TableCell>
+        )}
       </TableRow>
     );
   }
