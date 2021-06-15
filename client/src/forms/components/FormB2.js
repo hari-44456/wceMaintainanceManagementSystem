@@ -42,21 +42,12 @@ export default function FormB2({ complaintId, rejectHandler }) {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
-  const [currentUserId, setCurrentUserId] = useState(null);
-
   useEffect(() => {
     (async () => {
       try {
         const result = await axiosInstance.get(
           `/api/complaint/getMaterial/${complaintId}`
         );
-
-        // get Current USer and give edit and delete option if that material is added by himself only
-        const user = JSON.parse(
-          window.localStorage.getItem('WCEMaintananceManagementSystemUser')
-        );
-
-        setCurrentUserId(user.currentUser._id);
 
         const existing = result.data.availableInStore.map((doc) => {
           return {
@@ -104,7 +95,6 @@ export default function FormB2({ complaintId, rejectHandler }) {
           complaintId={complaintId}
           materials={storeMaterials}
           setMaterials={setStoreMaterials}
-          currentUserId={currentUserId}
         />
       </Grid>
       <Grid item md={6} xs={12}>
@@ -112,7 +102,6 @@ export default function FormB2({ complaintId, rejectHandler }) {
           complaintId={complaintId}
           orderedMaterials={orderedMaterials}
           setOrderedMaterials={setOrderedMaterials}
-          currentUserId={currentUserId}
         />
       </Grid>
       <Grid container className={classes.marginTop} spacing={1}>

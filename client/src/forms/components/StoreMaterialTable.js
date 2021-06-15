@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TableContainer,
   Paper,
@@ -33,7 +33,6 @@ export default function StoreMaterialTable({
   data,
   setData,
   complaintId,
-  currentUserId,
 }) {
   const classes = useStyles();
 
@@ -56,6 +55,16 @@ export default function StoreMaterialTable({
     state: false,
     row: null,
   });
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  useEffect(() => {
+    const user = JSON.parse(
+      window.localStorage.getItem('WCEMaintananceManagementSystemUser')
+    );
+
+    console.log(user.currentUser._id);
+    setCurrentUserId(user.currentUser._id);
+  }, []);
 
   const resetPopoverStates = () => {
     setPopoverEvent(null);
