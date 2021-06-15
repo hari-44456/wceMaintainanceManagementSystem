@@ -12,7 +12,7 @@ router.post('/', validateSchema, async (req, res) => {
         username: req.body.username,
         password: req.body.password,
       },
-      { role: 1, name: 1, email: 1 }
+      { role: 1, name: 1, email: 1, department: 1 }
     );
 
     if (!user)
@@ -39,6 +39,7 @@ router.post('/', validateSchema, async (req, res) => {
       email: user.email,
       name: user.name,
       _id: user._id,
+      department: user.department,
     });
   } catch (error) {
     console.log(error);
