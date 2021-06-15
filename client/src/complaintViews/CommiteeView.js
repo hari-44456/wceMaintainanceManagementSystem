@@ -50,6 +50,8 @@ const CommiteeView = (props) => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
+  const [visibleSubmit, setVisibleSubmit] = useState(true);
+
   useEffect(() => {
     (async () => {
       try {
@@ -60,6 +62,15 @@ const CommiteeView = (props) => {
         const result = await axiosInstance.get(
           `/api/complaint/details/${complaintId}`
         );
+
+        const user = JSON.parse(
+          window.localStorage.getItem('WCEMaintananceManagementSystemUser')
+        );
+
+        const grantAccessTo = result.data.complaint.grantAccessTo[0];
+
+        if (grantAccessTo[user.currentUser.department].isSubmitted)
+          setVisibleSubmit(false);
 
         setComplaint(result.data.complaint);
       } catch (error) {
@@ -137,17 +148,19 @@ const CommiteeView = (props) => {
       </div>
       <div className={classes.div}>
         <FormB complaintId={complaintId} />
-        <Grid item md={4} xs={4}>
-          <Button
-            className={[classes.button, classes.acceptBtn].join(' ')}
-            type="submit"
-            size="large"
-            variant="contained"
-            onClick={submitHandler}
-          >
-            Submit
-          </Button>
-        </Grid>
+        {visibleSubmit && (
+          <Grid item md={4} xs={4}>
+            <Button
+              className={[classes.button, classes.acceptBtn].join(' ')}
+              type="submit"
+              size="large"
+              variant="contained"
+              onClick={submitHandler}
+            >
+              Submit
+            </Button>
+          </Grid>
+        )}
       </div>
     </React.Fragment>
   );
