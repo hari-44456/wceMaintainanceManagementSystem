@@ -38,6 +38,7 @@ router.post('/', validateSchema, async (req, res) => {
       role: user.role,
       email: user.email,
       name: user.name,
+      _id: user._id,
     });
   } catch (error) {
     console.log(error);
