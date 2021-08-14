@@ -1,19 +1,19 @@
 import React from 'react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
-
+import { Typography } from '@material-ui/core';
 function Footer() {
   return (
     <div className="footer-container">
       <section className="footer-subscription">
         <p className="footer-subscription-heading">
-          Walchand College of Engineering Sangli-416415
+          <Typography>Walchand College of Engineering Sangli-416415</Typography>
         </p>
       </section>
       <div class="footer-links">
         <div className="footer-link-wrapper">
           <div class="footer-link-items">
-            <h2>About Us</h2>
+            <Typography>About Us</Typography>
             <Link to="/sign-up">How it works</Link>
             <Link to="/">Testimonials</Link>
             <Link to="/">Careers</Link>
