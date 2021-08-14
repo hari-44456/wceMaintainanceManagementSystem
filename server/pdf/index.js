@@ -23,9 +23,9 @@ module.exports.generatePdf = (data) => {
 
       const signature = signer.sign(private_key, 'base64');
 
-      console.log('Digital Signature: ', signature);
+      // console.log('Digital Signature: ', signature);
 
-      fs.writeFileSync(signaturePath, signature);
+      // fs.writeFileSync(signaturePath, signature);
 
       resolve({ success: true, message: 'pdf generated successfully..' });
     });
