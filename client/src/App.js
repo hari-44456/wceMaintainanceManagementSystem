@@ -18,7 +18,7 @@ import Help from './LandingPage/Help';
 import PageNotFound404 from './helpers/components/PageNotFound404';
 import landing from './LandingPage/index.js';
 import Footer from './LandingPage/Footer';
-
+import Report from './dashboards/Report';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -38,6 +38,7 @@ const App = () => {
               <Route exact path="/ui/help" component={Help} />
               <Route exact path="/ui/contactPage" component={Contact} />
               <Route exact path="/ui" component={landing} />
+              <Route exact path="/ui/forms/Report" component={Report}/>
               <Route
                 path="/ui/login"
                 render={(props) => (

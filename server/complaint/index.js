@@ -8,7 +8,7 @@ const {
 } = require('./validate');
 const Complaint = require('./model');
 const User = require('../login/model');
-const sendMail = require('../mail');
+// const sendMail = require('../mail');
 const Material = require('../material/model');
 const Store = require('../store/model');
 const { generatePdf, removePdf } = require('../pdf');
@@ -148,7 +148,7 @@ router.post('/', verify, validateCreateSchema, async (req, res) => {
     const newComplaint = new Complaint(req.body);
     const result = await newComplaint.save();
 
-    await sendMail(email, 'Complaint Received successfully...');
+    // await sendMail(email, 'Complaint Received successfully...');
 
     return res.status(200).json({
       success: 1,
@@ -322,10 +322,10 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
       }
     );
 
-    await sendMail(
-      email,
-      `${req.body.status} \n Reason: ${req.body.reasonForRejection}`
-    );
+    // await sendMail(
+    //   email,
+    //   `${req.body.status} \n Reason: ${req.body.reasonForRejection}`
+    // );
 
     if (req.user.userType === 'admin')
       await delteMaterialAndUpdateStore(req.params.id);

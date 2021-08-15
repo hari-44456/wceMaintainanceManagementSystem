@@ -102,6 +102,20 @@ export default function DashboardHeader({
                 </Button>
               </Link>
             )}
+            {match.url.substring(match.url.lastIndexOf('/') + 1) ===
+              'admin' && (
+              <Link to="/ui/forms/Report">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  style={{ height: '100%' }}
+                >
+                  <ReceiptIcon />
+                  Report
+                </Button>
+              </Link>
+            )}
           </Grid>
         </Grid>
       </Grid>
