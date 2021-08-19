@@ -64,6 +64,7 @@ app.use('/api/login', require('./login'));
 app.use('/api/complaint', require('./complaint'));
 app.use('/api/store', require('./store'));
 app.use('/api/material', require('./material'));
+app.use('/api/pdf', require('./pdf'));
 
 app.listen(process.env.PORT, () =>
   console.log(`Listening to PORT ${process.env.PORT}...`)
