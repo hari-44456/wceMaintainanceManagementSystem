@@ -80,10 +80,8 @@ const Report = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [value, setValue] = useState([null, null]);
-  const [startDate, setSelectedDate1] = useState(
-    new Date('2021-01-01T21:11:54')
-  );
-  const [endDate, setSelectedDate2] = useState(new Date('2021-01-01T21:11:54'));
+  const [startDate, setSelectedDate1] = useState(new Date(Date.now()));
+  const [endDate, setSelectedDate2] = useState(new Date(Date.now()));
   const handleDateChange1 = (date) => {
     setSelectedDate1(date);
   };
@@ -240,7 +238,8 @@ const Report = () => {
   useEffect(() => {
     (async () => {
       try {
-        const result = await axiosInstance.get('/api/complaint/admin');
+        const result = await axiosInstance.get('/api/complaint/all');
+        console.log(result);
         setLoading(false);
 
         const tmpData = result.data.complaints.map((doc, index) => {
@@ -330,8 +329,8 @@ const Report = () => {
     settmp(0);
   };
   const clearAll = () => {
-    setSelectedDate1(new Date('2021-01-01T21:11:54'));
-    setSelectedDate2(new Date('2021-01-01T21:11:54'));
+    setSelectedDate1(new Date(Date.now()));
+    setSelectedDate2(new Date(Date.now()));
     countRecords();
   };
   return (

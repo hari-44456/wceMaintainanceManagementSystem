@@ -45,6 +45,14 @@ const delteMaterialAndUpdateStore = (complaintId) => {
 
 router.get('/:id', verify, async (req, res) => {
   try {
+    if (req.params.id === 'all') {
+      const complaints = await Complaint.find();
+      return res.status(200).json({
+        success: 1,
+        complaints,
+      });
+    }
+
     if (!validUserRoles(req.params.id))
       return res.status(400).json({
         success: 0,
@@ -315,7 +323,10 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
 
     req.body.rejected = true;
 
-    req.body.status = `Rejected by ${req.user.userType}`;
+    req.body.status =
+      req.user.userType === 'admin'
+        ? 'Rejected by Administrative Officer'
+        : 'Rejected by Hod';
 
     await Complaint.updateOne(
       { _id: req.params.id },
