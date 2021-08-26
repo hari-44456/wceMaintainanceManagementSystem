@@ -80,7 +80,7 @@ const Report = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [value, setValue] = useState([null, null]);
-  const [startDate, setSelectedDate1] = useState(new Date(Date.now()));
+  const [startDate, setSelectedDate1] = useState(new Date('01/01/2021'));
   const [endDate, setSelectedDate2] = useState(new Date(Date.now()));
   const handleDateChange1 = (date) => {
     setSelectedDate1(date);
@@ -329,7 +329,7 @@ const Report = () => {
     settmp(0);
   };
   const clearAll = () => {
-    setSelectedDate1(new Date(Date.now()));
+    setSelectedDate1(new Date('01/01/2021'));
     setSelectedDate2(new Date(Date.now()));
     countRecords();
   };
@@ -408,7 +408,7 @@ const Report = () => {
               </Button>
             </Grid>
             <Grid item md={3} xs={6}>
-              <Link to="/ui/forms/Report">
+              <Link to="/ui/dashboard/admin">
                 <Button
                   fullWidth
                   variant="contained"
