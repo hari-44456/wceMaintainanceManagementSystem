@@ -112,8 +112,8 @@ const Report = () => {
         checkrange(first, last, x.date.toLocaleDateString()) &&
         x.status === filterValues[2]
     );
-    //console.log(filterValues[2]);
-    //console.log(tmp.length);
+    console.log(filterValues[2]);
+    console.log(tmp.length);
     const c1 = data.filter(
       (x) =>
         checkrange(first, last, x.date.toLocaleDateString()) &&
