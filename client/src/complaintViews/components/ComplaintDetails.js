@@ -1,7 +1,26 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
+
+import axiosInstance from '../../helpers/axiosInstance';
 
 export default function ComplaintDetails({ complaintData }) {
+  const downloadPdf = () => {
+    axiosInstance
+      .get(`/api/pdf/${complaintData._id}`, {
+        responseType: 'arraybuffer',
+      })
+      .then((res) => {
+        const url = window.URL.createObjectURL(
+          new Blob([res.data], { type: 'application/pdf' })
+        );
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'request.pdf');
+        document.body.appendChild(link);
+        link.click();
+      });
+  };
+
   return (
     <React.Fragment>
       <Grid container spacing={2}>
@@ -97,6 +116,17 @@ export default function ComplaintDetails({ complaintData }) {
             </Typography>
           </Grid>
         </Grid>
+      )}
+
+      {complaintData.stage >= 4 && (
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ height: '100%', marginTop: '20px' }}
+          onClick={downloadPdf}
+        >
+          Generate PDF
+        </Button>
       )}
     </React.Fragment>
   );

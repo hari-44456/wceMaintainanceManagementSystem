@@ -11,17 +11,21 @@ const User = require('../login/model');
 // const sendMail = require('../mail');
 const Material = require('../material/model');
 const Store = require('../store/model');
-const { generatePdf, removePdf } = require('../pdf');
 const { userRole, validUserRoles } = require('../utils/userRole');
 
 const delteMaterialAndUpdateStore = (complaintId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { availableInStore } = await Material.findOne(
+      const data = await Material.findOne(
         { complaintId },
         { availableInStore: 1 }
       );
 
+      if (!data || !data.availableInStore) {
+        resolve({ success: 1 });
+        return;
+      }
+      const availableInStore = data.availableInStore;
       availableInStore.forEach(
         async (material) =>
           await Store.updateOne(
@@ -41,6 +45,14 @@ const delteMaterialAndUpdateStore = (complaintId) => {
 
 router.get('/:id', verify, async (req, res) => {
   try {
+    if (req.params.id === 'all') {
+      const complaints = await Complaint.find();
+      return res.status(200).json({
+        success: 1,
+        complaints,
+      });
+    }
+
     if (!validUserRoles(req.params.id))
       return res.status(400).json({
         success: 0,
@@ -244,9 +256,7 @@ router.post('/accept/:id', verify, validateAcceptSchema, async (req, res) => {
         }
       );
 
-      // await generatePdf();
       // await sendMail(email, status, true);
-      // await removePdf();
     }
 
     if (req.user.userType === 'committee') {
@@ -313,7 +323,10 @@ router.post('/reject/:id', verify, validateRejectSchema, async (req, res) => {
 
     req.body.rejected = true;
 
-    req.body.status = `Rejected by ${req.user.userType}`;
+    req.body.status =
+      req.user.userType === 'admin'
+        ? 'Rejected by Administrative Officer'
+        : 'Rejected by Hod';
 
     await Complaint.updateOne(
       { _id: req.params.id },
