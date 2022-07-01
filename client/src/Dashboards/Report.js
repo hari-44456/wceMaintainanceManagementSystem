@@ -80,8 +80,10 @@ const Report = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [value, setValue] = useState([null, null]);
-  const [startDate, setSelectedDate1] = useState(new Date('01/01/2021'));
-  const [endDate, setSelectedDate2] = useState(new Date(Date.now()));
+  const [startDate, setSelectedDate1] = useState(
+    new Date('2021-01-01T21:11:54')
+  );
+  const [endDate, setSelectedDate2] = useState(new Date('2021-01-01T21:11:54'));
   const handleDateChange1 = (date) => {
     setSelectedDate1(date);
   };
@@ -238,8 +240,7 @@ const Report = () => {
   useEffect(() => {
     (async () => {
       try {
-        const result = await axiosInstance.get('/api/complaint/all');
-        console.log(result);
+        const result = await axiosInstance.get('/api/complaint/admin');
         setLoading(false);
 
         const tmpData = result.data.complaints.map((doc, index) => {
@@ -329,8 +330,8 @@ const Report = () => {
     settmp(0);
   };
   const clearAll = () => {
-    setSelectedDate1(new Date('01/01/2021'));
-    setSelectedDate2(new Date(Date.now()));
+    setSelectedDate1(new Date('2021-01-01T21:11:54'));
+    setSelectedDate2(new Date('2021-01-01T21:11:54'));
     countRecords();
   };
   return (
@@ -408,7 +409,7 @@ const Report = () => {
               </Button>
             </Grid>
             <Grid item md={3} xs={6}>
-              <Link to="/ui/dashboard/admin">
+              <Link to="/ui/forms/Report">
                 <Button
                   fullWidth
                   variant="contained"
